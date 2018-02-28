@@ -4,6 +4,7 @@ using ReportPluginFramework.ReportData;
 using ReportPluginFramework.ReportData.TimeSeriesDescription;
 using System.Data;
 using System.Reflection;
+using ServiceStack;
 
 namespace Reports
 {
@@ -186,7 +187,7 @@ namespace Reports
             dataRow["ComputationPeriod"] = tsd.ComputationPeriod;
             dataRow["TimeSeriesType"] = tsd.TimeSeriesType;
             dataRow["InterpolationType"] = tsd.InterpolationType;
-            dataRow["InterpolationTypeString"] = (new AquariusDataService.PortsConverter()).GetInterpolationCodeName((int)tsd.InterpolationType);
+            dataRow["InterpolationTypeString"] = GetLegacyInterpolationTypeString(tsd.InterpolationType);
             dataRow["LastModified"] = tsd.LastModified;
             dataRow["RawStartTime"] = tsd.RawStartTime;
             dataRow["RawEndTime"] = tsd.RawEndTime;
@@ -204,6 +205,13 @@ namespace Reports
             timeSeriesTable.Rows.Add(dataRow);
 
             return timeSeriesTable;
+        }
+
+        private static string GetLegacyInterpolationTypeString(InterpolationType interpolationType)
+        {
+            // This avoids adding a reference to AopDB.dll, just to get a string like "7 - Discrete Values"
+            // (new AquariusDataService.PortsConverter()).GetInterpolationCodeName((int)tsd.InterpolationType);
+            return $"{(int)interpolationType} - {interpolationType.ToString().ToTitleCase().SplitCamelCase()}";
         }
 
         public DataTable LocationDataTable(string tableName, string locationIdentifier)
