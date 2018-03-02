@@ -30,6 +30,7 @@ namespace Reports
             AddReportDataTable(set1, "ReportData");
             AddCommonTimeSeriesTables(set1);
 
+            Log.Info("Returning CommonDataSet");
             return set1;
         }
 
@@ -235,7 +236,9 @@ namespace Reports
         {
             string reportTitle = _Common.GetParameterString("ReportTitle", "");
             string description = _Common.GetParameterString("Description", "");
-            return reportTitle + ((!string.IsNullOrEmpty(reportTitle) && !string.IsNullOrEmpty(description)) ? " - " : "") + description;
+            string subTitle = reportTitle + ((!string.IsNullOrEmpty(reportTitle) && !string.IsNullOrEmpty(description)) ? " - " : "") + description;
+            Log.InfoFormat("ReportSubTitle = '{0}'", subTitle);
+            return subTitle;
         }
 
         public string GetFooterDisclaimer()
