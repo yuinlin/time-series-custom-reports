@@ -409,6 +409,7 @@ namespace Reports
             request.QueryFromTime = StartTime;
             request.QueryToTime = EndTime;
             request.TimeSeriesDataType = TimeSeriesDataType.Corrected;
+            request.IncludeGapMarkers = true;
 
             return ReportData().GetTimeSeriesPoints(request).Points;
         }
