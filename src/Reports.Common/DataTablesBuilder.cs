@@ -16,14 +16,20 @@ namespace Reports
         private Common _Common;
         public static string DateFormat = "yyyy-MM-dd HH:mmzzz";
 
+        public string _DllName;
+        public string _DllFolder;
+
         public DataTablesBuilder(RunReportRequest request, Common common)
         {
             _RunReportRequest = request;
             _Common = common;
         }
 
-        public DataSet GetCommonDataSet()
+        public DataSet GetCommonDataSet(string dllName, string dllFolder)
         {
+            _DllName = dllName;
+            _DllFolder = dllFolder;
+
             DataSet set1 = new DataSet("ReportTables");
 
             AddRunReportRequestTable(set1, "RunReportRequest");
@@ -40,10 +46,14 @@ namespace Reports
 
             DataTable table = new DataTable(tableName);
             table.Columns.Add("RunReportRequest", typeof(object));
+            table.Columns.Add("DllName", typeof(string));
+            table.Columns.Add("DllFolder", typeof(string));
             dataSet.Tables.Add(table);
 
             DataRow row = table.NewRow();
             row["RunReportRequest"] = _RunReportRequest;
+            row["DllName"] = _DllName;
+            row["DllFolder"] = _DllFolder;
             table.Rows.Add(row);
         }
 

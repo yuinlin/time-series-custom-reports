@@ -21,6 +21,9 @@ namespace Reports
 
         public Dictionary<Guid, DateTimeOffsetInterval> _TimeSeriesTimeRangeIntervals = new Dictionary<Guid, DateTimeOffsetInterval>();
 
+        public string _DllName;
+        public string _DllFolder;
+
         public Common(RunReportRequest request)
         {
             _RunReportRequest = request;
@@ -58,9 +61,13 @@ namespace Reports
             return TimeSpan.Zero;
         }
 
-        public DataSet GetCommonDataSet()
+        public DataSet GetCommonDataSet(string dllName, string dllFolder)
         {
-            return (new DataTablesBuilder(_RunReportRequest, this)).GetCommonDataSet();
+            _DllName = dllName;
+            _DllFolder = dllFolder;
+            Log.InfoFormat("GetCommonDataSet for dll {0} in folder {1}", dllName, dllFolder);
+
+            return (new DataTablesBuilder(_RunReportRequest, this)).GetCommonDataSet(dllName, dllFolder);
         }
 
         private IReportData ReportData()
