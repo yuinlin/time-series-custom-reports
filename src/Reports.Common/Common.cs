@@ -2,6 +2,9 @@
 using System.Data;
 using System.Collections.Generic;
 using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 using ReportPluginFramework;
 using ReportPluginFramework.ReportData;
@@ -67,7 +70,39 @@ namespace Reports
             _DllFolder = dllFolder;
             Log.InfoFormat("GetCommonDataSet for dll {0} in folder {1}", dllName, dllFolder);
 
+            AddRunReportRequestParametersFromSettingsFile();
+
             return (new DataTablesBuilder(_RunReportRequest, this)).GetCommonDataSet(dllName, dllFolder);
+        }
+
+        public void AddRunReportRequestParametersFromSettingsFile()
+        {
+            string settingsFile = Path.Combine(_DllFolder, "Settings.json");
+            Log.InfoFormat("AddSettings - look for settings in file = '{0}'", settingsFile);
+            try
+            {
+                if (File.Exists(settingsFile))
+                {
+                    using (StreamReader reader = File.OpenText(settingsFile))
+                    {
+                        JObject jsonObject = (JObject)JToken.ReadFrom(new JsonTextReader(reader));
+                        foreach (dynamic item in jsonObject["Parameters"])
+                        {
+                            Log.InfoFormat("item name = '{0}' value = '{1}'", item.Name, item.Value);
+                            ReportJobParameter parameter = new ReportJobParameter()
+                            {
+                                Name = (string)item.Name,
+                                Value = (string)item.Value
+                            };
+                            _RunReportRequest.Parameters.Add(parameter);
+                        }
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Error(string.Format("Error reading settings from '{0}'", settingsFile), exp);
+            }
         }
 
         private IReportData ReportData()
