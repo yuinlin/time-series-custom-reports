@@ -10,6 +10,8 @@ namespace Reports.PluginPackager
         public bool Subfolders { get; set; } = true;
         public List<string> Include { get; } = new List<string> {"*.*"};
 
+        public List<string> ForceInclude { get; } = new List<string>();
+
         public List<string> Exclude { get; } = new List<string>
         {
             "*.xml",
