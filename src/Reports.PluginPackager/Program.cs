@@ -91,7 +91,7 @@ namespace Reports.PluginPackager
                 new Option {Key = nameof(context.Subfolders), Setter = value => context.Subfolders = bool.Parse(value), Getter = () => context.Subfolders.ToString(), Description = "Include all subfolders"},
                 new Option {Key = nameof(context.Include), Setter = value => AddToList(value, context.Include), Getter = () => string.Join(", ", context.Include), Description = "Include file or DOS wildcard pattern"},
                 new Option {Key = nameof(context.Exclude), Setter = value => AddToList(value, context.Exclude), Getter = () => string.Join(", ", context.Exclude), Description = "Exclude file or DOS wildcard pattern"},
-                new Option {Key = nameof(context.Exception), Setter = value => AddToList(value, context.Exception), Getter = () => string.Join(", ", context.Exception), Description = "Exception to exclude list"},
+                new Option {Key = nameof(context.ForceInclude), Setter = value => AddToList(value, context.ForceInclude), Getter = () => string.Join(", ", context.ForceInclude), Description = "Force include file or DOS wildcard pattern"},
             };
 
             var usageMessage

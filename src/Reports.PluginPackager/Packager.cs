@@ -83,16 +83,16 @@ namespace Reports.PluginPackager
                 var assemblyFolder = new DirectoryInfo(Path.GetDirectoryName(Context.AssemblyPath));
                 var includeRegexes = Context.Include.Select(CreateRegexFromDosPattern).ToList();
                 var excludeRegexes = Context.Exclude.Select(CreateRegexFromDosPattern).ToList();
-                var exceptionRegexes = Context.Exception.Select(CreateRegexFromDosPattern).ToList();
+                var forceIncludeRegexes = Context.ForceInclude.Select(CreateRegexFromDosPattern).ToList();
 
                 foreach (var file in assemblyFolder.GetFiles("*", SearchOption.AllDirectories))
                 {
                     var filename = file.Name;
                     var relativePath = file.FullName.Substring(assemblyFolder.FullName.Length + 1);
 
-                    if (exceptionRegexes.Any() && exceptionRegexes.Any(r => r.IsMatch(filename)))
+                    if (forceIncludeRegexes.Any() && forceIncludeRegexes.Any(r => r.IsMatch(filename)))
                     {
-                        Log.Info($"Exception '{relativePath}' ...");
+                        Log.Info($"Force Include '{relativePath}' ...");
                     }
                     else if (excludeRegexes.Any(r => r.IsMatch(filename)))
                     {
