@@ -84,7 +84,7 @@ namespace Reports
             }
             if (weekNumber == -1)
             {
-                Log.InfoFormat("AddPointToTable - weekNumber is -1 which is invalid so SKIP, {0}, {1}", timestamp, value);
+                Log.DebugFormat("AddPointToTable - weekNumber is -1 which is invalid so SKIP, {0}, {1}", timestamp, value);
                 return;
             }
             DataRow row = pointsTable.NewRow();
