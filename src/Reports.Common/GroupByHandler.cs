@@ -23,11 +23,11 @@ namespace Reports
 
         public DateTimeOffsetInterval AdjustIntervalToGroupBy(DateTimeOffsetInterval SelectedPeriod, DateTimeOffsetInterval TimeSeriesRange, string GroupBy, TimeSpan timeseriesOffset)
         {
-            Log.InfoFormat("AdjustIntervalToGroupBy selected interval = {0}, timeseries range = {1}, groupBy = {2}, tsOffset = {3}",
+            Log.DebugFormat("AdjustIntervalToGroupBy selected interval = {0}, timeseries range = {1}, groupBy = {2}, tsOffset = {3}",
                 _Common.TimeRangeString(SelectedPeriod), _Common.TimeSeriesRangeString(TimeSeriesRange), GroupBy, timeseriesOffset);
 
             DateTimeOffsetInterval reportPeriod = new DateTimeOffsetInterval(SelectedPeriod.Start, SelectedPeriod.End);
-            Log.InfoFormat("1 Begin GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, SelectedPeriod.Start, SelectedPeriod.End);
+            Log.DebugFormat("1 Begin GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, SelectedPeriod.Start, SelectedPeriod.End);
 
             try
             {
@@ -65,10 +65,10 @@ namespace Reports
 
                 TheEndTime = (TheEndTime > TheStartTime) ? TheEndTime : TheStartTime; // avoid improper interval
 
-                Log.InfoFormat("2 GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
+                Log.DebugFormat("2 GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
                 reportPeriod = new DateTimeOffsetInterval(TheStartTime, TheEndTime);
 
-                Log.InfoFormat("Do GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
+                Log.DebugFormat("Do GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
 
                 if (GroupBy == "Year")
                 {
@@ -107,14 +107,14 @@ namespace Reports
                     TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, TheEndTime.Day, 0, 0, 0, timeseriesOffset).AddDays(1).AddMilliseconds(-1);
                 }
 
-                Log.InfoFormat("3 GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
+                Log.DebugFormat("3 GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
                 reportPeriod = new DateTimeOffsetInterval(TheStartTime, TheEndTime);
             }
             catch (Exception exp)
             {
                 Log.Error("Error in AdjustIntervalToGroupBy", exp);
             }
-            Log.InfoFormat("AdjustIntervalToGroupBy returns report period = {0}", _Common.TimeRangeString(reportPeriod));
+            Log.DebugFormat("AdjustIntervalToGroupBy returns report period = {0}", _Common.TimeRangeString(reportPeriod));
 
             return reportPeriod;
         }
@@ -240,7 +240,7 @@ namespace Reports
             row["StartTime"] = startTime;
             row["EndTime"] = endTime;
 
-            Log.InfoFormat("AddGroupByRow: year = {0}, wateryear = {1}, month = {2}, day = {3}, week = {4}, starttime = {5}, endtime = {6}",
+            Log.DebugFormat("AddGroupByRow: year = {0}, wateryear = {1}, month = {2}, day = {3}, week = {4}, starttime = {5}, endtime = {6}",
               row["Year"], row["WaterYear"], row["Month"], row["Day"], row["Week"], row["StartTime"], row["EndTime"]);
 
             groupBy.Rows.Add(row);

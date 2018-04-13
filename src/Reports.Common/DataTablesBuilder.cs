@@ -36,7 +36,7 @@ namespace Reports
             AddReportDataTable(set1, "ReportData");
             AddCommonTimeSeriesTables(set1);
 
-            Log.Info("Returning CommonDataSet");
+            Log.Debug("Returning CommonDataSet");
             return set1;
         }
 
@@ -80,7 +80,7 @@ namespace Reports
 
         public void AddReportTimeSeriesInputsTable(System.Data.DataSet dataSet, string tableName, ReportRequestInputs inputs)
         {
-            Log.InfoFormat("AddReportTimeSeriesInputsTable {0}", tableName);
+            Log.DebugFormat("AddReportTimeSeriesInputsTable {0}", tableName);
             if (dataSet.Tables.Contains(tableName)) return;
 
             DataTable table = new DataTable(tableName);
@@ -116,7 +116,7 @@ namespace Reports
 
         public DataTable ReportDataTable(string tableName)
         {
-            Log.InfoFormat("Create ReportDataTable {0}", tableName);
+            Log.DebugFormat("Create ReportDataTable {0}", tableName);
             DataTable pageHeader = new DataTable(tableName);
 
             pageHeader.Columns.Add("SelectedInterval", typeof(DateTimeOffsetInterval));
@@ -154,7 +154,7 @@ namespace Reports
 
         public DataTable TimeSeriesDataTable(string tableName, Guid timeseriesUniqueId)
         {
-            Log.InfoFormat("Create TimeSeriesDataTable {0}, {1}", tableName, timeseriesUniqueId);
+            Log.DebugFormat("Create TimeSeriesDataTable {0}, {1}", tableName, timeseriesUniqueId);
             DataTable timeSeriesTable = new DataTable(tableName);
             timeSeriesTable.Columns.Add("UniqueId", typeof(Guid));
             timeSeriesTable.Columns.Add("TimeSeriesIdentifier", typeof(string));
@@ -227,7 +227,7 @@ namespace Reports
 
         public DataTable LocationDataTable(string tableName, string locationIdentifier)
         {
-            Log.InfoFormat("Create LocationDataTable {0}, {1}", tableName, locationIdentifier);
+            Log.DebugFormat("Create LocationDataTable {0}, {1}", tableName, locationIdentifier);
             DataTable locationTable = new DataTable(tableName);
             locationTable.Columns.Add("LocationIdentifier", typeof(string));
             locationTable.Columns.Add("LocationName", typeof(string));
@@ -247,7 +247,7 @@ namespace Reports
             string reportTitle = _Common.GetParameterString("ReportTitle", "");
             string description = _Common.GetParameterString("Description", "");
             string subTitle = reportTitle + ((!string.IsNullOrEmpty(reportTitle) && !string.IsNullOrEmpty(description)) ? " - " : "") + description;
-            Log.InfoFormat("ReportSubTitle = '{0}'", subTitle);
+            Log.DebugFormat("ReportSubTitle = '{0}'", subTitle);
             return subTitle;
         }
 

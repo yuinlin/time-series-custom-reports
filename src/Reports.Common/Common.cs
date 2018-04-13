@@ -45,7 +45,7 @@ namespace Reports
                 if (points.Count > 0)
                 {
                     _WaterYearMonth = points[0].Timestamp.Month;
-                    Log.InfoFormat("SetWaterYearMonth found the first point = {0}, wateryearmonth = {1}", points[0].Timestamp.ToString(_DateFormat), _WaterYearMonth);
+                    Log.DebugFormat("SetWaterYearMonth found the first point = {0}, wateryearmonth = {1}", points[0].Timestamp.ToString(_DateFormat), _WaterYearMonth);
                     break;
                 }
             }
@@ -68,7 +68,7 @@ namespace Reports
         {
             _DllName = dllName;
             _DllFolder = dllFolder;
-            Log.InfoFormat("GetCommonDataSet for dll {0} in folder {1}", dllName, dllFolder);
+            Log.DebugFormat("GetCommonDataSet for dll {0} in folder {1}", dllName, dllFolder);
 
             AddRunReportRequestParametersFromSettingsFile();
 
@@ -78,7 +78,7 @@ namespace Reports
         public void AddRunReportRequestParametersFromSettingsFile()
         {
             string settingsFile = Path.Combine(_DllFolder, "Settings.json");
-            Log.InfoFormat("AddSettings - look for settings in file = '{0}'", settingsFile);
+            Log.DebugFormat("AddSettings - look for settings in file = '{0}'", settingsFile);
             try
             {
                 if (File.Exists(settingsFile))
@@ -88,7 +88,7 @@ namespace Reports
                         JObject jsonObject = (JObject)JToken.ReadFrom(new JsonTextReader(reader));
                         foreach (dynamic item in jsonObject["Parameters"])
                         {
-                            Log.InfoFormat("item name = '{0}' value = '{1}'", item.Name, item.Value);
+                            Log.DebugFormat("item name = '{0}' value = '{1}'", item.Name, item.Value);
                             ReportJobParameter parameter = new ReportJobParameter()
                             {
                                 Name = (string)item.Name,
@@ -197,7 +197,7 @@ namespace Reports
 
         public Guid? GetTimeSeriesInputByName(string timeseriesInputName)
         {
-            Log.InfoFormat("GetTimeSeriesInputByName: look for input with timeseriesInputName = {0}", timeseriesInputName);
+            Log.DebugFormat("GetTimeSeriesInputByName: look for input with timeseriesInputName = {0}", timeseriesInputName);
             ReportRequestInputs inputs = _RunReportRequest.Inputs;
             if (inputs == null) return null;
 
@@ -205,7 +205,7 @@ namespace Reports
                 if (timeseriesInput.Name == timeseriesInputName)
                 {
                     Guid uniqueId = timeseriesInput.UniqueId;
-                    Log.InfoFormat("GetTimeSeriesInputByName: found input with timeseriesInputName = {0} and UniqueId = {1}", timeseriesInputName, uniqueId);
+                    Log.DebugFormat("GetTimeSeriesInputByName: found input with timeseriesInputName = {0} and UniqueId = {1}", timeseriesInputName, uniqueId);
                     return uniqueId;
                 }
             return null;
@@ -293,7 +293,7 @@ namespace Reports
 
             DateTimeOffsetInterval newInterval = new DateTimeOffsetInterval(startTime, endTime);
 
-            Log.InfoFormat("GetPeriodSelectedInUtcOffset request interval = {0}, utcOffset = {1}, returns interval + {2}",
+            Log.DebugFormat("GetPeriodSelectedInUtcOffset request interval = {0}, utcOffset = {1}, returns interval + {2}",
                 TimeRangeString(_RunReportRequest.Interval), utcOffset, TimeRangeString(newInterval));
 
             return newInterval;
@@ -318,7 +318,7 @@ namespace Reports
 
             string startString = (startTime.HasValue) ? startTime.Value.ToString(dateFormat) : "Start of Record";
             string endString = (endTime.HasValue) ? endTime.Value.ToString(dateFormat) : "End of Record";
-            Log.InfoFormat("TimeRangeString: interval time range is {0} to {1}", startString, endString);
+            Log.DebugFormat("TimeRangeString: interval time range is {0} to {1}", startString, endString);
 
             return startString + " - " + endString;
         }
@@ -374,7 +374,7 @@ namespace Reports
         public List<TimeSeriesPoint> GetComputedStatisticsPoints(Guid timeseriesUniqueId, DateTimeOffset? startTime, DateTimeOffset? endTime,
             StatisticType statType, StatisticPeriod period, int? periodCount, bool? requiresCoverage, double? coverageAmount)
         {
-            Log.InfoFormat("GetComputedStatisticsPoints stat = {0}, period = {1}, periodCount = {2} for TimeRange = '{3}' - '{4}'", statType, period, periodCount, startTime, endTime);
+            Log.DebugFormat("GetComputedStatisticsPoints stat = {0}, period = {1}, periodCount = {2} for TimeRange = '{3}' - '{4}'", statType, period, periodCount, startTime, endTime);
 
             CoverageOptions co = new CoverageOptions();
             co.RequiresMinimumCoverage = requiresCoverage;
@@ -412,18 +412,18 @@ namespace Reports
 
         public DateTimeOffsetInterval GetTimeSeriesTimeRange(Guid timeseriesUniqueId)
         {
-            Log.InfoFormat("Get the time-range for uniqueId = {0}", timeseriesUniqueId);
+            Log.DebugFormat("Get the time-range for uniqueId = {0}", timeseriesUniqueId);
 
             if (!_TimeSeriesTimeRangeIntervals.ContainsKey(timeseriesUniqueId))
             {
-                Log.InfoFormat("Find the time-range for uniqueId = {0}", timeseriesUniqueId);
+                Log.DebugFormat("Find the time-range for uniqueId = {0}", timeseriesUniqueId);
                 DateTimeOffsetInterval timeseriesInterval = (new TimeSeriesTimeRangeFinder(this)).FindTimeSeriesTimeRange(timeseriesUniqueId);
                 _TimeSeriesTimeRangeIntervals.Add(timeseriesUniqueId, timeseriesInterval);
             }
 
             DateTimeOffsetInterval interval = _TimeSeriesTimeRangeIntervals[timeseriesUniqueId];         
 
-            Log.InfoFormat("Time-range for uniqueId = {0} is '{1}'", timeseriesUniqueId, TimeSeriesRangeString(interval));
+            Log.DebugFormat("Time-range for uniqueId = {0} is '{1}'", timeseriesUniqueId, TimeSeriesRangeString(interval));
 
             return interval;
         }
@@ -442,7 +442,7 @@ namespace Reports
 
         public List<TimeSeriesPoint> GetTimeSeriesPoints(Guid timeseriesUniqueId, DateTimeOffset? StartTime, DateTimeOffset? EndTime)
         {
-            Log.InfoFormat("GetTimeSeriesPoints uniqueId = {0} from {1} to {2}", timeseriesUniqueId,
+            Log.DebugFormat("GetTimeSeriesPoints uniqueId = {0} from {1} to {2}", timeseriesUniqueId,
                 (StartTime.HasValue) ? StartTime.Value.ToString(_DateFormat) : "start of record",
                 (EndTime.HasValue) ? EndTime.Value.ToString(_DateFormat) : "end of record");
 
