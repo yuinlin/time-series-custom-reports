@@ -31,18 +31,28 @@ namespace Reports
 
             try
             {
+                DateTimeOffset? SelectedPeriodEndTime = SelectedPeriod.End;
+
+                if (SelectedPeriodEndTime.HasValue)
+                {
+                    if ((SelectedPeriodEndTime.Value.Hour == 0) && (SelectedPeriodEndTime.Value.Minute == 0) && (SelectedPeriodEndTime.Value.Second == 0))
+                        SelectedPeriodEndTime = SelectedPeriodEndTime.Value.AddMilliseconds(-1); // avoid having endTime be at exact start of day/month/year
+                }
+
                 DateTimeOffset? StartTime = null;
                 DateTimeOffset? EndTime = null;
 
                 if (SelectedPeriod.Start.HasValue && TimeSeriesRange.Start.HasValue)
-                    StartTime = (SelectedPeriod.Start.Value > TimeSeriesRange.Start.Value) ? SelectedPeriod.Start.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.Start.Value;
+                    StartTime = (SelectedPeriod.Start.Value > TimeSeriesRange.Start.Value) ? SelectedPeriod.Start.Value.ToOffset(timeseriesOffset) :
+                        (SelectedPeriodEndTime.HasValue && (SelectedPeriodEndTime.Value < TimeSeriesRange.Start.Value)) ?
+                        SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.Start.Value;
                 else
                     StartTime = (SelectedPeriod.Start.HasValue) ? SelectedPeriod.Start.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.Start;
 
-                if (SelectedPeriod.End.HasValue && TimeSeriesRange.End.HasValue)
-                    EndTime = (SelectedPeriod.End.Value < TimeSeriesRange.End.Value) ? SelectedPeriod.End.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.End.Value;
+                if (SelectedPeriodEndTime.HasValue && TimeSeriesRange.End.HasValue)
+                    EndTime = (SelectedPeriodEndTime.Value < TimeSeriesRange.End.Value) ? SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.End.Value;
                 else
-                    EndTime = (SelectedPeriod.End.HasValue) ? SelectedPeriod.End.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.End;
+                    EndTime = (SelectedPeriodEndTime.HasValue) ? SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.End;
 
                 if (!TimeSeriesRange.Start.HasValue && !TimeSeriesRange.End.HasValue)
                 {
@@ -58,14 +68,8 @@ namespace Reports
                 DateTimeOffset TheStartTime = (StartTime.HasValue) ? StartTime.Value : now;
                 DateTimeOffset TheEndTime = (EndTime.HasValue) ? EndTime.Value : now;
 
-                TheEndTime = (TheEndTime > TheStartTime) ? TheEndTime : TheStartTime;
-
-                if ((TheEndTime.Hour == 0) && (TheEndTime.Minute == 0) && (TheEndTime.Second == 0))
-                    TheEndTime = TheEndTime.AddMilliseconds(-1); // avoid having endTime be at exact start of day/month/year
-
                 TheEndTime = (TheEndTime > TheStartTime) ? TheEndTime : TheStartTime; // avoid improper interval
 
-                Log.DebugFormat("2 GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
                 reportPeriod = new DateTimeOffsetInterval(TheStartTime, TheEndTime);
 
                 Log.DebugFormat("Do GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
