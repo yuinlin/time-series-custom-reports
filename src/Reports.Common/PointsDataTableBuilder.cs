@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Collections.Generic;
 using System.Data;
-using ReportPluginFramework.ReportData.TimeSeriesData;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
 
 namespace Reports
 {

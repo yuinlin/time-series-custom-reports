@@ -6,11 +6,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 
-using ReportPluginFramework;
-using ReportPluginFramework.ReportData;
-using ReportPluginFramework.ReportData.TimeSeriesComputedStatistics;
-using ReportPluginFramework.ReportData.TimeSeriesData;
-using ReportPluginFramework.ReportData.TimeSeriesDescription;
+using ReportPluginFramework.Beta;
+using ReportPluginFramework.Beta.ReportData;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesDescription;
+using ReportPluginFramework.Beta.ReportData.LocationDescription;
+using ReportPluginFramework.Beta.ReportData.LocationData;
 
 namespace Reports
 {
@@ -175,7 +177,8 @@ namespace Reports
 
         public string GetLocationName(string locationIdentifier)
         {
-            return ""; // location name is unavailable from IReportData for now
+            LocationDescription locationDescription = GetLocationDescriptionByIdentifier(locationIdentifier);
+            return (locationDescription != null)? locationDescription.Name : "";
         }
 
         public string GetTimeRangeString(Guid timeseriesUniqueId, DateTimeOffsetInterval timerange)
@@ -216,6 +219,21 @@ namespace Reports
             return ReportData().GetTimeSeriesDescription(timeseriesUniqueId);
         }
 
+        public LocationDescription GetLocationDescriptionByIdentifier(string locationIdentifier)
+        {
+            LocationDescriptionListRequest locationDescriptionListRequest = new LocationDescriptionListRequest();
+            locationDescriptionListRequest.LocationIdentifier = locationIdentifier;
+            List<LocationDescription> locationDescriptions = ReportData().GetLocationDescriptions(locationDescriptionListRequest);
+            return (locationDescriptions.Count > 0)? locationDescriptions[0] : null;
+        }
+        public LocationDataResponse GetLocationData(string locationIdentifier)
+        {
+            LocationDataRequest locationDataRequest = new LocationDataRequest();
+            locationDataRequest.LocationIdentifier = locationIdentifier;
+            LocationDataResponse locationData = ReportData().GetLocationData(locationDataRequest);
+            return locationData;
+        }
+
         public string GetPeriodSelectedInformation(DateTimeOffsetInterval interval)
         {
             return "Period Selected: " + PeriodSelectedString(interval);
@@ -233,7 +251,12 @@ namespace Reports
 
         public string GetTimeSeriesUnitSymbol(Guid timeseriesUniqueId)
         {
-            return GetTimeSeriesDescription(timeseriesUniqueId).Unit; //***todo: return unit symbol rather than unitId
+            return GetUnitSymbol(GetTimeSeriesDescription(timeseriesUniqueId).Unit); 
+        }
+
+        public string GetUnitSymbol(string unitId)
+        {
+            return unitId; //***todo: return unit symbol rather than unitId
         }
 
         public string PeriodSelectedString(DateTimeOffsetInterval interval)

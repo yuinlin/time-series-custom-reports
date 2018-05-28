@@ -1,7 +1,10 @@
 ﻿using System;
-using ReportPluginFramework;
-using ReportPluginFramework.ReportData;
-using ReportPluginFramework.ReportData.TimeSeriesDescription;
+using System.Collections.Generic;
+using ReportPluginFramework.Beta;
+using ReportPluginFramework.Beta.ReportData;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesDescription;
+using ReportPluginFramework.Beta.ReportData.LocationDescription;
+using ReportPluginFramework.Beta.ReportData.LocationData;
 using System.Data;
 using System.Reflection;
 using ServiceStack;
@@ -34,7 +37,7 @@ namespace Reports
 
             AddRunReportRequestTable(set1, "RunReportRequest");
             AddReportDataTable(set1, "ReportData");
-            AddCommonTimeSeriesTables(set1);
+            AddInputsTables(set1);
 
             Log.Debug("Returning CommonDataSet");
             return set1;
@@ -57,17 +60,25 @@ namespace Reports
             table.Rows.Add(row);
         }
 
-        public void AddCommonTimeSeriesTables(DataSet dataSet)
+        public void AddInputsTables(DataSet dataSet)
         {
             AddReportTimeSeriesInputsTable(dataSet, "TimeSeriesInputs", _RunReportRequest.Inputs);
+            AddReportLocationInputTable(dataSet, "LocationInput", _RunReportRequest.Inputs);
 
             ReportRequestInputs inputs = _RunReportRequest.Inputs;
             if (inputs == null) return;
 
-            foreach (TimeSeriesReportRequestInput timeseriesInput in inputs.TimeSeriesInputs)
+            if (inputs.TimeSeriesInputs != null)
             {
-                AddTimeSeriesInputDataTable(dataSet, timeseriesInput);
-                AddTimeSeriesLocationDataTable(dataSet, timeseriesInput);
+                foreach (TimeSeriesReportRequestInput timeseriesInput in inputs.TimeSeriesInputs)
+                {
+                    AddTimeSeriesInputDataTable(dataSet, timeseriesInput);
+                    AddTimeSeriesLocationDataTable(dataSet, timeseriesInput);
+                }
+            }
+            if (inputs.LocationInput != null)
+            {
+                AddLocationInputDataTable(dataSet, inputs.LocationInput);
             }
         }
 
@@ -85,24 +96,59 @@ namespace Reports
 
             DataTable table = new DataTable(tableName);
             dataSet.Tables.Add(table);
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Guid", typeof(Guid));
+
             if (inputs == null) return;
 
             foreach (TimeSeriesReportRequestInput timeseriesInput in inputs.TimeSeriesInputs)
-                table.Columns.Add(timeseriesInput.Name, typeof(Guid));
+            {
+                DataRow row = table.NewRow();
+                row["Name"] = timeseriesInput.Name;
+                row["Guid"] = timeseriesInput.UniqueId;
+                table.Rows.Add(row);
+            }
+        }
+        public void AddReportLocationInputTable(System.Data.DataSet dataSet, string tableName, ReportRequestInputs inputs)
+        {
+            Log.DebugFormat("AddReportLocationInputTable {0}", tableName);
+            if (dataSet.Tables.Contains(tableName)) return;
+
+            DataTable table = new DataTable(tableName);
+            dataSet.Tables.Add(table);
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Identifier", typeof(string));
+
+            if ((inputs == null) || (inputs.LocationInput == null)) return;
 
             System.Data.DataRow row = table.NewRow();
-            foreach (TimeSeriesReportRequestInput timeseriesInput in inputs.TimeSeriesInputs)
-                row[timeseriesInput.Name] = timeseriesInput.UniqueId;
+            LocationReportRequestInput locationInput = inputs.LocationInput;
+            row["Name"] = locationInput.Name;
+            row["Identifier"] = locationInput.Identifier;
             table.Rows.Add(row);
         }
-
         public void AddTimeSeriesLocationDataTable(System.Data.DataSet dataSet, TimeSeriesReportRequestInput timeseriesInput)
         {
             string tableName = string.Format("{0}Location", timeseriesInput.Name);
             if (dataSet.Tables.Contains(tableName)) return;
 
             string locationIdentifier = _Common.GetTimeSeriesDescription(timeseriesInput.UniqueId).LocationIdentifier;
+            AddLocationDataTables(dataSet, tableName, locationIdentifier);
+        }
+
+        public void AddLocationInputDataTable(DataSet dataSet, LocationReportRequestInput locationInput)
+        {
+            string tableName = "InputLocation";
+            if (dataSet.Tables.Contains(tableName)) return;
+
+            if (locationInput == null) return;
+            AddLocationDataTables(dataSet, tableName, locationInput.Identifier);
+        }
+
+        public void AddLocationDataTables(DataSet dataSet, string tableName, string locationIdentifier)
+        {
             dataSet.Tables.Add(LocationDataTable(tableName, locationIdentifier));
+            dataSet.Tables.Add(LocationExtendedAttributesTable(tableName + "ExtendedAttributes", locationIdentifier));
         }
 
         public void AddTimeSeriesInputDataTable(System.Data.DataSet dataSet, TimeSeriesReportRequestInput timeseriesInput)
@@ -229,17 +275,74 @@ namespace Reports
         {
             Log.DebugFormat("Create LocationDataTable {0}, {1}", tableName, locationIdentifier);
             DataTable locationTable = new DataTable(tableName);
+            locationTable.Columns.Add("UniqueId", typeof(Guid));
             locationTable.Columns.Add("LocationIdentifier", typeof(string));
             locationTable.Columns.Add("LocationName", typeof(string));
-
+            locationTable.Columns.Add("UtcOffset", typeof(TimeSpan));
+            locationTable.Columns.Add("UtcOffsetString", typeof(string));
+            locationTable.Columns.Add("Description", typeof(string));
+            locationTable.Columns.Add("Latitude", typeof(double));
+            locationTable.Columns.Add("Longitude", typeof(double));
+            locationTable.Columns.Add("Elevation", typeof(double));
+            locationTable.Columns.Add("ElevationUnit", typeof(string));
+            locationTable.Columns.Add("ElevationUnitSymbol", typeof(string));
+            locationTable.Columns.Add("LocationType", typeof(string));
+            locationTable.Columns.Add("IsExternal", typeof(bool));
             DataRow dataRow = locationTable.NewRow();
 
+            LocationDescription locDescription = _Common.GetLocationDescriptionByIdentifier(locationIdentifier);
+            LocationDataResponse locData = _Common.GetLocationData(locationIdentifier);
+
+            dataRow["UniqueId"] = locDescription.UniqueId;
             dataRow["LocationIdentifier"] = locationIdentifier;
-            dataRow["LocationName"] = locationIdentifier; //***todo: make this location name eventually!
+            dataRow["LocationName"] = _Common.GetLocationName(locationIdentifier);
+            dataRow["UtcOffset"] = locDescription.UtcOffset;
+            dataRow["UtcOffsetString"] = _Common.GetOffsetString(locDescription.UtcOffset);
+            dataRow["Description"] = locData.Description;
+            dataRow["Latitude"] = locData.Latitude;
+            dataRow["Longitude"] = locData.Longitude;
+            dataRow["Elevation"] = locData.Elevation;
+            dataRow["ElevationUnit"] = locData.ElevationUnits;
+            dataRow["ElevationUnitSymbol"] = _Common.GetUnitSymbol(locData.ElevationUnits);
+            dataRow["LocationType"] = locData.LocationType;
+            dataRow["IsExternal"] = locData.IsExternal;
 
             locationTable.Rows.Add(dataRow);
 
             return locationTable;
+        }
+
+        public DataTable LocationExtendedAttributesTable(string tableName, string locationIdentifier)
+        {
+            Log.DebugFormat("Create LocationExtendedAttributesTable {0}, {1}", tableName, locationIdentifier);
+            DataTable locationExtendedAttributesTable = new DataTable(tableName);
+
+            LocationDataResponse locData = _Common.GetLocationData(locationIdentifier);
+            List<ExtendedAttribute> attributes = locData.ExtendedAttributes;
+
+            foreach (ExtendedAttribute attribute in attributes)
+            {
+                try
+                {
+                    locationExtendedAttributesTable.Columns.Add(attribute.Name, typeof(object));
+                }
+                catch (Exception exp)
+                {
+                    Log.Error(string.Format("Error creating column in table = {0} with name = {1}", tableName, attribute.Name), exp);
+                }
+            }
+
+            DataRow dataRow = locationExtendedAttributesTable.NewRow();
+
+            foreach (ExtendedAttribute attribute in attributes)
+            {
+                if (locationExtendedAttributesTable.Columns.Contains(attribute.Name))
+                    dataRow[attribute.Name] = attribute.Value;
+            }
+
+            locationExtendedAttributesTable.Rows.Add(dataRow);
+
+            return locationExtendedAttributesTable;
         }
 
         public string GetReportSubTitle()

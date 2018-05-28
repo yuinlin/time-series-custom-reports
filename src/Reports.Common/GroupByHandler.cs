@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
-using ReportPluginFramework;
+using ReportPluginFramework.Beta;
 using System.Data;
 
 namespace Reports
@@ -43,8 +43,8 @@ namespace Reports
                 DateTimeOffset? EndTime = null;
 
                 if (SelectedPeriod.Start.HasValue && TimeSeriesRange.Start.HasValue)
-                    StartTime = (SelectedPeriod.Start.Value > TimeSeriesRange.Start.Value) ? SelectedPeriod.Start.Value.ToOffset(timeseriesOffset) : 
-                        (SelectedPeriodEndTime.HasValue && (SelectedPeriodEndTime.Value < TimeSeriesRange.Start.Value)) ? 
+                    StartTime = (SelectedPeriod.Start.Value > TimeSeriesRange.Start.Value) ? SelectedPeriod.Start.Value.ToOffset(timeseriesOffset) :
+                        (SelectedPeriodEndTime.HasValue && (SelectedPeriodEndTime.Value < TimeSeriesRange.Start.Value)) ?
                         SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.Start.Value;
                 else
                     StartTime = (SelectedPeriod.Start.HasValue) ? SelectedPeriod.Start.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.Start;

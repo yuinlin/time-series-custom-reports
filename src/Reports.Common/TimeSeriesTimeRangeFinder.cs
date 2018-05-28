@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ReportPluginFramework;
-using ReportPluginFramework.ReportData.TimeSeriesData;
-using ReportPluginFramework.ReportData.TimeSeriesComputedStatistics;
+using ReportPluginFramework.Beta;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
 
 namespace Reports
 {
