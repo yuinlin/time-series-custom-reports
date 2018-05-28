@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Reflection;
-using ReportPluginFramework;
+using ReportPluginFramework.Beta;
 
 namespace Reports
 {
