@@ -174,6 +174,7 @@ namespace Reports
             pageHeader.Columns.Add("PageHeader2", typeof(string));
             pageHeader.Columns.Add("FooterDisclaimer", typeof(string));
             pageHeader.Columns.Add("ReportSubTitle", typeof(string));
+            pageHeader.Columns.Add("WaterYearDefaultMonth", typeof(int));
 
             foreach (ReportJobParameter reportParameter in _RunReportRequest.Parameters)
                 pageHeader.Columns.Add(reportParameter.Name, typeof(string));
@@ -189,6 +190,7 @@ namespace Reports
             row["PageHeader2"] = GetPageHeader2();
             row["FooterDisclaimer"] = GetFooterDisclaimer();
             row["ReportSubTitle"] = GetReportSubTitle();
+            row["WaterYearDefaultMonth"] = _Common.GetWaterYearMonth();
 
             foreach (ReportJobParameter reportParameter in _RunReportRequest.Parameters)
                 row[reportParameter.Name] = reportParameter.Value;

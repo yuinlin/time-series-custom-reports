@@ -33,24 +33,12 @@ namespace Reports
         {
             _RunReportRequest = request;
 
-            SetWaterYearMonth();
+            _WaterYearMonth = _RunReportRequest.ReportData.GetSystemConfiguration().WaterYearDefaultMonth;
         }
 
-         private void SetWaterYearMonth()
+        private IReportData ReportData()
         {
-            ReportRequestInputs inputs = _RunReportRequest.Inputs;
-            if (inputs == null) return;
-
-            foreach (TimeSeriesReportRequestInput timeseriesInput in _RunReportRequest.Inputs.TimeSeriesInputs)
-            {
-                List<TimeSeriesPoint> points = GetComputedStatisticsPoints(timeseriesInput.UniqueId, null, null, StatisticType.Mean, StatisticPeriod.WaterYear, null, null);
-                if (points.Count > 0)
-                {
-                    _WaterYearMonth = points[0].Timestamp.Month;
-                    Log.DebugFormat("SetWaterYearMonth found the first point = {0}, wateryearmonth = {1}", points[0].Timestamp.ToString(_DateFormat), _WaterYearMonth);
-                    break;
-                }
-            }
+            return _RunReportRequest.ReportData;
         }
 
         public int GetWaterYearMonth()
@@ -105,11 +93,6 @@ namespace Reports
             {
                 Log.Error(string.Format("Error reading settings from '{0}'", settingsFile), exp);
             }
-        }
-
-        private IReportData ReportData()
-        {
-            return _RunReportRequest.ReportData;
         }
 
         public int GetParameterInt(string parameterName, int defaultValue)
@@ -221,27 +204,22 @@ namespace Reports
 
         public LocationDescription GetLocationDescriptionByIdentifier(string locationIdentifier)
         {
-            LocationDescriptionListRequest locationDescriptionListRequest = new LocationDescriptionListRequest();
+            var locationDescriptionListRequest = new LocationDescriptionListRequest();
             locationDescriptionListRequest.LocationIdentifier = locationIdentifier;
-            List<LocationDescription> locationDescriptions = ReportData().GetLocationDescriptions(locationDescriptionListRequest);
+            var locationDescriptions = ReportData().GetLocationDescriptions(locationDescriptionListRequest);
             return (locationDescriptions.Count > 0)? locationDescriptions[0] : null;
         }
+
         public LocationDataResponse GetLocationData(string locationIdentifier)
         {
-            LocationDataRequest locationDataRequest = new LocationDataRequest();
+            var locationDataRequest = new LocationDataRequest();
             locationDataRequest.LocationIdentifier = locationIdentifier;
-            LocationDataResponse locationData = ReportData().GetLocationData(locationDataRequest);
-            return locationData;
+            return ReportData().GetLocationData(locationDataRequest);
         }
 
         public string GetPeriodSelectedInformation(DateTimeOffsetInterval interval)
         {
             return "Period Selected: " + PeriodSelectedString(interval);
-        }
-
-        public string GetUnitsString(Guid timeseriesUniqueId)
-        {
-            return "Units: " + GetTimeSeriesDescription(timeseriesUniqueId).Unit;
         }
 
         public string GetTimeSeriesUnitInformation(Guid timeseriesUniqueId)
@@ -256,7 +234,11 @@ namespace Reports
 
         public string GetUnitSymbol(string unitId)
         {
-            return unitId; //***todo: return unit symbol rather than unitId
+            if (string.IsNullOrEmpty(unitId)) return "";
+
+            var units = ReportData().GetUnits();
+            foreach (Unit u in units) if (unitId == u.Identifier) return u.Symbol;
+            return unitId;
         }
 
         public string PeriodSelectedString(DateTimeOffsetInterval interval)
