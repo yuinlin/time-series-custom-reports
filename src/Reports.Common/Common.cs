@@ -328,29 +328,26 @@ namespace Reports
             return startString + " - " + endString;
         }
 
-        public bool? GetRequireCoverage(string requireCoverage)
+        public CoverageOptions GetCoverageOptions()
         {
-            if (!string.IsNullOrEmpty(requireCoverage))
+            double dataCoverage = GetParameterDouble("DataCoverageThreshold", -1.0);
+
+            bool useCoverage = (dataCoverage < 0) ? false : true;
+            double coverageAmount = dataCoverage / 100.0;
+            coverageAmount = (coverageAmount < 0.0) ? 0.0 : ((coverageAmount > 1.0) ? 1.0 : coverageAmount);
+
+            return new CoverageOptions
             {
-                return (requireCoverage == "Yes") ? true : false;
-            }
-            return null;
+                CoverageThreshold = coverageAmount,
+                RequiresMinimumCoverage = useCoverage
+            };
         }
 
-        public double? GetCoverageAmount(string coverageAmount)
+        public string GetCoverageString(CoverageOptions coverageOptions)
         {
-            if (!string.IsNullOrEmpty(coverageAmount))
-            {
-                try
-                {
-                    double coverage = int.Parse(coverageAmount) / 100.0;
-                    coverage = (coverage > 1.0) ? 1.0 : coverage;
-                    coverage = (coverage < 0.0) ? 0.0 : coverage;
-                    return coverage;
-                }
-                catch { }
-            }
-            return null;
+            bool useCoverage = (coverageOptions.RequiresMinimumCoverage.HasValue)? coverageOptions.RequiresMinimumCoverage.Value : false;
+            double coverageAmount = (coverageOptions.CoverageThreshold.HasValue)? coverageOptions.CoverageThreshold.Value : 0.0;
+            return string.Format("Data Coverage Threshold: {0}", (useCoverage) ? (coverageAmount * 100.0).ToString() + "%" : "n/a");
         }
 
         public StatisticType GetStatistic(string statistic, StatisticType defaultStatisticType)
