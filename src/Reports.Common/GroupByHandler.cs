@@ -35,6 +35,7 @@ namespace Reports
 
                 if (SelectedPeriodEndTime.HasValue)
                 {
+                    SelectedPeriodEndTime = SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset);
                     if ((SelectedPeriodEndTime.Value.Hour == 0) && (SelectedPeriodEndTime.Value.Minute == 0) && (SelectedPeriodEndTime.Value.Second == 0))
                         SelectedPeriodEndTime = SelectedPeriodEndTime.Value.AddMilliseconds(-1); // avoid having endTime be at exact start of day/month/year
                 }

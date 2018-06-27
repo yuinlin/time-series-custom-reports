@@ -171,12 +171,12 @@ namespace Reports
 
             if (timerange.Start.HasValue && timerange.End.HasValue)
             {
-                retValue += " Start Time: " + timerange.Start.Value.ToString(dateFormat);
-                retValue += " End Time: " + timerange.End.Value.ToString(dateFormat);
+                retValue += ", Start Time: " + timerange.Start.Value.ToString(dateFormat);
+                retValue += ", End Time: " + timerange.End.Value.ToString(dateFormat);
             }
             else
             {
-                retValue += " Empty Signal";
+                retValue += ", No Data";
             }
             return retValue;
         }
@@ -395,6 +395,12 @@ namespace Reports
             return ReportData().GetTimeSeriesComputedStatistics(compRequest).Points;
         }
 
+        public string GetTimeSeriesInterpolationTypeString(Guid timeseriesUniqueId)
+        {
+            InterpolationType interpolationType = GetTimeSeriesInterpolationType(timeseriesUniqueId);
+            return string.Format("{0} - {1}", (int)interpolationType, interpolationType.ToString());
+        }
+
         public int GetBinAdjustment(Guid timeseriesUniqueId)
         {
             return (HasEndBinInterpolationType(timeseriesUniqueId)) ? -1 : 0;
@@ -402,8 +408,12 @@ namespace Reports
 
         public bool HasEndBinInterpolationType(Guid timeseriesUniqueId)
         {
-            var interpolationType = GetTimeSeriesDescription(timeseriesUniqueId).InterpolationType;
-            return IsEndBinInterpolationType(interpolationType);
+            return IsEndBinInterpolationType(GetTimeSeriesInterpolationType(timeseriesUniqueId));
+        }
+
+        public InterpolationType GetTimeSeriesInterpolationType(Guid timeseriesUniqueId)
+        {
+            return GetTimeSeriesDescription(timeseriesUniqueId).InterpolationType;
         }
 
         public bool IsEndBinInterpolationType(InterpolationType interpolationType)
