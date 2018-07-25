@@ -21,6 +21,7 @@ namespace Reports.PluginPackager
             "ServiceStack.*",
             "ComponentFactory.*",
             "PerpetuumSoft.*",
+            "NewtonSoft.*",
         };
     }
 }

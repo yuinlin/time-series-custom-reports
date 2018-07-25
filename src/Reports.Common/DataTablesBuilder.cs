@@ -22,6 +22,8 @@ namespace Reports
         public string _DllName;
         public string _DllFolder;
 
+        public List<string> CommonReportParameters = new List<string> { "ReportTitle", "Description", "Comment" };
+
         public DataTablesBuilder(RunReportRequest request, Common common)
         {
             _RunReportRequest = request;
@@ -36,6 +38,7 @@ namespace Reports
             DataSet set1 = new DataSet("ReportTables");
 
             AddRunReportRequestTable(set1, "RunReportRequest");
+            AddReportSettingsTable(set1, "ReportSettings");
             AddReportDataTable(set1, "ReportData");
             AddInputsTables(set1);
 
@@ -51,12 +54,14 @@ namespace Reports
             table.Columns.Add("RunReportRequest", typeof(object));
             table.Columns.Add("DllName", typeof(string));
             table.Columns.Add("DllFolder", typeof(string));
+            table.Columns.Add("CommonLibrary", typeof(object));
             dataSet.Tables.Add(table);
 
             DataRow row = table.NewRow();
             row["RunReportRequest"] = _RunReportRequest;
             row["DllName"] = _DllName;
             row["DllFolder"] = _DllFolder;
+            row["CommonLibrary"] = _Common;
             table.Rows.Add(row);
         }
 
@@ -80,6 +85,13 @@ namespace Reports
             {
                 AddLocationInputDataTable(dataSet, inputs.LocationInput);
             }
+        }
+
+        public void AddReportSettingsTable(System.Data.DataSet dataSet, string tableName)
+        {
+            if (dataSet.Tables.Contains(tableName)) return;
+
+            dataSet.Tables.Add(ReportSettingsTable(tableName));
         }
 
         public void AddReportDataTable(System.Data.DataSet dataSet, string tableName)
@@ -163,23 +175,23 @@ namespace Reports
         public DataTable ReportDataTable(string tableName)
         {
             Log.DebugFormat("Create ReportDataTable {0}", tableName);
-            DataTable pageHeader = new DataTable(tableName);
+            DataTable table = new DataTable(tableName);
 
-            pageHeader.Columns.Add("SelectedInterval", typeof(DateTimeOffsetInterval));
-            pageHeader.Columns.Add("PeriodSelectedString", typeof(string));
-            pageHeader.Columns.Add("PeriodSelectedInformation", typeof(string));
-            pageHeader.Columns.Add("IReportData", typeof(IReportData));
-            pageHeader.Columns.Add("Locale", typeof(string));
-            pageHeader.Columns.Add("PageHeader1", typeof(string));
-            pageHeader.Columns.Add("PageHeader2", typeof(string));
-            pageHeader.Columns.Add("FooterDisclaimer", typeof(string));
-            pageHeader.Columns.Add("ReportSubTitle", typeof(string));
-            pageHeader.Columns.Add("WaterYearDefaultMonth", typeof(int));
+            table.Columns.Add("SelectedInterval", typeof(DateTimeOffsetInterval));
+            table.Columns.Add("PeriodSelectedString", typeof(string));
+            table.Columns.Add("PeriodSelectedInformation", typeof(string));
+            table.Columns.Add("IReportData", typeof(IReportData));
+            table.Columns.Add("Locale", typeof(string));
+            table.Columns.Add("PageHeader1", typeof(string));
+            table.Columns.Add("PageHeader2", typeof(string));
+            table.Columns.Add("FooterDisclaimer", typeof(string));
+            table.Columns.Add("ReportTitle", typeof(string));
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("Comment", typeof(string));
+            table.Columns.Add("ReportSubTitle", typeof(string));
+            table.Columns.Add("WaterYearDefaultMonth", typeof(int));
 
-            foreach (ReportJobParameter reportParameter in _RunReportRequest.Parameters)
-                pageHeader.Columns.Add(reportParameter.Name, typeof(string));
-
-            DataRow row = pageHeader.NewRow();
+            DataRow row = table.NewRow();
 
             row["SelectedInterval"] = _RunReportRequest.Interval;
             row["PeriodSelectedString"] = _Common.PeriodSelectedString(_Common.GetPeriodSelectedInUtcOffset(_Common.GetDefaultOffset()));
@@ -189,15 +201,43 @@ namespace Reports
             row["PageHeader1"] = GetPageHeader1();
             row["PageHeader2"] = GetPageHeader2();
             row["FooterDisclaimer"] = GetFooterDisclaimer();
+            row["ReportTitle"] = _Common.GetParameterString("ReportTitle", "");
+            row["Description"] = _Common.GetParameterString("Description", "");
+            row["Comment"] = _Common.GetParameterString("Comment", "");
             row["ReportSubTitle"] = GetReportSubTitle();
             row["WaterYearDefaultMonth"] = _Common.GetWaterYearMonth();
 
+            table.Rows.Add(row);
+
+            return table;
+        }
+
+        public DataTable ReportSettingsTable(string tableName)
+        {
+            Log.DebugFormat("Create ReportSettingsTable {0}", tableName);
+            DataTable table = new DataTable(tableName);
+
             foreach (ReportJobParameter reportParameter in _RunReportRequest.Parameters)
-                row[reportParameter.Name] = reportParameter.Value;
+                try
+                {
+                    if (!CommonReportParameters.Contains(reportParameter.Name))
+                        table.Columns.Add(reportParameter.Name, typeof(string));
+                }
+                catch { }
 
-            pageHeader.Rows.Add(row);
+            DataRow row = table.NewRow();
 
-            return pageHeader;
+            foreach (ReportJobParameter reportParameter in _RunReportRequest.Parameters)
+                try
+                {
+                    if (!CommonReportParameters.Contains(reportParameter.Name))
+                        row[reportParameter.Name] = reportParameter.Value;
+                }
+                catch { }
+
+            table.Rows.Add(row);
+
+            return table;
         }
 
         public DataTable TimeSeriesDataTable(string tableName, Guid timeseriesUniqueId)
@@ -371,57 +411,6 @@ namespace Reports
         public string GetPageHeader2()
         {
             return "Faster Analysis. Better Decisions.";
-        }
-
-        public System.Data.DataTable GetLegacyTimeSeriesMetadataTable(string tableName, Guid timeseriesUniqueId)
-        {
-            System.Data.DataTable tableTS = new System.Data.DataTable(tableName);
-
-            tableTS.Columns.Add("Identifier");
-            tableTS.Columns.Add("ParameterName");
-            tableTS.Columns.Add("Units");
-            tableTS.Columns.Add("Guid");
-            tableTS.Columns.Add("AncestorLabel1");
-            tableTS.Columns.Add("AncestorName1");
-            tableTS.Columns.Add("Comment");
-            tableTS.Columns.Add("Description");
-            tableTS.Columns.Add("Min", typeof(double));
-            tableTS.Columns.Add("Max", typeof(double));
-            tableTS.Columns.Add("Mean", typeof(double));
-            tableTS.Columns.Add("TotalGaps", typeof(double));
-            tableTS.Columns.Add("TotalSamples", typeof(double));
-            tableTS.Columns.Add("SamplingRate", typeof(double));
-            tableTS.Columns.Add("MaxGapInterval", typeof(double));
-            tableTS.Columns.Add("StartTime", typeof(DateTime));
-            tableTS.Columns.Add("EndTime", typeof(DateTime));
-            tableTS.Columns.Add("FirstTime", typeof(double));
-            tableTS.Columns.Add("LastTime", typeof(double));
-            tableTS.Columns.Add("StartValue", typeof(double));
-            tableTS.Columns.Add("EndValue", typeof(double));
-            tableTS.Columns.Add("NaN", typeof(double));
-            tableTS.Columns.Add("TimeZone");
-
-            TimeSeriesDescription tsd = _Common.GetTimeSeriesDescription(timeseriesUniqueId);
-
-            System.Data.DataRow rowTS = tableTS.NewRow();
-
-            rowTS["Guid"] = timeseriesUniqueId.ToString();
-            rowTS["Identifier"] = tsd.Identifier;
-            rowTS["ParameterName"] = tsd.Parameter;
-            rowTS["Units"] = tsd.Unit;
-            rowTS["Comment"] = tsd.Comment;
-            rowTS["Description"] = tsd.Description;
-            rowTS["MaxGapInterval"] = 0;
-            rowTS["NaN"] = double.NaN;
-            rowTS["TimeZone"] = "UTC" + _Common.GetOffsetString(tsd.UtcOffset);
-            rowTS["AncestorName1"] = "Location";
-
-            string locationName = _Common.GetLocationName(tsd.LocationIdentifier);
-            rowTS["AncestorLabel1"] = (!string.IsNullOrEmpty(locationName)) ? locationName : tsd.LocationIdentifier;
-
-            tableTS.Rows.Add(rowTS);
-
-            return tableTS;
         }
     }
 }

@@ -164,6 +164,22 @@ namespace Reports
             return (locationDescription != null)? locationDescription.Name : "";
         }
 
+        public double GetTotalPointCount(Guid timeSeriesUniqueId)
+        {
+            bool? requiresNoCoverage = null;
+            double? noCoverageAmount = null;
+
+            List<TimeSeriesPoint> points = GetComputedStatisticsPoints(timeSeriesUniqueId, StatisticType.Count, StatisticPeriod.Annual, requiresNoCoverage, noCoverageAmount);
+
+            double count = 0;
+            foreach (TimeSeriesPoint point in points)
+            {
+                count += (point.Value.HasValue) ? point.Value.Value : 0;
+            }
+
+            return count;
+        }
+
         public string GetTimeRangeString(Guid timeseriesUniqueId, DateTimeOffsetInterval timerange)
         {
             string dateFormat = "yyyy-MM-dd HH:mm:ss";
