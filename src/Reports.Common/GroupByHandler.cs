@@ -26,94 +26,15 @@ namespace Reports
             Log.DebugFormat("AdjustIntervalToGroupBy selected interval = {0}, timeseries range = {1}, groupBy = {2}, tsOffset = {3}",
                 _Common.TimeRangeString(SelectedPeriod), _Common.TimeSeriesRangeString(TimeSeriesRange), GroupBy, timeseriesOffset);
 
-            DateTimeOffsetInterval reportPeriod = new DateTimeOffsetInterval(SelectedPeriod.Start, SelectedPeriod.End);
-            Log.DebugFormat("1 Begin GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, SelectedPeriod.Start, SelectedPeriod.End);
+            DateTimeOffsetInterval reportPeriod = SelectedPeriod;
 
             try
             {
-                DateTimeOffset? SelectedPeriodEndTime = SelectedPeriod.End;
+                DateTimeOffsetInterval selectedInterval = _Common.GetIntervalInUtcOffset(SelectedPeriod, timeseriesOffset);
+                DateTimeOffsetInterval trimmedPeriodSelected = GetTrimmedPeriodSelected(selectedInterval);
+                DateTimeOffsetInterval overlappedInterval = GetIntervalOfOverlap(trimmedPeriodSelected, TimeSeriesRange, timeseriesOffset);
 
-                if (SelectedPeriodEndTime.HasValue)
-                {
-                    SelectedPeriodEndTime = SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset);
-                    if ((SelectedPeriodEndTime.Value.Hour == 0) && (SelectedPeriodEndTime.Value.Minute == 0) && (SelectedPeriodEndTime.Value.Second == 0))
-                        SelectedPeriodEndTime = SelectedPeriodEndTime.Value.AddMilliseconds(-1); // avoid having endTime be at exact start of day/month/year
-                }
-
-                DateTimeOffset? StartTime = null;
-                DateTimeOffset? EndTime = null;
-
-                if (SelectedPeriod.Start.HasValue && TimeSeriesRange.Start.HasValue)
-                    StartTime = (SelectedPeriod.Start.Value > TimeSeriesRange.Start.Value) ? SelectedPeriod.Start.Value.ToOffset(timeseriesOffset) :
-                        (SelectedPeriodEndTime.HasValue && (SelectedPeriodEndTime.Value < TimeSeriesRange.Start.Value)) ?
-                        SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.Start.Value;
-                else
-                    StartTime = (SelectedPeriod.Start.HasValue) ? SelectedPeriod.Start.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.Start;
-
-                if (SelectedPeriodEndTime.HasValue && TimeSeriesRange.End.HasValue)
-                    EndTime = (SelectedPeriodEndTime.Value < TimeSeriesRange.End.Value) ? SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.End.Value;
-                else
-                    EndTime = (SelectedPeriodEndTime.HasValue) ? SelectedPeriodEndTime.Value.ToOffset(timeseriesOffset) : TimeSeriesRange.End;
-
-                if (!TimeSeriesRange.Start.HasValue && !TimeSeriesRange.End.HasValue)
-                {
-                    // TimeSeries has no range - no points in it and will be no useful time range therefore collapse time range
-                    if (StartTime.HasValue)
-                        EndTime = StartTime.Value;
-                    else if (EndTime.HasValue)
-                        StartTime = EndTime.Value;
-                }
-
-                DateTimeOffset now = DateTimeOffset.Now.ToOffset(timeseriesOffset);
-
-                DateTimeOffset TheStartTime = (StartTime.HasValue) ? StartTime.Value : now;
-                DateTimeOffset TheEndTime = (EndTime.HasValue) ? EndTime.Value : now;
-
-                TheEndTime = (TheEndTime > TheStartTime) ? TheEndTime : TheStartTime; // avoid improper interval
-
-                reportPeriod = new DateTimeOffsetInterval(TheStartTime, TheEndTime);
-
-                Log.DebugFormat("Do GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
-
-                if (GroupBy == "Year")
-                {
-                    TheStartTime = new DateTimeOffset(TheStartTime.Year, 1, 1, 0, 0, 0, timeseriesOffset);
-                    TheEndTime = (new DateTimeOffset(TheEndTime.Year, 1, 1, 0, 0, 0, timeseriesOffset)).AddYears(1).AddMilliseconds(-1);
-                }
-                else if (GroupBy == "WaterYear")
-                {
-                    int startYear = (TheStartTime.Month >= _WaterYearMonth) ? TheStartTime.Year : TheStartTime.Year - 1;
-                    TheStartTime = new DateTimeOffset(startYear, _WaterYearMonth, 1, 0, 0, 0, timeseriesOffset);
-
-                    int endYear = (TheEndTime.Month >= _WaterYearMonth) ? TheEndTime.Year : TheEndTime.Year - 1;
-                    TheEndTime = (new DateTimeOffset(endYear, _WaterYearMonth, 1, 0, 0, 0, timeseriesOffset)).AddYears(1).AddMilliseconds(-1);
-                }
-                else if (GroupBy == "Month")
-                {
-                    TheStartTime = new DateTimeOffset(TheStartTime.Year, TheStartTime.Month, 1, 0, 0, 0, timeseriesOffset);
-                    TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, 1, 0, 0, 0, timeseriesOffset).AddMonths(1).AddMilliseconds(-1);
-                }
-                else if (GroupBy == "Week")
-                {
-                    int numberOfDays = ((int)Math.Ceiling(((TheEndTime - TheStartTime).TotalDays + 1) / 7.0)) * 7;
-                    TheEndTime = TheStartTime.AddDays(numberOfDays);
-
-                    TheStartTime = new DateTimeOffset(TheStartTime.Year, TheStartTime.Month, TheStartTime.Day, 0, 0, 0, timeseriesOffset);
-                    TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, TheEndTime.Day, 0, 0, 0, timeseriesOffset).AddMilliseconds(-1);
-                }
-                else if (GroupBy == "Day")
-                {
-                    TheStartTime = new DateTimeOffset(TheStartTime.Year, TheStartTime.Month, TheStartTime.Day, 0, 0, 0, timeseriesOffset);
-                    TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, TheEndTime.Day, 0, 0, 0, timeseriesOffset).AddDays(1).AddMilliseconds(-1);
-                }
-                else
-                {
-                    TheStartTime = new DateTimeOffset(TheStartTime.Year, TheStartTime.Month, TheStartTime.Day, 0, 0, 0, timeseriesOffset);
-                    TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, TheEndTime.Day, 0, 0, 0, timeseriesOffset).AddDays(1).AddMilliseconds(-1);
-                }
-
-                Log.DebugFormat("3 GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
-                reportPeriod = new DateTimeOffsetInterval(TheStartTime, TheEndTime);
+                reportPeriod = AdjustIntervalToGroupBy(overlappedInterval, GroupBy);
             }
             catch (Exception exp)
             {
@@ -123,6 +44,119 @@ namespace Reports
 
             return reportPeriod;
         }
+
+        public DateTimeOffsetInterval GetTrimmedPeriodSelected(DateTimeOffsetInterval periodSelected)
+        {
+            DateTimeOffset? SelectedPeriodEndTime = periodSelected.End;
+            if (SelectedPeriodEndTime.HasValue)
+            {
+                if ((SelectedPeriodEndTime.Value.Hour == 0) && (SelectedPeriodEndTime.Value.Minute == 0) && (SelectedPeriodEndTime.Value.Second == 0))
+                    SelectedPeriodEndTime = SelectedPeriodEndTime.Value.AddMilliseconds(-1); // avoid having endTime be at exact start of day/month/year
+            }
+
+            return new DateTimeOffsetInterval(periodSelected.Start, SelectedPeriodEndTime);
+        }
+
+        public DateTimeOffsetInterval GetIntervalOfOverlap(DateTimeOffsetInterval SelectedPeriod, DateTimeOffsetInterval TimeSeriesRange, TimeSpan utcOffset)
+        {
+            DateTimeOffset? StartTime = null;
+            DateTimeOffset? EndTime = null;
+
+            if (SelectedPeriod.Start.HasValue && TimeSeriesRange.Start.HasValue)
+                StartTime = (SelectedPeriod.Start.Value > TimeSeriesRange.Start.Value) ? SelectedPeriod.Start.Value.ToOffset(utcOffset) :
+                    (SelectedPeriod.End.HasValue && (SelectedPeriod.End.Value < TimeSeriesRange.Start.Value)) ?
+                    SelectedPeriod.End.Value.ToOffset(utcOffset) : TimeSeriesRange.Start.Value;
+            else
+                StartTime = (SelectedPeriod.Start.HasValue) ? SelectedPeriod.Start.Value.ToOffset(utcOffset) : TimeSeriesRange.Start;
+
+            if (SelectedPeriod.End.HasValue && TimeSeriesRange.End.HasValue)
+                EndTime = (SelectedPeriod.End.Value < TimeSeriesRange.End.Value) ? SelectedPeriod.End.Value.ToOffset(utcOffset) : TimeSeriesRange.End.Value;
+            else
+                EndTime = (SelectedPeriod.End.HasValue) ? SelectedPeriod.End.Value.ToOffset(utcOffset) : TimeSeriesRange.End;
+
+            if (!TimeSeriesRange.Start.HasValue && !TimeSeriesRange.End.HasValue)
+            {
+                // TimeSeries has no range - no points in it and will be no useful time range therefore collapse time range
+                if (StartTime.HasValue)
+                    EndTime = StartTime.Value;
+                else if (EndTime.HasValue)
+                    StartTime = EndTime.Value;
+            }
+
+            DateTimeOffset now = DateTimeOffset.Now.ToOffset(utcOffset);
+
+            DateTimeOffset TheStartTime = (StartTime.HasValue) ? StartTime.Value.ToOffset(utcOffset) : now;
+            DateTimeOffset TheEndTime = (EndTime.HasValue) ? EndTime.Value.ToOffset(utcOffset) : now;
+
+            TheEndTime = (TheEndTime > TheStartTime) ? TheEndTime : TheStartTime; // avoid improper interval
+
+            return new DateTimeOffsetInterval(TheStartTime, TheEndTime);
+        }
+        public DateTimeOffsetInterval AdjustIntervalToGroupBy(DateTimeOffsetInterval timeRange, string GroupBy)
+        {
+            Log.DebugFormat("Begin GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, timeRange.Start, timeRange.End);
+
+            if (!timeRange.Start.HasValue || !timeRange.End.HasValue)
+            {
+                Log.DebugFormat("AdjustIntervalToGroupBy unable to adjust timeRange interval = {0} because start or end has no value, return unadjusted", _Common.TimeRangeString(timeRange));
+                return timeRange;
+            }
+
+            try
+            {
+                DateTimeOffset TheStartTime = timeRange.Start.Value;
+                DateTimeOffset TheEndTime = timeRange.End.Value;
+                TimeSpan tsOffset = TheStartTime.Offset;
+
+                if (GroupBy == "Year")
+                {
+                    TheStartTime = new DateTimeOffset(TheStartTime.Year, 1, 1, 0, 0, 0, tsOffset);
+                    TheEndTime = (new DateTimeOffset(TheEndTime.Year, 1, 1, 0, 0, 0, tsOffset)).AddYears(1).AddMilliseconds(-1);
+                }
+                else if (GroupBy == "WaterYear")
+                {
+                    int startYear = (TheStartTime.Month >= _WaterYearMonth) ? TheStartTime.Year : TheStartTime.Year - 1;
+                    TheStartTime = new DateTimeOffset(startYear, _WaterYearMonth, 1, 0, 0, 0, tsOffset);
+
+                    int endYear = (TheEndTime.Month >= _WaterYearMonth) ? TheEndTime.Year : TheEndTime.Year - 1;
+                    TheEndTime = (new DateTimeOffset(endYear, _WaterYearMonth, 1, 0, 0, 0, tsOffset)).AddYears(1).AddMilliseconds(-1);
+                }
+                else if (GroupBy == "Month")
+                {
+                    TheStartTime = new DateTimeOffset(TheStartTime.Year, TheStartTime.Month, 1, 0, 0, 0, tsOffset);
+                    TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, 1, 0, 0, 0, tsOffset).AddMonths(1).AddMilliseconds(-1);
+                }
+                else if (GroupBy == "Week")
+                {
+                    int numberOfDays = ((int)Math.Ceiling(((TheEndTime - TheStartTime).TotalDays + 1) / 7.0)) * 7;
+                    TheEndTime = TheStartTime.AddDays(numberOfDays);
+
+                    TheStartTime = new DateTimeOffset(TheStartTime.Year, TheStartTime.Month, TheStartTime.Day, 0, 0, 0, tsOffset);
+                    TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, TheEndTime.Day, 0, 0, 0, tsOffset).AddMilliseconds(-1);
+                }
+                else if (GroupBy == "Day")
+                {
+                    TheStartTime = new DateTimeOffset(TheStartTime.Year, TheStartTime.Month, TheStartTime.Day, 0, 0, 0, tsOffset);
+                    TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, TheEndTime.Day, 0, 0, 0, tsOffset).AddDays(1).AddMilliseconds(-1);
+                }
+                else
+                {
+                    TheStartTime = new DateTimeOffset(TheStartTime.Year, TheStartTime.Month, TheStartTime.Day, 0, 0, 0, tsOffset);
+                    TheEndTime = new DateTimeOffset(TheEndTime.Year, TheEndTime.Month, TheEndTime.Day, 0, 0, 0, tsOffset).AddDays(1).AddMilliseconds(-1);
+                }
+
+                Log.DebugFormat("End GroupBy '{0}' adjustments for interval {1} - {2}", GroupBy, TheStartTime, TheEndTime);
+                timeRange = new DateTimeOffsetInterval(TheStartTime, TheEndTime);
+            }
+            catch (Exception exp)
+            {
+                Log.Error("Error in AdjustIntervalToGroupBy", exp);
+            }
+            Log.DebugFormat("AdjustIntervalToGroupBy returns timeRange interval = {0}", _Common.TimeRangeString(timeRange));
+
+            return timeRange;
+        }
+
         public DataRelation AddGroupRelation(string GroupBy, string relationName, DataTable groupBy, DataTable pointsTable)
         {
             DataSet dataSet = groupBy.DataSet;

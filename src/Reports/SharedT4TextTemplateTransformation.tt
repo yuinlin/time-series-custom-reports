@@ -35,13 +35,14 @@ void PrintFiles(string namespaceName, string folderPath)
 void PrintFile(string namespaceName, string filePath)
 {
 	string fileContent = File.ReadAllText(filePath);
-	string [] lines =  fileContent.Split(new[] { "\n" }, StringSplitOptions.None);
+	string [] lines =  fileContent.Replace("\r", "").Split(new[] { "\n" }, StringSplitOptions.None);
 	foreach (string line in lines)
 	{
 		if (line.StartsWith("using")) { continue; }
 		if (line.Contains("namespace")) 
 		{
 #>
+<#= "// Copy of shared file: \"" + filePath + "\"" #>
 <#= line.Replace("Reports", namespaceName) #>
 <#+ } else { #>
 <#= line #>

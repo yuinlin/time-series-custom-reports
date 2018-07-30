@@ -51,6 +51,9 @@ namespace Reports
             if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.TimeSeriesInputs.Count > 0))
                 return GetTimeSeriesOffset(_RunReportRequest.Inputs.TimeSeriesInputs[0].UniqueId); // not guaranteed to be "master" unfortunately
 
+            if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.LocationInput != null))
+                return GetLocationDescriptionByIdentifier(_RunReportRequest.Inputs.LocationInput.Identifier).UtcOffset;
+
             return TimeSpan.Zero;
         }
 
@@ -306,16 +309,36 @@ namespace Reports
 
         public DateTimeOffsetInterval GetPeriodSelectedInUtcOffset(TimeSpan utcOffset)
         {
-            DateTimeOffset? startTime = _RunReportRequest.Interval.Start;
-            DateTimeOffset? endTime = _RunReportRequest.Interval.End;
+            return GetIntervalInUtcOffset(_RunReportRequest.Interval, utcOffset);
+        }
+
+        public bool PeriodSelectedIsWaterYear()
+        {
+            return PeriodSelectedIsWaterYear(GetDefaultOffset());
+        }
+        public bool PeriodSelectedIsWaterYear(TimeSpan utcOffset)
+        {
+            DateTimeOffset? intervalStartTime = GetPeriodSelectedInUtcOffset(utcOffset).Start;
+            if (intervalStartTime.HasValue)
+            {
+                Log.DebugFormat("PeriodSelectedIsWaterYear waterYearMonth = {0}, periodSelected = {1}, Period selected in offset = {2} is {3}",
+                  GetWaterYearMonth(),  TimeRangeString(_RunReportRequest.Interval), utcOffset, TimeRangeString(GetPeriodSelectedInUtcOffset(utcOffset)));
+            }
+            return (intervalStartTime.HasValue) && (intervalStartTime.Value.Month == GetWaterYearMonth());
+        }
+
+        public DateTimeOffsetInterval GetIntervalInUtcOffset(DateTimeOffsetInterval interval, TimeSpan utcOffset)
+        {
+            DateTimeOffset? startTime = interval.Start;
+            DateTimeOffset? endTime = interval.End;
 
             if (startTime.HasValue) startTime = startTime.Value.ToOffset(utcOffset);
             if (endTime.HasValue) endTime = endTime.Value.ToOffset(utcOffset);
 
             DateTimeOffsetInterval newInterval = new DateTimeOffsetInterval(startTime, endTime);
 
-            Log.DebugFormat("GetPeriodSelectedInUtcOffset request interval = {0}, utcOffset = {1}, returns interval + {2}",
-                TimeRangeString(_RunReportRequest.Interval), utcOffset, TimeRangeString(newInterval));
+            Log.DebugFormat("GetIntervalInUtcOffset request interval = {0}, utcOffset = {1}, returns interval = {2}",
+                TimeRangeString(interval), utcOffset, TimeRangeString(newInterval));
 
             return newInterval;
         }

@@ -41,6 +41,7 @@ namespace Reports
             AddReportSettingsTable(set1, "ReportSettings");
             AddReportDataTable(set1, "ReportData");
             AddInputsTables(set1);
+            AddReportPeriodsTable(set1, "ReportPeriods");
 
             Log.Debug("Returning CommonDataSet");
             return set1;
@@ -99,6 +100,13 @@ namespace Reports
             if (dataSet.Tables.Contains(tableName)) return;
 
             dataSet.Tables.Add(ReportDataTable(tableName));
+        }
+
+        public void AddReportPeriodsTable(System.Data.DataSet dataSet, string tableName)
+        {
+            if (dataSet.Tables.Contains(tableName)) return;
+
+            dataSet.Tables.Add(ReportPeriodsTable(tableName));
         }
 
         public void AddReportTimeSeriesInputsTable(System.Data.DataSet dataSet, string tableName, ReportRequestInputs inputs)
@@ -385,6 +393,52 @@ namespace Reports
             locationExtendedAttributesTable.Rows.Add(dataRow);
 
             return locationExtendedAttributesTable;
+        }
+
+        public DataTable ReportPeriodsTable(string tableName)
+        {
+            return ReportPeriodsTable(tableName, _Common.GetDefaultOffset());
+        }
+
+        public DataTable ReportPeriodsTable(string tableName, TimeSpan reportUtcOffset)
+        {
+            Log.DebugFormat("Create ReportPeriodsTable {0}", tableName);
+
+            GroupByHandler groupByHandler = new GroupByHandler(_Common);
+            DateTimeOffsetInterval periodSelected = _Common.GetPeriodSelectedInUtcOffset(reportUtcOffset);
+            DateTimeOffsetInterval trimmedPeriodSelected = groupByHandler.GetTrimmedPeriodSelected(periodSelected);
+
+            DateTimeOffsetInterval timeRangeToAdjust = trimmedPeriodSelected;
+            if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.TimeSeriesInputs.Count > 0))
+            {
+                Guid firstTimeSeriesUniqueId = _RunReportRequest.Inputs.TimeSeriesInputs[0].UniqueId;
+                timeRangeToAdjust = groupByHandler.GetIntervalOfOverlap(timeRangeToAdjust, _Common.GetTimeSeriesTimeRange(firstTimeSeriesUniqueId), reportUtcOffset);
+                for (int i = 1; i < _RunReportRequest.Inputs.TimeSeriesInputs.Count; i++)
+                {
+                    Guid timeSeriesUniqueId = _RunReportRequest.Inputs.TimeSeriesInputs[i].UniqueId;
+                    timeRangeToAdjust = groupByHandler.GetIntervalOfOverlap(timeRangeToAdjust, _Common.GetTimeSeriesTimeRange(timeSeriesUniqueId), reportUtcOffset);
+                }
+            }
+
+            DataTable table = new DataTable(tableName);
+            table.Columns.Add("GroupByYear", typeof(DateTimeOffsetInterval));
+            table.Columns.Add("GroupByWaterYear", typeof(DateTimeOffsetInterval));
+            table.Columns.Add("GroupByMonth", typeof(DateTimeOffsetInterval));
+            table.Columns.Add("GroupByWeek", typeof(DateTimeOffsetInterval));
+            table.Columns.Add("GroupByDay", typeof(DateTimeOffsetInterval));
+            table.Columns.Add("NoGroupBy", typeof(DateTimeOffsetInterval));
+
+            DataRow row = table.NewRow();
+            row["GroupByYear"] = groupByHandler.AdjustIntervalToGroupBy(timeRangeToAdjust, "Year");
+            row["GroupByWaterYear"] = groupByHandler.AdjustIntervalToGroupBy(timeRangeToAdjust, "WaterYear");
+            row["GroupByMonth"] = groupByHandler.AdjustIntervalToGroupBy(timeRangeToAdjust, "Month");
+            row["GroupByWeek"] = groupByHandler.AdjustIntervalToGroupBy(timeRangeToAdjust, "Week");
+            row["GroupByDay"] = groupByHandler.AdjustIntervalToGroupBy(timeRangeToAdjust, "Day");
+            row["NoGroupBy"] = groupByHandler.AdjustIntervalToGroupBy(timeRangeToAdjust, "NoGroupBy");
+
+            table.Rows.Add(row);
+
+            return table;
         }
 
         public string GetReportSubTitle()

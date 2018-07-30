@@ -1,4 +1,6 @@
 ﻿using System;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
+using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
 
 namespace Reports
 {
@@ -69,6 +71,31 @@ namespace Reports
             catch { }
 
             return str;
+        }
+        public static string FormatPointValue(TimeSeriesPoint point, StatisticType statType)
+        {
+            string missingStr = "***";
+            bool fix = true;
+
+            if (!point.Value.HasValue) return missingStr;
+
+            if (statType == StatisticType.Count)
+                return FormatDoubleValue(point.Value.Value, fix, 0, missingStr);
+            else if (statType == StatisticType.Sum)
+                return FormatSumValue(point.Value.Value, missingStr);
+
+            return FormatDoubleValue(point.Value.Value, fix, 3, missingStr);
+        }
+
+        public static string FormatSumValue(double value, string missingStr)
+        {
+            if (double.IsNaN(value)) return missingStr;
+
+            int numPlaces = (value > 9999.5) ? 0 : ((value > 999.5) ? 1 : ((value > 99.5) ? 2 : 3));
+
+            bool fix = true;
+
+            return FormatDoubleValue(value, fix, numPlaces, missingStr);
         }
     }
 }
