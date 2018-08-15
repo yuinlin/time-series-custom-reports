@@ -40,6 +40,9 @@
     <Reference Include="ReportPluginFramework">
       <HintPath>..\ExternalLibaries\Aqts\ReportPluginFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Server.Services.PublishService.ServiceModel">
+      <HintPath>..\ExternalLibaries\Aqts\Server.Services.PublishService.ServiceModel.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.Interfaces.4.5.12\lib\portable-wp80+sl5+net45+win8+wpa81+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
     </Reference>

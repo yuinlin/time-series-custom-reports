@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using ReportPluginFramework.Beta;
 using ReportPluginFramework.Beta.ReportData;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesDescription;
-using ReportPluginFramework.Beta.ReportData.LocationDescription;
-using ReportPluginFramework.Beta.ReportData.LocationData;
+
 using System.Data;
 using System.Reflection;
 using ServiceStack;
+
+using Server.Services.PublishService.ServiceModel.RequestDtos;
+using Server.Services.PublishService.ServiceModel.ResponseDtos;
+using Server.Services.PublishService.ServiceModel.Dtos;
+
+using InterpolationType = ReportPluginFramework.Beta.ReportData.TimeSeriesDescription.InterpolationType;
 
 namespace Reports
 {
@@ -56,6 +60,8 @@ namespace Reports
             table.Columns.Add("DllName", typeof(string));
             table.Columns.Add("DllFolder", typeof(string));
             table.Columns.Add("CommonLibrary", typeof(object));
+            table.Columns.Add("Publish", typeof(object));
+
             dataSet.Tables.Add(table);
 
             DataRow row = table.NewRow();
@@ -63,6 +69,7 @@ namespace Reports
             row["DllName"] = _DllName;
             row["DllFolder"] = _DllFolder;
             row["CommonLibrary"] = _Common;
+            row["Publish"] = _RunReportRequest.Publish;
             table.Rows.Add(row);
         }
 
@@ -265,7 +272,7 @@ namespace Reports
             timeSeriesTable.Columns.Add("TimeSeriesType", typeof(string));
             timeSeriesTable.Columns.Add("InterpolationType", typeof(InterpolationType));
             timeSeriesTable.Columns.Add("InterpolationTypeString", typeof(string));
-            timeSeriesTable.Columns.Add("LastModified", typeof(DateTime));
+            timeSeriesTable.Columns.Add("LastModified", typeof(DateTimeOffset));
             timeSeriesTable.Columns.Add("RawStartTime", typeof(DateTimeOffset));
             timeSeriesTable.Columns.Add("RawEndTime", typeof(DateTimeOffset));
             timeSeriesTable.Columns.Add("Publish", typeof(bool));
@@ -290,19 +297,19 @@ namespace Reports
             dataRow["Comment"] = tsd.Comment;
             dataRow["LocationIdentifier"] = tsd.LocationIdentifier;
             dataRow["SubLocationIdentifier"] = tsd.SubLocationIdentifier;
-            dataRow["Computation"] = tsd.Computation;
-            dataRow["ComputationPeriod"] = tsd.ComputationPeriod;
+            dataRow["Computation"] = tsd.ComputationIdentifier;
+            dataRow["ComputationPeriod"] = tsd.ComputationPeriodIdentifier;
             dataRow["TimeSeriesType"] = tsd.TimeSeriesType;
-            dataRow["InterpolationType"] = tsd.InterpolationType;
-            dataRow["InterpolationTypeString"] = GetLegacyInterpolationTypeString(tsd.InterpolationType);
+            dataRow["InterpolationType"] = _Common.GetTimeSeriesInterpolationType(timeseriesUniqueId);
+            dataRow["InterpolationTypeString"] = GetLegacyInterpolationTypeString(_Common.GetTimeSeriesInterpolationType(timeseriesUniqueId));
             dataRow["LastModified"] = tsd.LastModified;
-            dataRow["RawStartTime"] = tsd.RawStartTime;
-            dataRow["RawEndTime"] = tsd.RawEndTime;
+            if (tsd.RawStartTime.HasValue) dataRow["RawStartTime"] = tsd.RawStartTime.Value;
+            if (tsd.RawEndTime.HasValue) dataRow["RawEndTime"] = tsd.RawEndTime.Value;
             dataRow["Publish"] = tsd.Publish;
             dataRow["Unit"] = tsd.Unit;
             dataRow["UnitSymbol"] = _Common.GetTimeSeriesUnitSymbol(timeseriesUniqueId);
             dataRow["UnitInformation"] = _Common.GetTimeSeriesUnitInformation(timeseriesUniqueId);
-            dataRow["UtcOffset"] = tsd.UtcOffset;
+            dataRow["UtcOffset"] = TimeSpan.FromHours(tsd.UtcOffset);
             dataRow["UtcOffsetString"] = _Common.GetOffsetString(tsd.UtcOffset);
             dataRow["TimeSeriesInformation"] = _Common.GetTimeSeriesInformation(timeseriesUniqueId);
             dataRow["TimeSeriesInterval"] = _Common.GetTimeSeriesTimeRange(timeseriesUniqueId);
@@ -338,16 +345,17 @@ namespace Reports
             locationTable.Columns.Add("ElevationUnitSymbol", typeof(string));
             locationTable.Columns.Add("LocationType", typeof(string));
             locationTable.Columns.Add("IsExternal", typeof(bool));
+            locationTable.Columns.Add("Tags", typeof(object));
             DataRow dataRow = locationTable.NewRow();
 
             LocationDescription locDescription = _Common.GetLocationDescriptionByIdentifier(locationIdentifier);
-            LocationDataResponse locData = _Common.GetLocationData(locationIdentifier);
+            LocationDataServiceResponse locData = _Common.GetLocationData(locationIdentifier);
 
             dataRow["UniqueId"] = locDescription.UniqueId;
             dataRow["LocationIdentifier"] = locationIdentifier;
-            dataRow["LocationName"] = _Common.GetLocationName(locationIdentifier);
-            dataRow["UtcOffset"] = locDescription.UtcOffset;
-            dataRow["UtcOffsetString"] = _Common.GetOffsetString(locDescription.UtcOffset);
+            dataRow["LocationName"] = locDescription.Name;
+            dataRow["UtcOffset"] = TimeSpan.FromHours(locData.UtcOffset);
+            dataRow["UtcOffsetString"] = _Common.GetOffsetString(locData.UtcOffset);
             dataRow["Description"] = locData.Description;
             dataRow["Latitude"] = locData.Latitude;
             dataRow["Longitude"] = locData.Longitude;
@@ -355,7 +363,8 @@ namespace Reports
             dataRow["ElevationUnit"] = locData.ElevationUnits;
             dataRow["ElevationUnitSymbol"] = _Common.GetUnitSymbol(locData.ElevationUnits);
             dataRow["LocationType"] = locData.LocationType;
-            dataRow["IsExternal"] = locData.IsExternal;
+            dataRow["IsExternal"] = locDescription.IsExternalLocation;
+            dataRow["Tags"] = locDescription.Tags;
 
             locationTable.Rows.Add(dataRow);
 
@@ -367,7 +376,7 @@ namespace Reports
             Log.DebugFormat("Create LocationExtendedAttributesTable {0}, {1}", tableName, locationIdentifier);
             DataTable locationExtendedAttributesTable = new DataTable(tableName);
 
-            LocationDataResponse locData = _Common.GetLocationData(locationIdentifier);
+            LocationDataServiceResponse locData = _Common.GetLocationData(locationIdentifier);
             List<ExtendedAttribute> attributes = locData.ExtendedAttributes;
 
             foreach (ExtendedAttribute attribute in attributes)

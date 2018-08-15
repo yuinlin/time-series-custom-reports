@@ -1,0 +1,45 @@
+﻿{
+  "Name": "Soil Moisture",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Years",
+    "Value": 25
+  },
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Soil Moisture Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    },
+    {
+      "Name": "PrecipitationData",
+      "Label": "Precipitation Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": false
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "Station",
+      "Label": "Station",
+      "DefaultValue": "Collins Lane",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Collins Lane": "Collins Lane",
+        "Flax Road": "Flax Road"
+      },
+      "Required": true
+    },
+    {
+      "Name": "DataCoverageThreshold",
+      "Label": "Data Coverage Threshold (%)",
+      "DefaultValue": "80",
+      "Type": "Double",
+      "Required": false
+    }
+  ]
+}
