@@ -1,0 +1,28 @@
+﻿{
+  "Name": "Rainfall - Monthly Totals",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Years",
+    "Value": 25
+  },
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "DataCoverageThreshold",
+      "Label": "Data Coverage Threshold (%)",
+      "DefaultValue": "80",
+      "Type": "Double",
+      "Required": false
+    }
+  ]
+}

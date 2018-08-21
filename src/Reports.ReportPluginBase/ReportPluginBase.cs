@@ -8,23 +8,27 @@ namespace Reports
     {
         public Assembly _Assembly = Assembly.GetExecutingAssembly();
 
-        public void SetAssembly(Assembly assembly)
-        {
-            _Assembly = assembly;
-        }
         public virtual DataSet GeneratePdfDataSet(RunReportRequest request)
         {
-            Assembly.Load("Reports.Common");
+            Assembly.Load("PerpetuumSoft.Reporting.MSChart");
 
             string location = System.IO.Path.GetDirectoryName(_Assembly.Location);
             string name = System.IO.Path.GetFileNameWithoutExtension(_Assembly.Location);
 
-            return (new Reports.Common(request)).GetCommonDataSet(name, location);
+            System.Data.DataSet dataSet = (new Common(request)).GetCommonDataSet(name, location);
+
+            AddReportSpecificTables(dataSet);
+
+            return dataSet;
         }
 
         public virtual DataSet GenerateCsvDataSet(RunReportRequest request)
         {
             return null;
+        }
+
+        public virtual void AddReportSpecificTables(System.Data.DataSet dataSet)
+        {
         }
     }
 }

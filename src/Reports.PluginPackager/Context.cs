@@ -18,9 +18,12 @@ namespace Reports.PluginPackager
             "*.pdb",
             "*.dll.config",
             "ReportPluginFramework.dll",
+            "Server.Services.PublishService.ServiceModel.dll",
             "ServiceStack.*",
+            "NodaTime.*",
             "ComponentFactory.*",
             "PerpetuumSoft.*",
+            "NewtonSoft.*",
         };
     }
 }

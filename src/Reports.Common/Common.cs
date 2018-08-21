@@ -10,9 +10,13 @@ using ReportPluginFramework.Beta;
 using ReportPluginFramework.Beta.ReportData;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesDescription;
-using ReportPluginFramework.Beta.ReportData.LocationDescription;
-using ReportPluginFramework.Beta.ReportData.LocationData;
+
+using Server.Services.PublishService.ServiceModel.RequestDtos;
+using Server.Services.PublishService.ServiceModel.ResponseDtos;
+using Server.Services.PublishService.ServiceModel.Dtos;
+
+using TimeSeriesPoint = ReportPluginFramework.Beta.ReportData.TimeSeriesData.TimeSeriesPoint;
+using InterpolationType = ReportPluginFramework.Beta.ReportData.TimeSeriesDescription.InterpolationType;
 
 namespace Reports
 {
@@ -41,6 +45,11 @@ namespace Reports
             return _RunReportRequest.ReportData;
         }
 
+        private IPublishGateway Publish()
+        {
+            return _RunReportRequest.Publish;
+        }
+
         public int GetWaterYearMonth()
         {
             return _WaterYearMonth;
@@ -50,6 +59,9 @@ namespace Reports
         {
             if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.TimeSeriesInputs.Count > 0))
                 return GetTimeSeriesOffset(_RunReportRequest.Inputs.TimeSeriesInputs[0].UniqueId); // not guaranteed to be "master" unfortunately
+
+            if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.LocationInput != null))
+                return TimeSpan.FromHours(GetLocationData(_RunReportRequest.Inputs.LocationInput.Identifier).UtcOffset);
 
             return TimeSpan.Zero;
         }
@@ -164,6 +176,23 @@ namespace Reports
             return (locationDescription != null)? locationDescription.Name : "";
         }
 
+        public double GetTotalPointCount(Guid timeSeriesUniqueId)
+        {
+            bool? requiresNoCoverage = null;
+            double? noCoverageAmount = null;
+
+            List<TimeSeriesPoint> points = 
+                GetComputedStatisticsPoints(timeSeriesUniqueId, StatisticType.Count, StatisticPeriod.Annual, requiresNoCoverage, noCoverageAmount);
+
+            double count = 0;
+            foreach (TimeSeriesPoint point in points)
+            {
+                count += (point.Value.HasValue) ? point.Value.Value : 0;
+            }
+
+            return count;
+        }
+
         public string GetTimeRangeString(Guid timeseriesUniqueId, DateTimeOffsetInterval timerange)
         {
             string dateFormat = "yyyy-MM-dd HH:mm:ss";
@@ -199,22 +228,29 @@ namespace Reports
 
         public TimeSeriesDescription GetTimeSeriesDescription(Guid timeseriesUniqueId)
         {
-            return ReportData().GetTimeSeriesDescription(timeseriesUniqueId);
+            TimeSeriesDescriptionListByUniqueIdServiceRequest tsDescRequest = new TimeSeriesDescriptionListByUniqueIdServiceRequest();
+            tsDescRequest.TimeSeriesUniqueIds = new List<Guid>() { timeseriesUniqueId };
+            TimeSeriesDescriptionListByUniqueIdServiceResponse tsDescResponse = Publish().Get(tsDescRequest);
+            if (tsDescResponse.TimeSeriesDescriptions.Count > 0)
+                return tsDescResponse.TimeSeriesDescriptions[0];
+
+            Log.InfoFormat("GetTimeSeriesDescription for guid = {0} not found, returning null", timeseriesUniqueId);
+            return null;
         }
 
         public LocationDescription GetLocationDescriptionByIdentifier(string locationIdentifier)
         {
-            var locationDescriptionListRequest = new LocationDescriptionListRequest();
+            var locationDescriptionListRequest = new LocationDescriptionListServiceRequest();
             locationDescriptionListRequest.LocationIdentifier = locationIdentifier;
-            var locationDescriptions = ReportData().GetLocationDescriptions(locationDescriptionListRequest);
+            var locationDescriptions = Publish().Get(locationDescriptionListRequest).LocationDescriptions;
             return (locationDescriptions.Count > 0)? locationDescriptions[0] : null;
         }
 
-        public LocationDataResponse GetLocationData(string locationIdentifier)
+        public LocationDataServiceResponse GetLocationData(string locationIdentifier)
         {
-            var locationDataRequest = new LocationDataRequest();
+            var locationDataRequest = new LocationDataServiceRequest();
             locationDataRequest.LocationIdentifier = locationIdentifier;
-            return ReportData().GetLocationData(locationDataRequest);
+            return Publish().Get(locationDataRequest);
         }
 
         public string GetPeriodSelectedInformation(DateTimeOffsetInterval interval)
@@ -273,12 +309,13 @@ namespace Reports
         public TimeSpan GetTimeSeriesOffset(Guid timeseriesUniqueId)
         {
             TimeSeriesDescription tsd = GetTimeSeriesDescription(timeseriesUniqueId);
-            return tsd.UtcOffset;
+            return TimeSpan.FromHours(tsd.UtcOffset);
         }
 
-        public string GetOffsetString(TimeSpan offset)
+        public string GetOffsetString(double offset)
         {
-            return ((offset < TimeSpan.Zero) ? "-" : "+") + offset.ToString(@"hh\:mm");
+            TimeSpan tsSpan = TimeSpan.FromHours(offset);
+            return ((tsSpan < TimeSpan.Zero) ? "-" : "+") + tsSpan.ToString(@"hh\:mm");
         }
 
         public DateTimeOffsetInterval GetReportTimeRangeInTimeSeriesUtcOffset(Guid timeseriesUniqueId)
@@ -290,16 +327,36 @@ namespace Reports
 
         public DateTimeOffsetInterval GetPeriodSelectedInUtcOffset(TimeSpan utcOffset)
         {
-            DateTimeOffset? startTime = _RunReportRequest.Interval.Start;
-            DateTimeOffset? endTime = _RunReportRequest.Interval.End;
+            return GetIntervalInUtcOffset(_RunReportRequest.Interval, utcOffset);
+        }
+
+        public bool PeriodSelectedIsWaterYear()
+        {
+            return PeriodSelectedIsWaterYear(GetDefaultOffset());
+        }
+        public bool PeriodSelectedIsWaterYear(TimeSpan utcOffset)
+        {
+            DateTimeOffset? intervalStartTime = GetPeriodSelectedInUtcOffset(utcOffset).Start;
+            if (intervalStartTime.HasValue)
+            {
+                Log.DebugFormat("PeriodSelectedIsWaterYear waterYearMonth = {0}, periodSelected = {1}, Period selected in offset = {2} is {3}",
+                  GetWaterYearMonth(),  TimeRangeString(_RunReportRequest.Interval), utcOffset, TimeRangeString(GetPeriodSelectedInUtcOffset(utcOffset)));
+            }
+            return (intervalStartTime.HasValue) && (intervalStartTime.Value.Month == GetWaterYearMonth());
+        }
+
+        public DateTimeOffsetInterval GetIntervalInUtcOffset(DateTimeOffsetInterval interval, TimeSpan utcOffset)
+        {
+            DateTimeOffset? startTime = interval.Start;
+            DateTimeOffset? endTime = interval.End;
 
             if (startTime.HasValue) startTime = startTime.Value.ToOffset(utcOffset);
             if (endTime.HasValue) endTime = endTime.Value.ToOffset(utcOffset);
 
             DateTimeOffsetInterval newInterval = new DateTimeOffsetInterval(startTime, endTime);
 
-            Log.DebugFormat("GetPeriodSelectedInUtcOffset request interval = {0}, utcOffset = {1}, returns interval + {2}",
-                TimeRangeString(_RunReportRequest.Interval), utcOffset, TimeRangeString(newInterval));
+            Log.DebugFormat("GetIntervalInUtcOffset request interval = {0}, utcOffset = {1}, returns interval = {2}",
+                TimeRangeString(interval), utcOffset, TimeRangeString(newInterval));
 
             return newInterval;
         }
@@ -413,7 +470,7 @@ namespace Reports
 
         public InterpolationType GetTimeSeriesInterpolationType(Guid timeseriesUniqueId)
         {
-            return GetTimeSeriesDescription(timeseriesUniqueId).InterpolationType;
+            return ReportData().GetTimeSeriesDescription(timeseriesUniqueId).InterpolationType;
         }
 
         public bool IsEndBinInterpolationType(InterpolationType interpolationType)
