@@ -58,7 +58,14 @@ namespace Reports
         public TimeSpan GetDefaultOffset()
         {
             if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.TimeSeriesInputs.Count > 0))
-                return GetTimeSeriesOffset(_RunReportRequest.Inputs.TimeSeriesInputs[0].UniqueId); // not guaranteed to be "master" unfortunately
+            {
+                foreach (TimeSeriesReportRequestInput timeseriesInput in _RunReportRequest.Inputs.TimeSeriesInputs)
+                {
+                    if (timeseriesInput.IsMaster)
+                        return GetTimeSeriesOffset(timeseriesInput.UniqueId);
+                }
+                return GetTimeSeriesOffset(_RunReportRequest.Inputs.TimeSeriesInputs[0].UniqueId);
+            }
 
             if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.LocationInput != null))
                 return TimeSpan.FromHours(GetLocationData(_RunReportRequest.Inputs.LocationInput.Identifier).UtcOffset);
@@ -533,6 +540,29 @@ namespace Reports
         public static string FormatSigFigsNumber(double value, int sigfigs)
         {
             return DoubleValueFormatter.FormatSigFigsNumber(value, sigfigs);
+        }
+
+        public string ReportInputInformation()
+        {
+            RunReportRequest runReportRequest = _RunReportRequest;
+            string message = Environment.NewLine + "Selected Interval: " + Environment.NewLine;
+            message += PeriodSelectedString(GetPeriodSelectedInUtcOffset(GetDefaultOffset()));
+            message = Environment.NewLine + "TimeSeriesInputs: " + Environment.NewLine;
+            if ((runReportRequest.Inputs != null) && (runReportRequest.Inputs.TimeSeriesInputs != null))
+                foreach (TimeSeriesReportRequestInput timeseries in runReportRequest.Inputs.TimeSeriesInputs)
+                    message += "Name = '" + timeseries.Name + "', UniqueId = '" + timeseries.UniqueId.ToString() + "'" + Environment.NewLine;
+
+            message += Environment.NewLine + "LocationInput: " + Environment.NewLine;
+            if ((runReportRequest.Inputs != null) && (runReportRequest.Inputs.LocationInput != null))
+                message += "Name = '" + runReportRequest.Inputs.LocationInput.Name+ "', Identifier = '" + 
+                    runReportRequest.Inputs.LocationInput.Identifier + "'" + Environment.NewLine;
+
+            message += Environment.NewLine + "Report Settings: " + Environment.NewLine;
+            if (runReportRequest.Parameters != null)
+                foreach (ReportJobParameter parameter in runReportRequest.Parameters)
+                    message += parameter.Name + " = '" + parameter.Value + "'" + Environment.NewLine;
+
+            return message;
         }
     }
 }

@@ -61,6 +61,7 @@ namespace Reports
             table.Columns.Add("DllFolder", typeof(string));
             table.Columns.Add("CommonLibrary", typeof(object));
             table.Columns.Add("Publish", typeof(object));
+            table.Columns.Add("ReportInputInformation", typeof(string));
 
             dataSet.Tables.Add(table);
 
@@ -70,6 +71,7 @@ namespace Reports
             row["DllFolder"] = _DllFolder;
             row["CommonLibrary"] = _Common;
             row["Publish"] = _RunReportRequest.Publish;
+            row["ReportInputInformation"] = _Common.ReportInputInformation();
             table.Rows.Add(row);
         }
 
@@ -125,6 +127,8 @@ namespace Reports
             dataSet.Tables.Add(table);
             table.Columns.Add("Name", typeof(string));
             table.Columns.Add("Guid", typeof(Guid));
+            table.Columns.Add("Label", typeof(string));
+            table.Columns.Add("IsMaster", typeof(bool));
 
             if (inputs == null) return;
 
@@ -133,6 +137,8 @@ namespace Reports
                 DataRow row = table.NewRow();
                 row["Name"] = timeseriesInput.Name;
                 row["Guid"] = timeseriesInput.UniqueId;
+                row["Label"] = timeseriesInput.Label;
+                row["IsMaster"] = timeseriesInput.IsMaster;
                 table.Rows.Add(row);
             }
         }
