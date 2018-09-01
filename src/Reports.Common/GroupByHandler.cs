@@ -58,6 +58,8 @@ namespace Reports
             {
                 startTime = new DateTimeOffset(startTime.Value.Year, startTime.Value.Month, startTime.Value.Day, 0, 0, 0, startTime.Value.Offset);
             }
+            if (startTime.HasValue && endTime.HasValue && endTime.Value < startTime.Value)
+                endTime = startTime.Value;
             return new DateTimeOffsetInterval(startTime, endTime);
         }
 
