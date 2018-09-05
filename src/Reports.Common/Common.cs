@@ -95,6 +95,8 @@ namespace Reports
 
             AddRunReportRequestParametersFromSettingsFile();
 
+            Log.Info(ReportInputInformation());
+
             return (new DataTablesBuilder(_RunReportRequest, this)).GetCommonDataSet(dllName, dllFolder);
         }
 
@@ -583,14 +585,16 @@ namespace Reports
             RunReportRequest runReportRequest = _RunReportRequest;
             string message = string.Format("{0}Report: {1}", newLine, _DllName);
             message += string.Format("{0}RunReportRequest Interval: {1}", newLine, TimeIntervalAsString(_RunReportRequest.Interval, dateFormat));
-            message += string.Format("{0}Selected Interval: {1}", newLine, newLine);
-            message += string.Format("{0}, Report offset: {1}", 
-                PeriodSelectedString(GetPeriodSelectedAdjustedForReport()), GetOffsetString(GetReportTimeSpanOffset()));
+            message += string.Format("{0}Period Selected Adjusted for Report: {1}", newLine, TimeIntervalAsString(GetPeriodSelectedAdjustedForReport(), dateFormat));
+            message += string.Format("{0}Formatted Period Selected: ", newLine);
+            message += string.Format("{0}{1}Report offset: {2}", 
+                PeriodSelectedString(GetPeriodSelectedAdjustedForReport()), newLine, GetOffsetString(GetReportTimeSpanOffset()));
             message += string.Format("{0}TimeSeriesInputs: {1}", newLine, newLine);
             if ((runReportRequest.Inputs != null) && (runReportRequest.Inputs.TimeSeriesInputs != null))
                 foreach (TimeSeriesReportRequestInput timeseries in runReportRequest.Inputs.TimeSeriesInputs)
-                    message += string.Format("Name = '{0}', UniqueId = '{1}', IsMaster= '{2}', Label= '{3}', utcOffset= {4}{5}", 
-                        timeseries.Name, timeseries.UniqueId, timeseries.IsMaster, timeseries.Label, 
+                    message += string.Format("Name = '{0}', UniqueId = '{1}', IsMaster= '{2}', Identifier= '{3}', utcOffset= {4}{5}", 
+                        timeseries.Name, timeseries.UniqueId, timeseries.IsMaster,
+                        GetTimeSeriesDescription(timeseries.UniqueId).Identifier, 
                         GetOffsetString(GetTimeSeriesDescription(timeseries.UniqueId).UtcOffset), newLine);
 
             message += string.Format("{0}LocationInput: {1}", newLine, newLine);
