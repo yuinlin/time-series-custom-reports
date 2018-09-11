@@ -1,93 +1,49 @@
 ﻿{
   "Parameters": 
   [
-    {
-      "Name": "Collins Lane-YAxis-Minimum",
-      "Value": "0"
-    },
-    {
-      "Name": "Collins Lane-YAxis-Maximum",
-      "Value": "150"
-    },
-    {
-      "Name": "Collins Lane-SecondaryYAxis-Maximum",
-      "Value": "1000"
-    },
-    {
-      "Name": "Collins Lane-Permanent Wilting Point-LowerLimit",
-      "Value": "0"
-    },
-    {
-      "Name": "Collins Lane-Permanent Wilting Point-UpperLimit",
-      "Value": "31.9"
-    },
-    {
-      "Name": "Collins Lane-Stress Point-LowerLimit",
-      "Value": "31.9"
-    },
-    {
-      "Name": "Collins Lane-Stress Point-UpperLimit",
-      "Value": "65.2"
-    },
-    {
-      "Name": "Collins Lane-Field Capacity-LowerLimit",
-      "Value": "65.2"
-    },
-    {
-      "Name": "Collins Lane-Field Capacity-UpperLimit",
-      "Value": "97"
-    },
-    {
-      "Name": "Collins Lane-Saturation Point-LowerLimit",
-      "Value": "97.5"
-    },
-    {
-      "Name": "Collins Lane-Saturation Point-UpperLimit",
-      "Value": "150"
-    },
-    {
-      "Name": "Flax Road-YAxis-Minimum",
-      "Value": "0"
-    },
-    {
-      "Name": "Flax Road-YAxis-Maximum",
-      "Value": "150"
-    },
-    {
-      "Name": "Flax Road-SecondaryYAxis-Maximum",
-      "Value": "1000"
-    },
-    {
-      "Name": "Flax Road-Permanent Wilting Point-LowerLimit",
-      "Value": "0"
-    },
-    {
-      "Name": "Flax Road-Permanent Wilting Point-UpperLimit",
-      "Value": "48.3"
-    },
-    {
-      "Name": "Flax Road-Stress Point-LowerLimit",
-      "Value": "48.3"
-    },
-    {
-      "Name": "Flax Road-Stress Point-UpperLimit",
-      "Value": "84.1"
-    },
-    {
-      "Name": "Flax Road-Field Capacity-LowerLimit",
-      "Value": "84.1"
-    },
-    {
-      "Name": "Flax Road-Field Capacity-UpperLimit",
-      "Value": "110.3"
-    },
-    {
-      "Name": "Flax Road-Saturation Point-LowerLimit",
-      "Value": "110.3"
-    },
-    {
-      "Name": "Flax Road-Saturation Point-UpperLimit",
-      "Value": "145.7"
-    }
+    { "Name": "Collins Lane-Permanent Wilting Point-LowerLimit", "Value": "0" },
+    { "Name": "Collins Lane-Permanent Wilting Point-UpperLimit", "Value": "31.9" },
+    { "Name": "Collins Lane-Stress Point-LowerLimit", "Value": "31.9" },
+    { "Name": "Collins Lane-Stress Point-UpperLimit", "Value": "65.2"},
+    { "Name": "Collins Lane-Field Capacity-LowerLimit", "Value": "65.2" },
+    { "Name": "Collins Lane-Field Capacity-UpperLimit", "Value": "97" },
+    { "Name": "Collins Lane-Saturation Point-LowerLimit", "Value": "97.5" },
+    { "Name": "Collins Lane-Saturation Point-UpperLimit", "Value": "150" },
+    { "Name": "Collins Lane-YAxis-Minimum", "Value": "0" },
+    { "Name": "Collins Lane-YAxis-Maximum", "Value": "150" },
+    { "Name": "Collins Lane-SecondaryYAxis-Maximum", "Value": "1000" },
+    { "Name": "Flax Road-Permanent Wilting Point-LowerLimit", "Value": "0" },
+    { "Name": "Flax Road-Permanent Wilting Point-UpperLimit", "Value": "48.3" },
+    { "Name": "Flax Road-Stress Point-LowerLimit", "Value": "48.3" },
+    { "Name": "Flax Road-Stress Point-UpperLimit", "Value": "84.1" },
+    { "Name": "Flax Road-Field Capacity-LowerLimit", "Value": "84.1" },
+    { "Name": "Flax Road-Field Capacity-UpperLimit", "Value": "110.3" },
+    { "Name": "Flax Road-Saturation Point-LowerLimit", "Value": "110.3" },
+    { "Name": "Flax Road-Saturation Point-UpperLimit", "Value": "145.7" },
+    { "Name": "Flax Road-YAxis-Minimum", "Value": "0" },
+    { "Name": "Flax Road-YAxis-Maximum", "Value": "150" },
+    { "Name": "Flax Road-SecondaryYAxis-Maximum", "Value": "1000" },
+    { "Name": "Galatea Basin-Permanent Wilting Point-LowerLimit", "Value": "0" },
+    { "Name": "Galatea Basin-Permanent Wilting Point-UpperLimit", "Value": "28.4" },
+    { "Name": "Galatea Basin-Stress Point-LowerLimit", "Value": "28.4" },
+    { "Name": "Galatea Basin-Stress Point-UpperLimit", "Value": "62.4"},
+    { "Name": "Galatea Basin-Field Capacity-LowerLimit", "Value": "62.4" },
+    { "Name": "Galatea Basin-Field Capacity-UpperLimit", "Value": "89.6" },
+    { "Name": "Galatea Basin-Saturation Point-LowerLimit", "Value": "89.6" },
+    { "Name": "Galatea Basin-Saturation Point-UpperLimit", "Value": "140" },
+    { "Name": "Galatea Basin-YAxis-Minimum", "Value": "-10" },
+    { "Name": "Galatea Basin-YAxis-Maximum", "Value": "140" },
+    { "Name": "Galatea Basin-SecondaryYAxis-Maximum", "Value": "1200" },
+    { "Name": "Kaharoa-Permanent Wilting Point-LowerLimit", "Value": "0" },
+    { "Name": "Kaharoa-Permanent Wilting Point-UpperLimit", "Value": "40.5" },
+    { "Name": "Kaharoa-Stress Point-LowerLimit", "Value": "40.5" },
+    { "Name": "Kaharoa-Stress Point-UpperLimit", "Value": "62.9"},
+    { "Name": "Kaharoa-Field Capacity-LowerLimit", "Value": "62.9" },
+    { "Name": "Kaharoa-Field Capacity-UpperLimit", "Value": "91.2" },
+    { "Name": "Kaharoa-Saturation Point-LowerLimit", "Value": "91.2" },
+    { "Name": "Kaharoa-Saturation Point-UpperLimit", "Value": "158.8" },
+    { "Name": "Kaharoa-YAxis-Minimum", "Value": "0" },
+    { "Name": "Kaharoa-YAxis-Maximum", "Value": "150" },
+    { "Name": "Kaharoa-SecondaryYAxis-Maximum", "Value": "1300" }
   ]
 }

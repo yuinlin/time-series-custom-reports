@@ -45,16 +45,22 @@ namespace Reports
             return reportPeriod;
         }
 
-        public DateTimeOffsetInterval GetTrimmedPeriodSelected(DateTimeOffsetInterval periodSelected)
+        public static DateTimeOffsetInterval GetTrimmedPeriodSelected(DateTimeOffsetInterval periodSelected)
         {
-            DateTimeOffset? SelectedPeriodEndTime = periodSelected.End;
-            if (SelectedPeriodEndTime.HasValue)
+            DateTimeOffset? endTime = periodSelected.End;
+            if (endTime.HasValue)
             {
-                if ((SelectedPeriodEndTime.Value.Hour == 0) && (SelectedPeriodEndTime.Value.Minute == 0) && (SelectedPeriodEndTime.Value.Second == 0))
-                    SelectedPeriodEndTime = SelectedPeriodEndTime.Value.AddMilliseconds(-1); // avoid having endTime be at exact start of day/month/year
+                if ((endTime.Value.Hour == 0) && (endTime.Value.Minute == 0) && (endTime.Value.Second == 0))
+                    endTime = endTime.Value.AddMilliseconds(-1); // avoid having endTime be at exact start of day/month/year
             }
-
-            return new DateTimeOffsetInterval(periodSelected.Start, SelectedPeriodEndTime);
+            DateTimeOffset? startTime = periodSelected.Start;
+            if (startTime.HasValue)
+            {
+                startTime = new DateTimeOffset(startTime.Value.Year, startTime.Value.Month, startTime.Value.Day, 0, 0, 0, startTime.Value.Offset);
+            }
+            if (startTime.HasValue && endTime.HasValue && endTime.Value < startTime.Value)
+                endTime = startTime.Value;
+            return new DateTimeOffsetInterval(startTime, endTime);
         }
 
         public DateTimeOffsetInterval GetIntervalOfOverlap(DateTimeOffsetInterval SelectedPeriod, DateTimeOffsetInterval TimeSeriesRange, TimeSpan utcOffset)

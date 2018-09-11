@@ -55,15 +55,36 @@ namespace Reports
             return _WaterYearMonth;
         }
 
-        public TimeSpan GetDefaultOffset()
+        public TimeSpan GetReportTimeSpanOffset()
         {
             if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.TimeSeriesInputs.Count > 0))
-                return GetTimeSeriesOffset(_RunReportRequest.Inputs.TimeSeriesInputs[0].UniqueId); // not guaranteed to be "master" unfortunately
+            {
+                foreach (TimeSeriesReportRequestInput timeseriesInput in _RunReportRequest.Inputs.TimeSeriesInputs)
+                {
+                    if (timeseriesInput.IsMaster)
+                        return GetTimeSeriesOffset(timeseriesInput.UniqueId);
+                }
+                return GetTimeSeriesOffset(_RunReportRequest.Inputs.TimeSeriesInputs[0].UniqueId);
+            }
 
             if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.LocationInput != null))
                 return TimeSpan.FromHours(GetLocationData(_RunReportRequest.Inputs.LocationInput.Identifier).UtcOffset);
 
             return TimeSpan.Zero;
+        }
+
+        public DateTimeOffsetInterval GetPeriodSelectedAdjustedForReport()
+        {
+            DateTimeOffsetInterval interval = GetPeriodSelectedInUtcOffset(GetReportTimeSpanOffset());
+
+            if ((_RunReportRequest.Inputs != null) &&
+                (_RunReportRequest.Inputs.TimeSeriesInputs.Count == 0) &&
+                (_RunReportRequest.Inputs.LocationInput != null))
+            {
+                interval = GetReportTimeRangeInLocationUtcOffset(_RunReportRequest.Inputs.LocationInput.Identifier);
+            }
+            
+            return GroupByHandler.GetTrimmedPeriodSelected(interval);
         }
 
         public DataSet GetCommonDataSet(string dllName, string dllFolder)
@@ -73,6 +94,8 @@ namespace Reports
             Log.DebugFormat("GetCommonDataSet for dll {0} in folder {1}", dllName, dllFolder);
 
             AddRunReportRequestParametersFromSettingsFile();
+
+            Log.Info(ReportInputInformation());
 
             return (new DataTablesBuilder(_RunReportRequest, this)).GetCommonDataSet(dllName, dllFolder);
         }
@@ -315,7 +338,12 @@ namespace Reports
         public string GetOffsetString(double offset)
         {
             TimeSpan tsSpan = TimeSpan.FromHours(offset);
-            return ((tsSpan < TimeSpan.Zero) ? "-" : "+") + tsSpan.ToString(@"hh\:mm");
+            return GetOffsetString(tsSpan);
+        }
+
+        public string GetOffsetString(TimeSpan offset)
+        {
+            return ((offset < TimeSpan.Zero) ? "-" : "+") + offset.ToString(@"hh\:mm");
         }
 
         public DateTimeOffsetInterval GetReportTimeRangeInTimeSeriesUtcOffset(Guid timeseriesUniqueId)
@@ -325,6 +353,21 @@ namespace Reports
             return GetPeriodSelectedInUtcOffset(tsOffset);
         }
 
+        public DateTimeOffsetInterval GetReportTimeRangeInLocationUtcOffset(string locationIdentifier)
+        {
+            TimeSpan tsOffset = TimeSpan.FromHours(GetLocationData(locationIdentifier).UtcOffset);
+
+            DateTimeOffsetInterval interval = GetPeriodSelectedInUtcOffset(tsOffset);
+
+            DateTimeOffset? startTime = null;
+            DateTimeOffset? endTime = null;
+
+            if (interval.Start.HasValue) startTime = interval.Start.Value.Subtract(tsOffset);
+            if (interval.End.HasValue) endTime = interval.End.Value.Subtract(tsOffset);
+
+            return new DateTimeOffsetInterval(startTime, endTime);
+        }
+
         public DateTimeOffsetInterval GetPeriodSelectedInUtcOffset(TimeSpan utcOffset)
         {
             return GetIntervalInUtcOffset(_RunReportRequest.Interval, utcOffset);
@@ -332,7 +375,7 @@ namespace Reports
 
         public bool PeriodSelectedIsWaterYear()
         {
-            return PeriodSelectedIsWaterYear(GetDefaultOffset());
+            return PeriodSelectedIsWaterYear(GetReportTimeSpanOffset());
         }
         public bool PeriodSelectedIsWaterYear(TimeSpan utcOffset)
         {
@@ -533,6 +576,39 @@ namespace Reports
         public static string FormatSigFigsNumber(double value, int sigfigs)
         {
             return DoubleValueFormatter.FormatSigFigsNumber(value, sigfigs);
+        }
+
+        public string ReportInputInformation()
+        {
+            string newLine = Environment.NewLine;
+            string dateFormat = "yyyy-MM-dd HH:mm:ss.ffffffzzz";
+            RunReportRequest runReportRequest = _RunReportRequest;
+            string message = string.Format("{0}Report: {1}", newLine, _DllName);
+            message += string.Format("{0}RunReportRequest Interval: {1}", newLine, TimeIntervalAsString(_RunReportRequest.Interval, dateFormat));
+            message += string.Format("{0}Period Selected Adjusted for Report: {1}", newLine, TimeIntervalAsString(GetPeriodSelectedAdjustedForReport(), dateFormat));
+            message += string.Format("{0}Formatted Period Selected: ", newLine);
+            message += string.Format("{0}{1}Report offset: {2}", 
+                PeriodSelectedString(GetPeriodSelectedAdjustedForReport()), newLine, GetOffsetString(GetReportTimeSpanOffset()));
+            message += string.Format("{0}TimeSeriesInputs: {1}", newLine, newLine);
+            if ((runReportRequest.Inputs != null) && (runReportRequest.Inputs.TimeSeriesInputs != null))
+                foreach (TimeSeriesReportRequestInput timeseries in runReportRequest.Inputs.TimeSeriesInputs)
+                    message += string.Format("Name = '{0}', UniqueId = '{1}', IsMaster= '{2}', Identifier= '{3}', utcOffset= {4}{5}", 
+                        timeseries.Name, timeseries.UniqueId, timeseries.IsMaster,
+                        GetTimeSeriesDescription(timeseries.UniqueId).Identifier, 
+                        GetOffsetString(GetTimeSeriesDescription(timeseries.UniqueId).UtcOffset), newLine);
+
+            message += string.Format("{0}LocationInput: {1}", newLine, newLine);
+            if ((runReportRequest.Inputs != null) && (runReportRequest.Inputs.LocationInput != null))
+                message += string.Format("Name = '{0}', Identifier = '{1}', utcOffset = {2}{3}",
+                    runReportRequest.Inputs.LocationInput.Name, runReportRequest.Inputs.LocationInput.Identifier, 
+                    GetOffsetString(GetLocationData(runReportRequest.Inputs.LocationInput.Identifier).UtcOffset), newLine);
+
+            message += string.Format("{0}Report Settings: {1}", newLine, newLine);
+            if (runReportRequest.Parameters != null)
+                foreach (ReportJobParameter parameter in runReportRequest.Parameters)
+                    message += string.Format("report parameter '{0}' = '{1}'{2}", parameter.Name, parameter.Value, newLine);
+
+            return message;
         }
     }
 }

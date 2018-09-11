@@ -61,6 +61,7 @@ namespace Reports
             table.Columns.Add("DllFolder", typeof(string));
             table.Columns.Add("CommonLibrary", typeof(object));
             table.Columns.Add("Publish", typeof(object));
+            table.Columns.Add("ReportInputInformation", typeof(string));
 
             dataSet.Tables.Add(table);
 
@@ -70,6 +71,7 @@ namespace Reports
             row["DllFolder"] = _DllFolder;
             row["CommonLibrary"] = _Common;
             row["Publish"] = _RunReportRequest.Publish;
+            row["ReportInputInformation"] = _Common.ReportInputInformation();
             table.Rows.Add(row);
         }
 
@@ -125,6 +127,8 @@ namespace Reports
             dataSet.Tables.Add(table);
             table.Columns.Add("Name", typeof(string));
             table.Columns.Add("Guid", typeof(Guid));
+            table.Columns.Add("Label", typeof(string));
+            table.Columns.Add("IsMaster", typeof(bool));
 
             if (inputs == null) return;
 
@@ -133,6 +137,8 @@ namespace Reports
                 DataRow row = table.NewRow();
                 row["Name"] = timeseriesInput.Name;
                 row["Guid"] = timeseriesInput.UniqueId;
+                row["Label"] = timeseriesInput.Label;
+                row["IsMaster"] = timeseriesInput.IsMaster;
                 table.Rows.Add(row);
             }
         }
@@ -193,6 +199,7 @@ namespace Reports
             DataTable table = new DataTable(tableName);
 
             table.Columns.Add("SelectedInterval", typeof(DateTimeOffsetInterval));
+            table.Columns.Add("PeriodSelectedAdjustedForReport", typeof(DateTimeOffsetInterval));
             table.Columns.Add("PeriodSelectedString", typeof(string));
             table.Columns.Add("PeriodSelectedInformation", typeof(string));
             table.Columns.Add("IReportData", typeof(IReportData));
@@ -209,8 +216,9 @@ namespace Reports
             DataRow row = table.NewRow();
 
             row["SelectedInterval"] = _RunReportRequest.Interval;
-            row["PeriodSelectedString"] = _Common.PeriodSelectedString(_Common.GetPeriodSelectedInUtcOffset(_Common.GetDefaultOffset()));
-            row["PeriodSelectedInformation"] = _Common.GetPeriodSelectedInformation(_Common.GetPeriodSelectedInUtcOffset(_Common.GetDefaultOffset()));
+            row["PeriodSelectedAdjustedForReport"] = _Common.GetPeriodSelectedAdjustedForReport();
+            row["PeriodSelectedString"] = _Common.PeriodSelectedString(_Common.GetPeriodSelectedAdjustedForReport());
+            row["PeriodSelectedInformation"] = _Common.GetPeriodSelectedInformation(_Common.GetPeriodSelectedAdjustedForReport());
             row["IReportData"] = _RunReportRequest.ReportData;
             row["Locale"] = _RunReportRequest.Locale;
             row["PageHeader1"] = GetPageHeader1();
@@ -406,18 +414,15 @@ namespace Reports
 
         public DataTable ReportPeriodsTable(string tableName)
         {
-            return ReportPeriodsTable(tableName, _Common.GetDefaultOffset());
+            return ReportPeriodsTable(tableName, _Common.GetReportTimeSpanOffset());
         }
 
         public DataTable ReportPeriodsTable(string tableName, TimeSpan reportUtcOffset)
         {
             Log.DebugFormat("Create ReportPeriodsTable {0}", tableName);
 
+            DateTimeOffsetInterval timeRangeToAdjust = _Common.GetPeriodSelectedAdjustedForReport();
             GroupByHandler groupByHandler = new GroupByHandler(_Common);
-            DateTimeOffsetInterval periodSelected = _Common.GetPeriodSelectedInUtcOffset(reportUtcOffset);
-            DateTimeOffsetInterval trimmedPeriodSelected = groupByHandler.GetTrimmedPeriodSelected(periodSelected);
-
-            DateTimeOffsetInterval timeRangeToAdjust = trimmedPeriodSelected;
             if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.TimeSeriesInputs.Count > 0))
             {
                 Guid firstTimeSeriesUniqueId = _RunReportRequest.Inputs.TimeSeriesInputs[0].UniqueId;
