@@ -30,7 +30,9 @@
       "Type": "PickList",
       "PickListOptions": {
         "Collins Lane": "Collins Lane",
-        "Flax Road": "Flax Road"
+        "Flax Road": "Flax Road",
+		"Galatea Basin", "Galatea Basin",
+		"Kaharoa", "Kaharoa"
       },
       "Required": true
     },
