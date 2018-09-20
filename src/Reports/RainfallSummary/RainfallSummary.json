@@ -1,0 +1,15 @@
+﻿{
+  "Name": "Rainfall Summary",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Days",
+    "Value": 1
+  },
+  "Inputs": 
+  [
+  ],
+  "Parameters": 
+  [
+  ]
+}

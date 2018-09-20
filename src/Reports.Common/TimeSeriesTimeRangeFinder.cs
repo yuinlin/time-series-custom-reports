@@ -29,9 +29,9 @@ namespace Reports
 
             DateTimeOffset FirstYear = new DateTimeOffset(points[0].Timestamp.Year + binAdjust, 1, 1, 0, 0, 0, offset);
             DateTimeOffset LastYear = new DateTimeOffset(points[points.Count - 1].Timestamp.Year + binAdjust, 1, 1, 0, 0, 0, offset);
-            Log.DebugFormat("Found first point in Year = {0}, last point in Year = {1}", FirstYear, LastYear);
+            Log.DebugFormat("Found first point is in Year = {0}, last point is in Year = {1}", FirstYear, LastYear);
 
-            points = FindDailyCountPoints(timeseriesUniqueId, FirstYear, FirstYear.AddYears(1));
+            points = FindDailyCountPoints(timeseriesUniqueId, FirstYear, FirstYear.AddYears(1).AddDays(1));
             if (points.Count == 0) return new DateTimeOffsetInterval();
 
             DateTimeOffset firstTime = FirstNonZeroPoint(points).Timestamp;
@@ -42,7 +42,7 @@ namespace Reports
             firstTime = points[0].Timestamp;
             Log.DebugFormat("Found first point at time = {0}", firstTime.ToString(Common._DateFormat));
 
-            points = FindDailyCountPoints(timeseriesUniqueId, LastYear, LastYear.AddYears(1));
+            points = FindDailyCountPoints(timeseriesUniqueId, LastYear, LastYear.AddYears(1).AddDays(1));
             if (points.Count == 0) return new DateTimeOffsetInterval(firstTime, null);
 
             DateTimeOffset lastTime = LastNonZeroPoint(points).Timestamp;
@@ -72,7 +72,7 @@ namespace Reports
             return _Common.GetComputedStatisticsPoints(timeseriesUniqueId, fromTime, toTime, StatisticType.Count, StatisticPeriod.Daily, false, null);
         }
 
-        public TimeSeriesPoint FirstNonZeroPoint(List<TimeSeriesPoint> points)
+        private TimeSeriesPoint FirstNonZeroPoint(List<TimeSeriesPoint> points)
         {
             TimeSeriesPoint firstDataPoint = points[0];
             foreach (TimeSeriesPoint p in points)
@@ -85,7 +85,7 @@ namespace Reports
             return firstDataPoint;
         }
 
-        public TimeSeriesPoint LastNonZeroPoint(List<TimeSeriesPoint> points)
+        private TimeSeriesPoint LastNonZeroPoint(List<TimeSeriesPoint> points)
         {
             points.Reverse();
             TimeSeriesPoint lastPoint = FirstNonZeroPoint(points);
