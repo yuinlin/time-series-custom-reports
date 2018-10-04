@@ -32,7 +32,12 @@
         "Collins Lane": "Collins Lane",
         "Flax Road": "Flax Road",
 		"Galatea Basin", "Galatea Basin",
-		"Kaharoa", "Kaharoa"
+		"Kaharoa", "Kaharoa",
+		"Lower Kaima", "Lower Kaima",
+		"Marshalls Farm","Marshalls Farm",
+		"Okaro","Okaro",
+		"Oturoa Rd","Oturoa Rd",
+		"Pongakawa","Pongakawa"
       },
       "Required": true
     },
