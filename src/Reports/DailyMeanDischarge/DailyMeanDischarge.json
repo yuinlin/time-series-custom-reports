@@ -1,0 +1,21 @@
+﻿{
+  "Name": "Daily Mean Discharge",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "WaterYears",
+    "Value": 1
+  },
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Daily Mean Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+  ]
+}
