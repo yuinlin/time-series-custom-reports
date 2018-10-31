@@ -1,0 +1,57 @@
+﻿{
+  "Name": "USGS Reservoir",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "WaterYears",
+    "Value": 1
+  },
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Total Storage Time Series from Rating Curve",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "StageFormatType",
+      "Label": "Stage Format Type",
+      "DefaultValue": "Fixed",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "SigFigs": "SigFigs"
+      },
+      "Required": true
+    },
+    {
+      "Name": "StageFormatPlaces",
+      "Label": "Stage Format Places",
+      "DefaultValue": "2",
+      "Type": "Integer",
+      "Required": true
+    },  
+    {
+      "Name": "TotalStorageFormatType",
+      "Label": "Total Storage Format Type",
+      "DefaultValue": "SigFigs",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "SigFigs": "SigFigs"
+      },
+      "Required": true
+    },
+    {
+      "Name": "TotalStorageFormatPlaces",
+      "Label": "Total Storage Format Places",
+      "DefaultValue": "3",
+      "Type": "Integer",
+      "Required": true
+    }
+  ]
+}

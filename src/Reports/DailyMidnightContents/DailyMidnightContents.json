@@ -1,0 +1,21 @@
+﻿{
+  "Name": "Daily Midnight Contents",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "WaterYears",
+    "Value": 1
+  },
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Daily Selected Value (24:00) Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+  ]
+}
