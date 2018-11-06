@@ -276,6 +276,18 @@ namespace Reports
             return Publish().Get(locationDataRequest);
         }
 
+        public ParameterMetadata GetParameterMetadata(string parameterName)
+        {
+            var request = new ParameterListServiceRequest();
+            var parameters = Publish().Get(request).Parameters;
+            foreach (ParameterMetadata parameterMetaData in parameters)
+                if (parameterMetaData.DisplayName == parameterName)
+                    return parameterMetaData;
+
+            Log.InfoFormat("GetParameterMetadata for parameterName = {0} not found, returning null", parameterName);
+            return null;
+        }
+
         public string GetPeriodSelectedInformation(DateTimeOffsetInterval interval)
         {
             return "Period Selected: " + PeriodSelectedString(interval);
