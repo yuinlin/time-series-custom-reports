@@ -1,0 +1,65 @@
+﻿{
+  "Name": "Discrete Data",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Years",
+    "Value": 30
+  },
+  "Inputs": 
+  [
+    {
+      "Name": "Location",
+      "Type": "Location"
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "Signal1",
+      "Label": "Signal identifier",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "Signal2",
+      "Label": "Signal identifier",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    }, 
+    {
+      "Name": "Signal3",
+      "Label": "Signal identifier",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "Signal4",
+      "Label": "Signal identifier",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "DischargeFormatType",
+      "Label": "Discharge Format Type",
+      "DefaultValue": "Fixed",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "SigFigs": "SigFigs"
+      },
+      "Required": true
+    },
+    {
+      "Name": "DischargeFormatPlaces",
+      "Label": "Discharge Format Places",
+      "DefaultValue": "3",
+      "Type": "Integer",
+      "Required": true
+    }
+  ]
+}
