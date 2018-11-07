@@ -281,7 +281,7 @@ namespace Reports
             var request = new ParameterListServiceRequest();
             var parameters = Publish().Get(request).Parameters;
             foreach (ParameterMetadata parameterMetaData in parameters)
-                if (parameterMetaData.DisplayName == parameterName)
+                if (parameterMetaData.Identifier == parameterName)
                     return parameterMetaData;
 
             Log.InfoFormat("GetParameterMetadata for parameterName = {0} not found, returning null", parameterName);
