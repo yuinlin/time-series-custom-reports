@@ -33,6 +33,7 @@ void PrintFiles(string namespaceName, string folderPath)
 	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\GroupByHandler.cs");
 	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\PointsDataTableBuilder.cs");
 	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\TimeSeriesTimeRangeFinder.cs");
+	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\TimeSeriesInstMinMaxFinder.cs");	
 	PrintFile(namespaceName, folderPath + @"\..\..\Reports.ReportPluginBase\ReportPluginBase.cs");
 }
 void PrintFile(string namespaceName, string filePath)
