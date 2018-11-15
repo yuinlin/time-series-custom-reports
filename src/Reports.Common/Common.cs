@@ -580,6 +580,35 @@ namespace Reports
             return ReportData().GetTimeSeriesPoints(request).Points;
         }
 
+        public List<TimeAlignedPoint> GetTimeAlignedPoints(List<Guid> inputGuids, DateTimeOffset? StartTime, DateTimeOffset? EndTime)
+        {
+            Log.DebugFormat("GetTimeAlignedPoints number of guids='{0}', from start = {1} to end = {2}", inputGuids.Count,
+                (StartTime.HasValue) ? StartTime.Value.ToString(_DateFormat) : "start of record",
+                (EndTime.HasValue) ? EndTime.Value.ToString(_DateFormat) : "end of record");
+
+            TimeAlignedDataServiceRequest request = new TimeAlignedDataServiceRequest();
+            request.TimeSeriesUniqueIds = inputGuids;
+            request.QueryFrom = StartTime;
+            request.QueryTo = EndTime;
+            request.IncludeGapMarkers = true;
+
+            List<TimeAlignedPoint> points = Publish().Get(request).Points;
+
+            if (points.Count == 0)
+                Log.Debug("GetTimeAlignedPoints returns zero points");
+            else
+                Log.DebugFormat("GetTimeAlignedPoints returns = {0} points, from first timestamp = {1} to last timestamp = {2}",
+                  points.Count, points[0].Timestamp, points[points.Count - 1].Timestamp);
+
+            return points;
+        }
+
+        public TimeAlignedPoint[] GetInstMinMaxPoints(Guid inputGuid, string interval, bool extrema, DateTimeOffset StartTime, DateTimeOffset EndTime)
+        {
+            TimeSeriesInstMinMaxFinder instMinMax = new TimeSeriesInstMinMaxFinder(this);
+            return instMinMax.GetInstMinMaxPoints(inputGuid, interval, extrema, StartTime, EndTime);
+        }
+
         public static string FormatDoubleValue(double value, bool fix, int places, string missingStr)
         {
             return DoubleValueFormatter.FormatDoubleValue(value, fix, places, missingStr);

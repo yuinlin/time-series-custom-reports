@@ -61,6 +61,7 @@
     <Compile Include="GroupByHandler.cs" />
     <Compile Include="PointsDataTableBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeSeriesInstMinMaxFinder.cs" />
     <Compile Include="TimeSeriesTimeRangeFinder.cs" />
   </ItemGroup>
   <ItemGroup>
