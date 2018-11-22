@@ -1,0 +1,19 @@
+﻿{
+  "Name": "Field Activity",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Years",
+    "Value": 3
+  },
+  "Inputs": 
+  [
+    {
+        "Name":"Location",
+        "Type":"Location"
+    }
+  ],
+  "Parameters": 
+  [
+  ]
+}
