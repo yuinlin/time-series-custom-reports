@@ -466,19 +466,17 @@ namespace Reports
 
         public string GetFooterDisclaimer()
         {
-            return "DISCLAIMER - AQUARIUS is the leading software suite to acquire, process, model, and publish water data." +
-                " Environmental monitoring agencies worldwide trust AQUARIUS to produce accurate water information in real-time." +
-                " A modern design delivers the latest water science in an intuitive experience.";
+            return _RunReportRequest.ReportData.GetSystemConfiguration().PageFooter;
         }
 
         public string GetPageHeader1()
         {
-            return "Aquatic Informatics Data Management Software";
+            return _RunReportRequest.ReportData.GetSystemConfiguration().PageHeader;
         }
 
         public string GetPageHeader2()
         {
-            return "Faster Analysis. Better Decisions.";
+            return _RunReportRequest.ReportData.GetSystemConfiguration().PageSubheader;
         }
     }
 }
