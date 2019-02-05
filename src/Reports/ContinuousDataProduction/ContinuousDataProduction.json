@@ -1,0 +1,33 @@
+﻿{
+  "Name": "Continuous Data Production",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Days",
+    "Value": 1
+  },
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Discharge Time Series from Rating Curve",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "TableIncrement",
+      "Label": "Table Increment",
+      "DefaultValue": "0.1",
+      "Type": "PickList",
+      "PickListOptions": {
+        "0.1": "0.1",
+        "0.01": "0.01",
+        "0.001": "0.001"
+      },
+      "Required": true
+    }
+  ]
+}
