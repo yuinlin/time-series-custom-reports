@@ -1,0 +1,18 @@
+﻿{
+  "Parameters": 
+  [
+    {
+      "Name": "HttpRepeatCallLimit",
+      "Value": "5"
+    },
+    {
+      "Name": "HttpCallLimitSize",
+      "Value": "500"
+    }
+,
+    {
+      "Name": "HttpCallTimeoutInSeconds",
+      "Value": "30"
+    }
+  ]
+}
