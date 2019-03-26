@@ -10,7 +10,11 @@ namespace Reports.PluginPackager
         public bool Subfolders { get; set; } = true;
         public List<string> Include { get; } = new List<string> {"*.*"};
 
-        public List<string> ForceInclude { get; } = new List<string>();
+        public List<string> ForceInclude { get; } = new List<string>
+        {
+            "PerpetuumSoft.Reporting.Export.Csv.dll",
+            "PerpetuumSoft.Reporting.Export.OpenXML.dll"
+        };
 
         public List<string> Exclude { get; } = new List<string>
         {
@@ -23,6 +27,8 @@ namespace Reports.PluginPackager
             "NodaTime.*",
             "ComponentFactory.*",
             "PerpetuumSoft.*",
+            "DocumentFormat.OpenXml.dll",
+            "itextsharp.dll",
             "NewtonSoft.*",
         };
     }
