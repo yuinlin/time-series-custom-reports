@@ -44,6 +44,7 @@ namespace Reports
             AddRunReportRequestTable(set1, "RunReportRequest");
             AddReportSettingsTable(set1, "ReportSettings");
             AddReportDataTable(set1, "ReportData");
+            AddOrganizationIconTable(set1, "OrganizationIcon");
             AddInputsTables(set1);
             AddReportPeriodsTable(set1, "ReportPeriods");
 
@@ -109,6 +110,13 @@ namespace Reports
             if (dataSet.Tables.Contains(tableName)) return;
 
             dataSet.Tables.Add(ReportDataTable(tableName));
+        }
+
+        public void AddOrganizationIconTable(System.Data.DataSet dataSet, string tableName)
+        {
+            if (dataSet.Tables.Contains(tableName)) return;
+
+            dataSet.Tables.Add(OrganizationIconTable(tableName));
         }
 
         public void AddReportPeriodsTable(System.Data.DataSet dataSet, string tableName)
@@ -229,6 +237,24 @@ namespace Reports
             row["Comment"] = _Common.GetParameterString("Comment", "");
             row["ReportSubTitle"] = GetReportSubTitle();
             row["WaterYearDefaultMonth"] = _Common.GetWaterYearMonth();
+
+            table.Rows.Add(row);
+
+            return table;
+        }
+
+        public DataTable OrganizationIconTable(string tableName)
+        {
+            Log.DebugFormat("Create OrganizationIconTable {0}", tableName);
+            DataTable table = new DataTable(tableName);
+
+            table.Columns.Add("EncodedImage", typeof(string));
+            table.Columns.Add("SupportUrl", typeof(string));
+
+            DataRow row = table.NewRow();
+
+            row["EncodedImage"] = GetOrganizationIconEncodedImage();
+            row["SupportUrl"] = GetOrganizationSupportUrl();
 
             table.Rows.Add(row);
 
@@ -462,6 +488,16 @@ namespace Reports
             string subTitle = reportTitle + ((!string.IsNullOrEmpty(reportTitle) && !string.IsNullOrEmpty(description)) ? " - " : "") + description;
             Log.DebugFormat("ReportSubTitle = '{0}'", subTitle);
             return subTitle;
+        }
+
+        public string GetOrganizationIconEncodedImage()
+        {
+            return _RunReportRequest.ReportData.GetSystemConfiguration().OrganizationIconBase64;
+        }
+
+        public string GetOrganizationSupportUrl()
+        {
+            return _RunReportRequest.ReportData.GetSystemConfiguration().OrganizationSupportUrl;
         }
 
         public string GetFooterDisclaimer()
