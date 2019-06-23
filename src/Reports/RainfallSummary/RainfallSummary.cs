@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class RainfallSummary : RainfallSummaryNamespace.ReportPluginBase, IReport
+    public class RainfallSummary : RainfallSummaryNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

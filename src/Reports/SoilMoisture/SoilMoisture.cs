@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class SoilMoisture : SoilMoistureNamespace.ReportPluginBase, IReport
+    public class SoilMoisture : SoilMoistureNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

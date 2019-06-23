@@ -31,7 +31,7 @@ namespace InstrumentationNamespace
 
                 dataSet.Tables.Add(table);
 
-                RunReportRequest runReportRequest = (RunReportRequest)dataSet.Tables["RunReportRequest"].Rows[0]["RunReportRequest"];
+                RunFileReportRequest runReportRequest = (RunFileReportRequest)dataSet.Tables["RunReportRequest"].Rows[0]["RunReportRequest"];
                 IPublishGateway publish = runReportRequest.Publish;
                 string locationIdentifier = (string)dataSet.Tables["LocationInput"].Rows[0]["Identifier"];
 

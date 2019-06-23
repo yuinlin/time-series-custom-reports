@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class BenchmarkHistory : BenchmarkHistoryNamespace.ReportPluginBase, IReport
+    public class BenchmarkHistory : BenchmarkHistoryNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

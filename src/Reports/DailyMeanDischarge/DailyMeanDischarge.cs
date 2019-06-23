@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class DailyMeanDischarge : DailyMeanDischargeNamespace.ReportPluginBase, IReport
+    public class DailyMeanDischarge : DailyMeanDischargeNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

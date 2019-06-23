@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class FieldActivity : FieldActivityNamespace.ReportPluginBase, IReport
+    public class FieldActivity : FieldActivityNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

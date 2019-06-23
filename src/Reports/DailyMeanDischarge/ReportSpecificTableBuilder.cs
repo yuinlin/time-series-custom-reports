@@ -18,7 +18,7 @@ namespace DailyMeanDischargeNamespace
         {
             try
             {
-                RunReportRequest runReportRequest = (RunReportRequest)dataSet.Tables["RunReportRequest"].Rows[0]["RunReportRequest"];
+                RunFileReportRequest runReportRequest = (RunFileReportRequest)dataSet.Tables["RunReportRequest"].Rows[0]["RunReportRequest"];
                 IPublishGateway publish = runReportRequest.Publish;
                 Guid TimeSeriesUniqueId = (Guid)dataSet.Tables["SourceData"].Rows[0]["UniqueId"];
                 string timeseriesType = (string)dataSet.Tables["SourceData"].Rows[0]["TimeSeriesType"];

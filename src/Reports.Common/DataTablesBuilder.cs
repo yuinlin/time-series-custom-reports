@@ -19,7 +19,7 @@ namespace Reports
     {
         private static ServiceStack.Logging.ILog Log = ServiceStack.Logging.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private RunReportRequest _RunReportRequest;
+        private RunFileReportRequest _RunReportRequest;
         private Common _Common;
         public static string DateFormat = "yyyy-MM-dd HH:mmzzz";
 
@@ -28,7 +28,7 @@ namespace Reports
 
         public List<string> CommonReportParameters = new List<string> { "ReportTitle", "Description", "Comment" };
 
-        public DataTablesBuilder(RunReportRequest request, Common common)
+        public DataTablesBuilder(RunFileReportRequest request, Common common)
         {
             _RunReportRequest = request;
             _Common = common;
@@ -62,6 +62,7 @@ namespace Reports
             table.Columns.Add("DllFolder", typeof(string));
             table.Columns.Add("CommonLibrary", typeof(object));
             table.Columns.Add("Publish", typeof(object));
+            table.Columns.Add("OutputFormat", typeof(string));
             table.Columns.Add("ReportInputInformation", typeof(string));
 
             dataSet.Tables.Add(table);
@@ -72,6 +73,7 @@ namespace Reports
             row["DllFolder"] = _DllFolder;
             row["CommonLibrary"] = _Common;
             row["Publish"] = _RunReportRequest.Publish;
+            row["OutputFormat"] = _RunReportRequest.OutputFormat;
             row["ReportInputInformation"] = _Common.ReportInputInformation();
             table.Rows.Add(row);
         }
@@ -220,6 +222,7 @@ namespace Reports
             table.Columns.Add("Comment", typeof(string));
             table.Columns.Add("ReportSubTitle", typeof(string));
             table.Columns.Add("WaterYearDefaultMonth", typeof(int));
+            table.Columns.Add("OutputFormat", typeof(string));
 
             DataRow row = table.NewRow();
 
@@ -237,6 +240,7 @@ namespace Reports
             row["Comment"] = _Common.GetParameterString("Comment", "");
             row["ReportSubTitle"] = GetReportSubTitle();
             row["WaterYearDefaultMonth"] = _Common.GetWaterYearMonth();
+            row["OutputFormat"] = _RunReportRequest.OutputFormat;
 
             table.Rows.Add(row);
 
