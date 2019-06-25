@@ -6,6 +6,13 @@
     "Unit": "Days",
     "Value": 1
   },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
   "Inputs": 
   [
   ],

@@ -6,6 +6,13 @@
     "Unit": "Years",
     "Value": 25
   },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
   "Inputs": 
   [
     {

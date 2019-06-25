@@ -68,7 +68,7 @@ namespace Reports
             }
             catch { }
 
-            Log.DebugFormat("GenerateReport - the name of file to return is {0}", tempFileName);
+            Log.DebugFormat("GenerateReport - the name of file for export report to write to is set to {0}", tempFileName);
 
             try
             {
@@ -116,7 +116,8 @@ namespace Reports
             }
             catch (System.Exception exp)
             {
-                Log.Debug("Exception in export report", exp);
+                Log.Debug("Exception during export report", exp);
+                throw exp;
             }
 
             return tempFileName;
