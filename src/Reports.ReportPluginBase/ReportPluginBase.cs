@@ -140,17 +140,16 @@ namespace Reports
 
             string location = System.IO.Path.GetDirectoryName(_Assembly.Location);
             string name = System.IO.Path.GetFileNameWithoutExtension(_Assembly.Location);
-            string version = _Assembly.GetName().Version.ToString();
             FileVersionInfo fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
 
-            Log.InfoFormat("Plugin version info = {0}, {1}", fileVersionInfo.ProductVersion, fileVersionInfo.FileVersion);
-            Log.InfoFormat("Report plugin folder = {0}, plugin name = {1}, plugin version = {2}", location, name, version);
+            Log.InfoFormat("Report plugin folder = {0}, plugin name = {1}, plugin version = {2}", location, name, fileVersionInfo.ProductVersion);
 
            System.Data.DataSet reportTables = (new Common(request)).GetCommonDataSet(name, location);
 
             AddReportSpecificTables(reportTables);
             return reportTables;
         }
+
         public virtual void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
         }
