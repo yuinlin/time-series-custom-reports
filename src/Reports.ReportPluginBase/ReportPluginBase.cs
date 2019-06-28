@@ -139,8 +139,11 @@ namespace Reports
 
             string location = System.IO.Path.GetDirectoryName(_Assembly.Location);
             string name = System.IO.Path.GetFileNameWithoutExtension(_Assembly.Location);
+            string version = _Assembly.GetName().Version.ToString();
 
-            System.Data.DataSet reportTables = (new Common(request)).GetCommonDataSet(name, location);
+            Log.InfoFormat("Report plugin folder = {0}, plugin name = {1}, plugin version = {2}", location, name, version);
+
+           System.Data.DataSet reportTables = (new Common(request)).GetCommonDataSet(name, location);
 
             AddReportSpecificTables(reportTables);
             return reportTables;
