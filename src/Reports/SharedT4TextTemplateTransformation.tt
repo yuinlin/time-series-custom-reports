@@ -12,6 +12,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Diagnostics;
 using ServiceStack;
 
 using ReportPluginFramework.Beta;
