@@ -75,9 +75,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileReportPluginBase.cs" />
-    <Compile Include="ReportPluginBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportPluginBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Reports.Common\Reports.Common.csproj">

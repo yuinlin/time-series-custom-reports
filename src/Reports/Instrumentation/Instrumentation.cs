@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class Instrumentation : InstrumentationNamespace.ReportPluginBase, IReport
+    public class Instrumentation : InstrumentationNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

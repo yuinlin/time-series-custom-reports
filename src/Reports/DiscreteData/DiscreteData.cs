@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class DiscreteData : DiscreteDataNamespace.ReportPluginBase, IReport
+    public class DiscreteData : DiscreteDataNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

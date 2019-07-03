@@ -27,7 +27,7 @@ namespace ContinuousDataProductionNamespace
                 DataTable table = new DataTable("ContinuousDataProductionDataTable");
 
                 dataSet.Tables.Add(table);
-                RunReportRequest runReportRequest = (RunReportRequest)dataSet.Tables["RunReportRequest"].Rows[0]["RunReportRequest"];
+                RunFileReportRequest runReportRequest = (RunFileReportRequest)dataSet.Tables["RunReportRequest"].Rows[0]["RunReportRequest"];
                 IPublishGateway publish = runReportRequest.Publish;
                 Guid timeSeriesUniqueId = (Guid)dataSet.Tables["SourceData"].Rows[0]["UniqueId"];
 

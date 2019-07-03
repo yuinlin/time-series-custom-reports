@@ -12,6 +12,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Diagnostics;
 using ServiceStack;
 
 using ReportPluginFramework.Beta;
@@ -21,6 +22,13 @@ using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
 using Server.Services.PublishService.ServiceModel.RequestDtos;
 using Server.Services.PublishService.ServiceModel.ResponseDtos;
 using Server.Services.PublishService.ServiceModel.Dtos;
+
+using PerpetuumSoft.Reporting.Components;
+using PerpetuumSoft.Reporting.DOM;
+using PerpetuumSoft.Reporting.Export.Pdf;
+using PerpetuumSoft.Reporting.Export.Csv;
+using PerpetuumSoft.Reporting.Export.OpenXML;
+using PerpetuumSoft.Reporting.Export.Graph;
 
 using TimeSeriesPoint = ReportPluginFramework.Beta.ReportData.TimeSeriesData.TimeSeriesPoint;
 using InterpolationType = ReportPluginFramework.Beta.ReportData.TimeSeriesDescription.InterpolationType;

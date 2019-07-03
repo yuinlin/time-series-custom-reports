@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class USGSReservoir : USGSReservoirNamespace.ReportPluginBase, IReport
+    public class USGSReservoir : USGSReservoirNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

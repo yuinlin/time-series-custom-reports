@@ -2,7 +2,7 @@
 
 namespace Reports
 {
-    public class ContinuousDataProduction : ContinuousDataProductionNamespace.ReportPluginBase, IReport
+    public class ContinuousDataProduction : ContinuousDataProductionNamespace.ReportPluginBase, IFileReport
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {

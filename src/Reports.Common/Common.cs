@@ -24,7 +24,7 @@ namespace Reports
     {
         private static ServiceStack.Logging.ILog Log = ServiceStack.Logging.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private RunReportRequest _RunReportRequest;
+        private RunFileReportRequest _RunReportRequest;
         private int _WaterYearMonth = 10;
         public static string _DateFormat = "yyyy-MM-dd HH:mmzzz";
 
@@ -33,7 +33,7 @@ namespace Reports
         public string _DllName;
         public string _DllFolder;
 
-        public Common(RunReportRequest request)
+        public Common(RunFileReportRequest request)
         {
             _RunReportRequest = request;
 
@@ -623,7 +623,11 @@ namespace Reports
         {
             string newLine = Environment.NewLine;
             string dateFormat = "yyyy-MM-dd HH:mm:ss.ffffffzzz";
-            RunReportRequest runReportRequest = _RunReportRequest;
+            RunFileReportRequest runReportRequest = _RunReportRequest;
+
+            string outputFormatMessage = string.Format("{0}OutputFormat: {1}", System.Environment.NewLine, System.Environment.NewLine);
+            outputFormatMessage += string.Format("OutputFormat = '{0}'{1}", _RunReportRequest.OutputFormat, System.Environment.NewLine);
+
             string message = string.Format("{0}Report: {1}", newLine, _DllName);
             message += string.Format("{0}RunReportRequest Interval: {1}", newLine, TimeIntervalAsString(_RunReportRequest.Interval, dateFormat));
             message += string.Format("{0}Period Selected Adjusted for Report: {1}", newLine, TimeIntervalAsString(GetPeriodSelectedAdjustedForReport(), dateFormat));
@@ -643,6 +647,8 @@ namespace Reports
                 message += string.Format("Name = '{0}', Identifier = '{1}', utcOffset = {2}{3}",
                     runReportRequest.Inputs.LocationInput.Name, runReportRequest.Inputs.LocationInput.Identifier, 
                     GetOffsetString(GetLocationData(runReportRequest.Inputs.LocationInput.Identifier).UtcOffset), newLine);
+
+            message += outputFormatMessage;
 
             message += string.Format("{0}Report Settings: {1}", newLine, newLine);
             if (runReportRequest.Parameters != null)
