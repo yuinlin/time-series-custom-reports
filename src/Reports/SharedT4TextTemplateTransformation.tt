@@ -22,6 +22,8 @@ using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
 using Server.Services.PublishService.ServiceModel.RequestDtos;
 using Server.Services.PublishService.ServiceModel.ResponseDtos;
 using Server.Services.PublishService.ServiceModel.Dtos;
+using Server.Services.PublishService.ServiceModel.Dtos.FieldVisit;
+using Server.Services.PublishService.ServiceModel.Dtos.FieldVisit.Enum;
 
 using PerpetuumSoft.Reporting.Components;
 using PerpetuumSoft.Reporting.DOM;
