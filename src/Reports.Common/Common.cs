@@ -14,6 +14,8 @@ using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
 using Server.Services.PublishService.ServiceModel.RequestDtos;
 using Server.Services.PublishService.ServiceModel.ResponseDtos;
 using Server.Services.PublishService.ServiceModel.Dtos;
+using Server.Services.PublishService.ServiceModel.Dtos.FieldVisit;
+using Server.Services.PublishService.ServiceModel.Dtos.FieldVisit.Enum;
 
 using TimeSeriesPoint = ReportPluginFramework.Beta.ReportData.TimeSeriesData.TimeSeriesPoint;
 using InterpolationType = ReportPluginFramework.Beta.ReportData.TimeSeriesDescription.InterpolationType;
@@ -310,6 +312,71 @@ namespace Reports
             var units = ReportData().GetUnits();
             foreach (Unit u in units) if (unitId == u.Identifier) return u.Symbol;
             return unitId;
+        }
+
+        public string GetGradeDisplayName(int? gradeCode)
+        {
+            GradeMetadata gradeMetadata = GetGradeMetadata(gradeCode);
+            if (gradeMetadata != null) return gradeMetadata.DisplayName;
+
+            return "";
+        }
+
+        public string GetGradeDisplayName(string gradeCode)
+        {
+            GradeMetadata gradeMetadata = GetGradeMetadata(gradeCode);
+            if (gradeMetadata != null) return gradeMetadata.DisplayName;
+
+            return "";
+        }
+
+        public GradeMetadata GetGradeMetadata(int? gradeCode)
+        {
+            if (!gradeCode.HasValue) return null;
+
+            return GetGradeMetadata(gradeCode.Value.ToString());
+        }
+
+        public GradeMetadata GetGradeMetadata(string gradeCode)
+        {
+            if (string.IsNullOrEmpty(gradeCode)) return null;
+
+            var request = new GradeListServiceRequest();
+            var grades = Publish().Get(request).Grades;
+            foreach (GradeMetadata gradeMetaData in grades)
+                if (gradeMetaData.Identifier == gradeCode)
+                    return gradeMetaData;
+
+            Log.InfoFormat("GetGradeMetadata for gradeCode = {0} not found, returning null", gradeCode);
+            return null;
+        }
+
+        public double GetPercentUncertainty(DischargeUncertainty dischargeUncertainty)
+        {
+            if (dischargeUncertainty.ActiveUncertaintyType == UncertaintyType.None)
+                return double.NaN;
+            if (dischargeUncertainty.ActiveUncertaintyType == UncertaintyType.Quantitative)
+                return (dischargeUncertainty.QuantitativeUncertainty.Numeric.HasValue) ? 
+                    dischargeUncertainty.QuantitativeUncertainty.Numeric.Value : double.NaN;
+            if (dischargeUncertainty.ActiveUncertaintyType == UncertaintyType.Qualitative)
+                return GetPercentUncertaintyForQualitativeGrade(dischargeUncertainty.QualitativeUncertainty);
+            return double.NaN;
+        }
+
+        public double GetPercentUncertaintyForQualitativeGrade(QualitativeUncertaintyType qualitativeUncertainty)
+        {
+            switch (qualitativeUncertainty)
+            {
+                case QualitativeUncertaintyType.Excellent:
+                    return 2;
+                case QualitativeUncertaintyType.Good:
+                    return 5;
+                case QualitativeUncertaintyType.Fair:
+                    return 8;
+                case QualitativeUncertaintyType.Poor:
+                    return 10;
+            }
+            return double.NaN;
         }
 
         public string PeriodSelectedString(DateTimeOffsetInterval interval)
