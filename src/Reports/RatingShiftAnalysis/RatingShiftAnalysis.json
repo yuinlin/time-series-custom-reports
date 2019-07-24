@@ -1,0 +1,87 @@
+﻿{
+  "Name": "Rating Shift Analysis",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "WaterYears",
+    "Value": 3
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+        "Name":"Location",
+        "Type":"Location"
+    }
+  ],
+  "Parameters": 
+  [
+	{
+      "Name": "SortOrder",
+      "Label": "Sort Order",
+      "DefaultValue": "Chronological on Measurement Time",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Chronological on Measurement Time": "Chronological on Measurement Time",
+        "Reverse Chronological on Measurement Time": "Reverse Chronological on Measurement Time"
+      },
+      "Required": true
+    },
+	{
+      "Name": "InputOutputParameters",
+      "Label": "Input-Output Parameters",
+      "DefaultValue": "Stage-Discharge",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "RatingModelLabel",
+      "Label": "Rating Model Label",
+      "DefaultValue": "Rating",
+      "Type": "String",
+      "Required": true
+    },  
+    {
+      "Name": "DischargeFormatType",
+      "Label": "Discharge Format Type",
+      "DefaultValue": "Significant Figures",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "Significant Figures": "Significant Figures"
+      },
+      "Required": true
+    },
+    {
+      "Name": "DischargeFormatPrecision",
+      "Label": "Discharge Format Precision",
+      "DefaultValue": "3",
+      "Type": "Integer",
+      "Required": true
+    },
+    {
+      "Name": "OtherFormatType",
+      "Label": "Other Format Type",
+      "DefaultValue": "Fixed",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "Significant Figures": "Significant Figures"
+      },
+      "Required": true
+    },
+    {
+      "Name": "OtherFormatPrecision",
+      "Label": "Other Format Precision",
+      "DefaultValue": "2",
+      "Type": "Integer",
+      "Required": true
+    }
+  ]
+}
