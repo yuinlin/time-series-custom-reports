@@ -1,0 +1,70 @@
+﻿{
+  "Name": "Rating Table",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Days",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+        "Name":"Location",
+        "Type":"Location"
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "InputOutputParameters",
+      "Label": "Input-Output Parameters",
+      "DefaultValue": "Stage-Discharge",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "RatingModelLabel",
+      "Label": "Rating Model Label",
+      "DefaultValue": "Rating",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "TableIncrement",
+      "Label": "Table Increment",
+      "DefaultValue": "0.1",
+      "Type": "PickList",
+      "PickListOptions": {
+        "0.1": "0.1",
+        "0.01": "0.01",
+        "0.001": "0.001"
+      },
+      "Required": true
+    },  
+    {
+      "Name": "DischargeFormatType",
+      "Label": "Discharge Format Type",
+      "DefaultValue": "Significant Figures",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "Significant Figures": "Significant Figures"
+      },
+      "Required": true
+    },
+    {
+      "Name": "DischargeFormatPrecision",
+      "Label": "Discharge Format Precision",
+      "DefaultValue": "3",
+      "Type": "Integer",
+      "Required": true
+    }
+  ]
+}
