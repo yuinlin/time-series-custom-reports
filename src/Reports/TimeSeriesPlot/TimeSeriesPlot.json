@@ -3,7 +3,7 @@
   "DefaultTimeRange": 
   {
     "Type": "LatestComplete",
-    "Unit": "Years",
+    "Unit": "WaterYears",
     "Value": 1
   },
   "OutputFormats": 
