@@ -2,7 +2,7 @@
   "Name": "Time Series Plot",
   "DefaultTimeRange": 
   {
-    "Type": "LatestComplete",
+    "Type": "MostRecent",
     "Unit": "WaterYears",
     "Value": 1
   },
