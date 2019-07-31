@@ -4,6 +4,14 @@
     {
       "Name": "WaterTempParameter",
       "Value": "Water Temp"
+    },
+    {
+      "Name": "DateFormat",
+      "Value": "MM/dd/yyyy"
+    },
+    {
+      "Name": "TimeFormat",
+      "Value": "HH:mm:ss"
     }
   ]
 }
