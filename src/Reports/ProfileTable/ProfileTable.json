@@ -1,0 +1,29 @@
+﻿{
+  "Name": "Profile Table",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Days",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "LocationIdentifiers",
+      "Label": "Location Identifiers",
+      "DefaultValue": "Wraysbury, WilliamGirlingOutlet, KingGeorgeVI, QEII",
+      "Type": "String",
+      "Required": true
+    }
+  ]
+}
