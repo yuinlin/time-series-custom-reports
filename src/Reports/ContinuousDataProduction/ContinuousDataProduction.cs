@@ -6,7 +6,7 @@ namespace Reports
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
-            ContinuousDataProductionNamespace.ReportSpecificTablesBuilder.AddReportSpecificTables(dataSet);
+            ContinuousDataProductionNamespace.ReportSpecificTableBuilder.AddReportSpecificTables(dataSet);
         }
     }
 }

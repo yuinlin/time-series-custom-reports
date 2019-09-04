@@ -6,7 +6,7 @@ namespace Reports
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
-            DischargeMeasurementsR56Namespace.ReportSpecificTablesBuilder.AddReportSpecificTables(dataSet);
+            DischargeMeasurementsR56Namespace.ReportSpecificTableBuilder.AddReportSpecificTables(dataSet);
         }
     }
 }

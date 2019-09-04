@@ -6,7 +6,7 @@ namespace Reports
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
-            BenchmarkHistoryNamespace.ReportSpecificTablesBuilder.AddReportSpecificTables(dataSet);
+            BenchmarkHistoryNamespace.ReportSpecificTableBuilder.AddReportSpecificTables(dataSet);
         }
     }
 }

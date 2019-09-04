@@ -6,7 +6,7 @@ namespace Reports
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
-            FieldActivityNamespace.ReportSpecificTablesBuilder.AddReportSpecificTables(dataSet);
+            FieldActivityNamespace.ReportSpecificTableBuilder.AddReportSpecificTables(dataSet);
         }
     }
 }

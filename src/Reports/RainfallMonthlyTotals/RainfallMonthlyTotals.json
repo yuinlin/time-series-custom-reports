@@ -25,7 +25,7 @@
   "Parameters": 
   [
     {
-      "Name": "DataCoverageThreshold",
+      "Name": "DataCoverageThresholdPercent",
       "Label": "Data Coverage Threshold (%)",
       "DefaultValue": "80",
       "Type": "Double",

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace RatingShiftAnalysisNamespace
 {
-    public class ReportSpecificTablesBuilder
+    public class ReportSpecificTableBuilder
     {
         private static ServiceStack.Logging.ILog Log = ServiceStack.Logging.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
