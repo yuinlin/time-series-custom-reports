@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Reflection;
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.Beta;
 using ReportPluginFramework.Beta.ReportData;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace InstrumentationNamespace
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
-                settingsTable.Rows[0]["ReportTitle"] = "Instrumentation";
+                settingsTable.Rows[0]["ReportTitle"] = Resources.Instrumentation;
 
                 DataTable table = new DataTable("InstrumentationDataTable");
 
@@ -41,7 +42,7 @@ namespace InstrumentationNamespace
                 ///////////////////////////////////////////////////////////////
                 DateTimeOffsetInterval reportPeriod = (DateTimeOffsetInterval)dataSet.Tables["ReportPeriods"].Rows[0]["NoGroupBy"];
 
-                string sortOrder = common.GetParameterString("SortOrder", "Reverse Chronological on Measurement Time");
+                string sortOrder = common.GetParameterString("SortOrder", "ReverseChronologicalOnMeasurementTime");
 
                 DataTable table1 = dataSet.Tables.Add("Instrumentation");
 
@@ -78,7 +79,7 @@ namespace InstrumentationNamespace
 
                 try
                 {
-                    if (sortOrder != "Reverse Chronological on Measurement Time")
+                    if (sortOrder != "ReverseChronologicalOnMeasurementTime")
                         fieldVisitData.Sort((x, y) => x.StartTime.Value.CompareTo(y.StartTime.Value));
                     else
                         fieldVisitData.Sort((x, y) => y.StartTime.Value.CompareTo(x.StartTime.Value));
@@ -96,7 +97,7 @@ namespace InstrumentationNamespace
 
                     if (activities != null)
                     {
-                        if (sortOrder != "Reverse Chronological on Measurement Time")
+                        if (sortOrder != "ReverseChronologicalOnMeasurementTime")
                             activities.Sort((x, y) => x.DischargeSummary.MeasurementTime.CompareTo(y.DischargeSummary.MeasurementTime));
                         else
                             activities.Sort((x, y) => y.DischargeSummary.MeasurementTime.CompareTo(x.DischargeSummary.MeasurementTime));
@@ -107,7 +108,7 @@ namespace InstrumentationNamespace
                             row["Date"] = (fieldVisit.StartTime.HasValue) ? fieldVisit.StartTime.Value.ToString("yyyy-MM-dd") : "";
                             row["ControlCondition"] = controlCondition;
                             row["FieldVisitComments"] = fieldVisit.Remarks;
-                            row["ActivityType"] = ActivityType.DischargeSummary.ToString();
+                            row["ActivityType"] = Resources.DischargeSummary;
                             row["Method"] = dischargeActivity.DischargeSummary.DischargeMethod;
 
                             DischargeSummary dischargeSummary = dischargeActivity.DischargeSummary;

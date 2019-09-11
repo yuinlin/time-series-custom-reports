@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Reflection;
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.Beta;
 using ReportPluginFramework.Beta.ReportData;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
@@ -22,7 +23,7 @@ namespace DischargeMeasurementsR56Namespace
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
-                settingsTable.Rows[0]["ReportTitle"] = "Discharge Measurements R56";
+                settingsTable.Rows[0]["ReportTitle"] = Resources.DischargeMeasurementsR56;
 
                 DataTable table = new DataTable("DischargeMeasurementsR56DataTable");
 

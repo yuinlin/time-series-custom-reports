@@ -25,11 +25,11 @@
 	{
       "Name": "SortOrder",
       "Label": "Sort Order",
-      "DefaultValue": "Reverse Chronological on Measurement Time",
+      "DefaultValue": "ReverseChronologicalOnMeasurementTime",
       "Type": "PickList",
       "PickListOptions": {
-        "Chronological on Measurement Time": "Chronological on Measurement Time",
-        "Reverse Chronological on Measurement Time": "Reverse Chronological on Measurement Time"
+        "ChronologicalOnMeasurementTime": "Chronological on Measurement Time",
+        "ReverseChronologicalOnMeasurementTime": "Reverse Chronological on Measurement Time"
       },
       "Required": true
     }
