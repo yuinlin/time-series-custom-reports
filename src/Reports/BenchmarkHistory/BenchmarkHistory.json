@@ -1,5 +1,5 @@
 ﻿{
-  "Name": "Benchmark History",
+  "Name": "BenchmarkHistory",
   "DefaultTimeRange": 
   {
     "Type": "MostRecent",
@@ -29,13 +29,13 @@
       "Type": "PickList",
       "PickListOptions": {
         "Fixed": "Fixed",
-        "SigFigs": "SigFigs"
+        "SignificantFigures": "Significant Figures"
       },
       "Required": true
     },
     {
-      "Name": "FormatPlaces",
-      "Label": "Format Places",
+      "Name": "FormatPrecision",
+      "Label": "Format Precision",
       "DefaultValue": "3",
       "Type": "Integer",
       "Required": true

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Data;
-using System.Reflection;
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.Beta;
+using System.Reflection;
 using ReportPluginFramework.Beta.ReportData;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
@@ -18,11 +19,15 @@ namespace ContinuousDataProductionNamespace
         {
             try
             {
+                dataSet.Tables["DischargeTimeSeriesFromRatingCurve"].TableName = "SourceData";
+                dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocation"].TableName = "SourceDataLocation";
+                dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocationExtendedAttributes"].TableName = "SourceDataLocationExtendedAttributes";
+
                 Common common = (Common)dataSet.Tables["RunReportRequest"].Rows[0]["CommonLibrary"];
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
-                settingsTable.Rows[0]["ReportTitle"] = "Continuous Data Production";
+                settingsTable.Rows[0]["ReportTitle"] = Resources.ContinuousDataProduction;
 
                 DataTable table = new DataTable("ContinuousDataProductionDataTable");
 
