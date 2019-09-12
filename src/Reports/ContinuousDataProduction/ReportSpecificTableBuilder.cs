@@ -68,7 +68,9 @@ namespace ContinuousDataProductionNamespace
                 double tableIncrement = common.GetParameterDouble("TableIncrement", 0.1);
                 int httpRepeatCallLimit = common.GetParameterInt("HttpRepeatCallLimit", 4);
                 int httpCallLimitSize = common.GetParameterInt("HttpCallLimitSize", 2000);
-                int httpCallTimeoutInSeconds = common.GetParameterInt("HttpCallTimeoutInSeconds", 30);              
+                int httpCallTimeoutInSeconds = common.GetParameterInt("HttpCallTimeoutInSeconds", 30);
+                string httpUrlPrefix = common.GetParameterString("HttpUrlPrefix",
+                    @"http://geo.weather.gc.ca/geomet-beta/features/collections/hydrometric-daily-mean/items?f=json&STATION_NUMBER=");
 
                 TimeSpan timezone = TimeSpan.FromHours(common.GetTimeSeriesDescription(timeSeriesUniqueId).UtcOffset);
                 DateTimeOffsetInterval selectedInterval = (DateTimeOffsetInterval)dataSet.Tables["ReportData"].Rows[0]["SelectedInterval"];
@@ -83,7 +85,7 @@ namespace ContinuousDataProductionNamespace
                 string locationIdentifier = common.GetTimeSeriesDescription(timeSeriesUniqueId).LocationIdentifier;
 
                 int numberOfHistoricalPoints = ReportSpecificFunctions.GetNumberOfHistoricalPointsAvailable(
-                    locationIdentifier, httpRepeatCallLimit, httpCallTimeoutInSeconds);
+                    httpUrlPrefix, locationIdentifier, httpRepeatCallLimit, httpCallTimeoutInSeconds);
 
                 settingsTable.Columns.Add("NumberOfHistoricalPoints", typeof(int));
                 settingsTable.Rows[0]["NumberOfHistoricalPoints"] = numberOfHistoricalPoints;

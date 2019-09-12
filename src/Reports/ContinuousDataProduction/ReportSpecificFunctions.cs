@@ -16,9 +16,9 @@ namespace ContinuousDataProductionNamespace
     {
         private static ServiceStack.Logging.ILog Log = ServiceStack.Logging.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static int GetNumberOfHistoricalPointsAvailable(string locationIdentifier, int httpRepeatCallLimit, int httpCallTimeoutInSeconds)
+        public static int GetNumberOfHistoricalPointsAvailable(string urlPrefix, string locationIdentifier, int httpRepeatCallLimit, int httpCallTimeoutInSeconds)
         {
-            string path = @"http://geo.weather.gc.ca/geomet-beta/features/collections/hydrometric-daily-mean/items?STATION_NUMBER=";
+            string path = urlPrefix;
 
             path += System.Net.WebUtility.UrlEncode(locationIdentifier);
             path += "&startindex=0&limit=0";
