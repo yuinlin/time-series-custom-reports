@@ -19,9 +19,12 @@ namespace ContinuousDataProductionNamespace
         {
             try
             {
-                dataSet.Tables["DischargeTimeSeriesFromRatingCurve"].TableName = "SourceData";
-                dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocation"].TableName = "SourceDataLocation";
-                dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocationExtendedAttributes"].TableName = "SourceDataLocationExtendedAttributes";
+                if (dataSet.Tables.Contains("DischargeTimeSeriesFromRatingCurve"))
+                {
+                    dataSet.Tables["DischargeTimeSeriesFromRatingCurve"].TableName = "SourceData";
+                    dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocation"].TableName = "SourceDataLocation";
+                    dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocationExtendedAttributes"].TableName = "SourceDataLocationExtendedAttributes";
+                }
 
                 Common common = (Common)dataSet.Tables["RunReportRequest"].Rows[0]["CommonLibrary"];
 
