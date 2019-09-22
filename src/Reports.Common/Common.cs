@@ -611,7 +611,8 @@ namespace Reports
         public string GetTimeSeriesInterpolationTypeString(Guid timeseriesUniqueId)
         {
             InterpolationType interpolationType = GetTimeSeriesInterpolationType(timeseriesUniqueId);
-            return string.Format("{0} - {1}", (int)interpolationType, interpolationType.ToString());
+            string interpolationTypeString = GetLocalizedEnumValue(interpolationType.GetType().Name, interpolationType.ToString());
+            return string.Format("{0} - {1}", (int) interpolationType, interpolationTypeString);
         }
 
         public int GetBinAdjustment(Guid timeseriesUniqueId)
@@ -825,25 +826,36 @@ namespace Reports
             return message;
         }
 
+        public static string GetLocalizedEnumValue(string enumType, string enumValue)
+        {
+            try
+            {
+                string localizedEnum = Resources.ResourceManager.GetString(enumType + enumValue);
+                if (string.IsNullOrEmpty(localizedEnum)) localizedEnum = Resources.ResourceManager.GetString(enumValue);
+                if (string.IsNullOrEmpty(localizedEnum)) localizedEnum = enumValue;
+
+                return localizedEnum;
+            }
+            catch
+            {
+                Log.DebugFormat("GetLocalizedEnumValue catch exception: Enum type = {0}, Enum value = {1}, returning Enum value = {1}", enumType, enumValue);
+                return enumValue;
+            }
+        }
+
+        public static string GetLocalizedTimeSeriesTypeName(string timeSeriesType)
+        {
+            return GetLocalizedEnumValue("TimeSeriesType", timeSeriesType.Replace("Processor", ""));
+        }
+
+        public static string GetLocalizedRatingCurveTypeName(RatingCurveType ratingCurveType)
+        {
+            return GetLocalizedEnumValue("", ratingCurveType.ToString());
+        }
+
         public static string GetLocalizedStatisticName(StatisticType statistic)
         {
-            switch (statistic)
-            {
-                case StatisticType.Min:
-                    return Resources.Min;
-                case StatisticType.Mean:
-                    return Resources.Mean;
-                case StatisticType.Max:
-                    return Resources.Max;
-                case StatisticType.Count:
-                    return Resources.Count;
-                case StatisticType.Median:
-                    return Resources.Median;
-                case StatisticType.Sum:
-                    return Resources.Sum;
-                default:
-                    return statistic.ToString();
-            }
+            return GetLocalizedEnumValue("", statistic.ToString());
         }
     }
 }
