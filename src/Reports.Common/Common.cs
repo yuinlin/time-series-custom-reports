@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.Beta;
 using ReportPluginFramework.Beta.ReportData;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
@@ -95,11 +96,43 @@ namespace Reports
             _DllFolder = dllFolder;
             Log.DebugFormat("GetCommonDataSet for dll {0} in folder {1}", dllName, dllFolder);
 
+            AddRunReportRequestParametersFromDefinitionMetadata();
             AddRunReportRequestParametersFromSettingsFile();
 
             Log.Info(ReportInputInformation());
 
-            return (new DataTablesBuilder(_RunReportRequest, this)).GetCommonDataSet(dllName, dllFolder);
+            return GetDataTablesBuilder().GetCommonDataSet(dllName, dllFolder);
+        }
+
+        public DataTablesBuilder GetDataTablesBuilder()
+        {
+            return new DataTablesBuilder(_RunReportRequest, this);
+        }
+
+        public void AddRunReportRequestParametersFromDefinitionMetadata()
+        {
+            Dictionary<string, string> metadatas = _RunReportRequest.ReportDefinitionMetadata;
+
+            if ((metadatas == null) || (metadatas.Count == 0))
+                return;
+
+            foreach (string key in metadatas.Keys)
+            {
+                Log.DebugFormat("metatdata item key = '{0}' value = '{1}'", key, metadatas[key]);
+                try
+                {
+                    ReportJobParameter parameter = new ReportJobParameter()
+                    {
+                        Name = key,
+                        Value = metadatas[key]
+                    };
+                    _RunReportRequest.Parameters.Add(parameter);
+                }
+                catch (Exception exp)
+                {
+                    Log.Error(string.Format("Error adding report parameter from metadata '{0}', value = '{1}'", key, metadatas[key]), exp);
+                }
+            }
         }
 
         public void AddRunReportRequestParametersFromSettingsFile()
@@ -221,16 +254,16 @@ namespace Reports
         public string GetTimeRangeString(Guid timeseriesUniqueId, DateTimeOffsetInterval timerange)
         {
             string dateFormat = "yyyy-MM-dd HH:mm:ss";
-            string retValue = "Utc Offset: " + GetOffsetString(GetTimeSeriesDescription(timeseriesUniqueId).UtcOffset);
+            string retValue = Resources.UtcOffset + ": " + GetOffsetString(GetTimeSeriesDescription(timeseriesUniqueId).UtcOffset);
 
             if (timerange.Start.HasValue && timerange.End.HasValue)
             {
-                retValue += ", Start Time: " + timerange.Start.Value.ToString(dateFormat);
-                retValue += ", End Time: " + timerange.End.Value.ToString(dateFormat);
+                retValue += ", " + Resources.StartTime + ": " + timerange.Start.Value.ToString(dateFormat);
+                retValue += ", " + Resources.EndTime + ": " + timerange.End.Value.ToString(dateFormat);
             }
             else
             {
-                retValue += ", No Data";
+                retValue += ", " + Resources.NoData;
             }
             return retValue;
         }
@@ -292,12 +325,12 @@ namespace Reports
 
         public string GetPeriodSelectedInformation(DateTimeOffsetInterval interval)
         {
-            return "Period Selected: " + PeriodSelectedString(interval);
+            return Resources.PeriodSelected + ": " + PeriodSelectedString(interval);
         }
 
         public string GetTimeSeriesUnitInformation(Guid timeseriesUniqueId)
         {
-            return "Units: " + GetTimeSeriesUnitSymbol(timeseriesUniqueId);
+            return Resources.Units + ": " + GetTimeSeriesUnitSymbol(timeseriesUniqueId);
         }
 
         public string GetTimeSeriesUnitSymbol(Guid timeseriesUniqueId)
@@ -384,15 +417,15 @@ namespace Reports
             string timeRange;
             if (!interval.Start.HasValue && !interval.End.HasValue)
             {
-                timeRange = "Entire Record";
+                timeRange = Resources.EntireRecord;
             }
             else if (!interval.Start.HasValue)
             {
-                timeRange = string.Format("From Beginning of Record to {0}", FormatDateTimeOffset(interval.End.Value));
+                timeRange = string.Format(Resources.FromBeginningOfRecordToX, FormatDateTimeOffset(interval.End.Value));
             }
             else if (!interval.End.HasValue)
             {
-                timeRange = string.Format("{0} to End of Record", FormatDateTimeOffset(interval.Start.Value));
+                timeRange = string.Format(Resources.XToEndOfRecord, FormatDateTimeOffset(interval.Start.Value));
             }
             else
             {
@@ -486,7 +519,7 @@ namespace Reports
         public string TimeSeriesRangeString(DateTimeOffsetInterval interval)
         {
             if (!interval.Start.HasValue && !interval.End.HasValue)
-                return "No Points";
+                return Resources.NoPoints;
             return TimeIntervalAsString(interval, _DateFormat);
         }
 
@@ -509,7 +542,7 @@ namespace Reports
 
         public CoverageOptions GetCoverageOptions()
         {
-            double dataCoverage = GetParameterDouble("DataCoverageThreshold", -1.0);
+            double dataCoverage = GetParameterDouble("DataCoverageThresholdPercent", -1.0);
 
             bool useCoverage = (dataCoverage < 0) ? false : true;
             double coverageAmount = dataCoverage / 100.0;
@@ -526,7 +559,8 @@ namespace Reports
         {
             bool useCoverage = (coverageOptions.RequiresMinimumCoverage.HasValue)? coverageOptions.RequiresMinimumCoverage.Value : false;
             double coverageAmount = (coverageOptions.CoverageThreshold.HasValue)? coverageOptions.CoverageThreshold.Value : 0.0;
-            return string.Format("Data Coverage Threshold: {0}", (useCoverage) ? (coverageAmount * 100.0).ToString() + "%" : "n/a");
+            return string.Format(Resources.DataCoverageThreshold + ": {0}", (useCoverage) ? 
+                (coverageAmount * 100.0).ToString() + "%" : Resources.NotApplicableAbbreviated);
         }
 
         public StatisticType GetStatistic(string statistic, StatisticType defaultStatisticType)
@@ -577,7 +611,8 @@ namespace Reports
         public string GetTimeSeriesInterpolationTypeString(Guid timeseriesUniqueId)
         {
             InterpolationType interpolationType = GetTimeSeriesInterpolationType(timeseriesUniqueId);
-            return string.Format("{0} - {1}", (int)interpolationType, interpolationType.ToString());
+            string interpolationTypeString = GetLocalizedEnumValue(interpolationType.GetType().Name, interpolationType.ToString());
+            return string.Format("{0} - {1}", (int) interpolationType, interpolationTypeString);
         }
 
         public int GetBinAdjustment(Guid timeseriesUniqueId)
@@ -686,6 +721,61 @@ namespace Reports
             return DoubleValueFormatter.FormatSigFigsNumber(value, sigfigs);
         }
 
+        public RatingModelDescription GetRatingModelDescription(string ratingModelIdentifier, string locationIdentifier)
+        {
+            RatingModelDescriptionListServiceRequest ratingModelDescriptionListRequest = new RatingModelDescriptionListServiceRequest();
+            ratingModelDescriptionListRequest.LocationIdentifier = locationIdentifier;
+
+            RatingModelDescriptionListServiceResponse ratingModelDescriptionListResponse = Publish().Get(ratingModelDescriptionListRequest);
+
+            RatingModelDescription ratingModelDescription = null;
+            foreach (RatingModelDescription rmDesc in ratingModelDescriptionListResponse.RatingModelDescriptions)
+            {
+                if (rmDesc.Identifier == ratingModelIdentifier)
+                {
+                    ratingModelDescription = rmDesc;
+                    break;
+                }
+            }
+
+            return ratingModelDescription;
+        }
+
+        public RatingCurveListServiceResponse GetRatingCurveList(string ratingModelIdentifier)
+        {
+            RatingCurveListServiceResponse ratingCurveResponse = null;
+
+            RatingCurveListServiceRequest ratingCurveListRequest = new RatingCurveListServiceRequest();
+            ratingCurveListRequest.RatingModelIdentifier = ratingModelIdentifier;
+
+            try
+            {
+                ratingCurveResponse = Publish().Get(ratingCurveListRequest);
+            }
+            catch { }
+
+            return ratingCurveResponse;
+        }
+
+        public string GetRatingCurveId(string ratingModelIdentifier, DateTimeOffset time)
+        {
+            string ratingCurveId = "";
+            try
+            {
+                RatingCurveListServiceRequest curveRequest = new RatingCurveListServiceRequest();
+                curveRequest.RatingModelIdentifier = ratingModelIdentifier;
+                curveRequest.QueryFrom = time;
+                curveRequest.QueryTo = time;
+
+                RatingCurveListServiceResponse curveResponse = Publish().Get(curveRequest);
+                if (curveResponse.RatingCurves.Count > 0)
+                    ratingCurveId = curveResponse.RatingCurves[0].Id;
+            }
+            catch { }
+
+            return ratingCurveId;
+        }
+
         public string ReportInputInformation()
         {
             string newLine = Environment.NewLine;
@@ -694,6 +784,8 @@ namespace Reports
 
             string outputFormatMessage = string.Format("{0}OutputFormat: {1}", System.Environment.NewLine, System.Environment.NewLine);
             outputFormatMessage += string.Format("OutputFormat = '{0}'{1}", _RunReportRequest.OutputFormat, System.Environment.NewLine);
+            string localeMessage = string.Format("{0}Locale: {1}", System.Environment.NewLine, System.Environment.NewLine);
+            localeMessage += string.Format("Locale = '{0}'{1}", _RunReportRequest.Locale, System.Environment.NewLine);
 
             string message = string.Format("{0}Report: {1}", newLine, _DllName);
             message += string.Format("{0}RunReportRequest Interval: {1}", newLine, TimeIntervalAsString(_RunReportRequest.Interval, dateFormat));
@@ -716,13 +808,54 @@ namespace Reports
                     GetOffsetString(GetLocationData(runReportRequest.Inputs.LocationInput.Identifier).UtcOffset), newLine);
 
             message += outputFormatMessage;
+            message += localeMessage;
 
             message += string.Format("{0}Report Settings: {1}", newLine, newLine);
             if (runReportRequest.Parameters != null)
                 foreach (ReportJobParameter parameter in runReportRequest.Parameters)
-                    message += string.Format("report parameter '{0}' = '{1}'{2}", parameter.Name, parameter.Value, newLine);
+                    message += string.Format("parameter: '{0}' = '{1}'{2}", parameter.Name, parameter.Value, newLine);
+
+            message += string.Format("{0}Report Definition Metadata: {1}", newLine, newLine);
+            Dictionary<string, string> metadatas = runReportRequest.ReportDefinitionMetadata;
+            if ((metadatas != null) && (metadatas.Count > 0))
+            {
+                foreach (string key in metadatas.Keys)
+                    message += string.Format("metadata: '{0}' = '{1}'{2}", key, metadatas[key], newLine);
+            }
 
             return message;
+        }
+
+        public static string GetLocalizedEnumValue(string enumType, string enumValue)
+        {
+            try
+            {
+                string localizedEnum = Resources.ResourceManager.GetString(enumType + enumValue);
+                if (string.IsNullOrEmpty(localizedEnum)) localizedEnum = Resources.ResourceManager.GetString(enumValue);
+                if (string.IsNullOrEmpty(localizedEnum)) localizedEnum = enumValue;
+
+                return localizedEnum;
+            }
+            catch
+            {
+                Log.DebugFormat("GetLocalizedEnumValue catch exception: Enum type = {0}, Enum value = {1}, returning Enum value = {1}", enumType, enumValue);
+                return enumValue;
+            }
+        }
+
+        public static string GetLocalizedTimeSeriesTypeName(string timeSeriesType)
+        {
+            return GetLocalizedEnumValue("TimeSeriesType", timeSeriesType.Replace("Processor", ""));
+        }
+
+        public static string GetLocalizedRatingCurveTypeName(RatingCurveType ratingCurveType)
+        {
+            return GetLocalizedEnumValue("", ratingCurveType.ToString());
+        }
+
+        public static string GetLocalizedStatisticName(StatisticType statistic)
+        {
+            return GetLocalizedEnumValue("", statistic.ToString());
         }
     }
 }

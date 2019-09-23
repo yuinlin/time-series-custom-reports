@@ -15,7 +15,7 @@ namespace Reports
             {
                 double roundVal = Math.Round(value, places, MidpointRounding.ToEven);
                 string formatStr = "F" + places.ToString();
-                return roundVal.ToString(formatStr);
+                return roundVal.ToString(formatStr, System.Globalization.CultureInfo.InvariantCulture);
             }
             else
             {
@@ -60,12 +60,12 @@ namespace Reports
                     }
                     string theFormatStr = "{0:." + zeros + "}";
 
-                    str = string.Format(theFormatStr, result);
+                    str = string.Format(System.Globalization.CultureInfo.InvariantCulture, theFormatStr, result);
                 }
                 else
                 {
                     string theFormatStr = "{0}";
-                    str = string.Format(theFormatStr, value);
+                    str = string.Format(System.Globalization.CultureInfo.InvariantCulture, theFormatStr, value);
                 }
             }
             catch { }

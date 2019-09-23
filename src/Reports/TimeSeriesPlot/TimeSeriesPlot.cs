@@ -6,7 +6,7 @@ namespace Reports
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
-            TimeSeriesPlotNamespace.ReportSpecificTablesBuilder.AddReportSpecificTables(dataSet);
+            TimeSeriesPlotNamespace.ReportSpecificTableBuilder.AddReportSpecificTables(dataSet);
         }
     }
 }

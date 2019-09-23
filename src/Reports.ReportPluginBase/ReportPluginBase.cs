@@ -9,6 +9,8 @@ using PerpetuumSoft.Reporting.Export.Csv;
 using PerpetuumSoft.Reporting.Export.OpenXML;
 using PerpetuumSoft.Reporting.Export.Graph;
 using System.Diagnostics;
+using System.Threading;
+using System.Globalization;
 
 namespace Reports
 {
@@ -29,6 +31,8 @@ namespace Reports
 
         public string GenerateReportIntoFile(RunFileReportRequest request)
         {
+            Thread.CurrentThread.CurrentCulture.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
+
             DataSet set = GenerateDataSet(request);
             Log.Debug("GenerateReport - after generate dataset");
 

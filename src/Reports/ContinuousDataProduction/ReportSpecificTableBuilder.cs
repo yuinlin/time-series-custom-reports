@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Data;
-using System.Reflection;
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.Beta;
+using System.Reflection;
 using ReportPluginFramework.Beta.ReportData;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 
 namespace ContinuousDataProductionNamespace
 {
-    public class ReportSpecificTablesBuilder
+    public class ReportSpecificTableBuilder
     {
         private static ServiceStack.Logging.ILog Log = ServiceStack.Logging.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -18,11 +19,18 @@ namespace ContinuousDataProductionNamespace
         {
             try
             {
+                if (dataSet.Tables.Contains("DischargeTimeSeriesFromRatingCurve"))
+                {
+                    dataSet.Tables["DischargeTimeSeriesFromRatingCurve"].TableName = "SourceData";
+                    dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocation"].TableName = "SourceDataLocation";
+                    dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocationExtendedAttributes"].TableName = "SourceDataLocationExtendedAttributes";
+                }
+
                 Common common = (Common)dataSet.Tables["RunReportRequest"].Rows[0]["CommonLibrary"];
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
-                settingsTable.Rows[0]["ReportTitle"] = "Continuous Data Production";
+                settingsTable.Rows[0]["ReportTitle"] = Resources.ContinuousDataProduction;
 
                 DataTable table = new DataTable("ContinuousDataProductionDataTable");
 
@@ -63,7 +71,9 @@ namespace ContinuousDataProductionNamespace
                 double tableIncrement = common.GetParameterDouble("TableIncrement", 0.1);
                 int httpRepeatCallLimit = common.GetParameterInt("HttpRepeatCallLimit", 4);
                 int httpCallLimitSize = common.GetParameterInt("HttpCallLimitSize", 2000);
-                int httpCallTimeoutInSeconds = common.GetParameterInt("HttpCallTimeoutInSeconds", 30);              
+                int httpCallTimeoutInSeconds = common.GetParameterInt("HttpCallTimeoutInSeconds", 30);
+                string httpUrlPrefix = common.GetParameterString("HttpUrlPrefix",
+                    @"http://geo.weather.gc.ca/geomet-beta/features/collections/hydrometric-daily-mean/items?f=json&STATION_NUMBER=");
 
                 TimeSpan timezone = TimeSpan.FromHours(common.GetTimeSeriesDescription(timeSeriesUniqueId).UtcOffset);
                 DateTimeOffsetInterval selectedInterval = (DateTimeOffsetInterval)dataSet.Tables["ReportData"].Rows[0]["SelectedInterval"];
@@ -78,7 +88,7 @@ namespace ContinuousDataProductionNamespace
                 string locationIdentifier = common.GetTimeSeriesDescription(timeSeriesUniqueId).LocationIdentifier;
 
                 int numberOfHistoricalPoints = ReportSpecificFunctions.GetNumberOfHistoricalPointsAvailable(
-                    locationIdentifier, httpRepeatCallLimit, httpCallTimeoutInSeconds);
+                    httpUrlPrefix, locationIdentifier, httpRepeatCallLimit, httpCallTimeoutInSeconds);
 
                 settingsTable.Columns.Add("NumberOfHistoricalPoints", typeof(int));
                 settingsTable.Rows[0]["NumberOfHistoricalPoints"] = numberOfHistoricalPoints;

@@ -14,7 +14,10 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Diagnostics;
 using ServiceStack;
+using System.Threading;
+using System.Globalization;
 
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.Beta;
 using ReportPluginFramework.Beta.ReportData;
 using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;

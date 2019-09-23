@@ -6,7 +6,7 @@ namespace Reports
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
-            USGSReservoirNamespace.ReportSpecificTablesBuilder.AddReportSpecificTables(dataSet);
+            USGSReservoirNamespace.ReportSpecificTableBuilder.AddReportSpecificTables(dataSet);
         }
     }
 }

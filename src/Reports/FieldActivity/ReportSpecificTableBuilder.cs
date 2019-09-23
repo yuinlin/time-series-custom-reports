@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Reflection;
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.Beta;
 using ReportPluginFramework.Beta.ReportData;
 using Server.Services.PublishService.ServiceModel.RequestDtos;
@@ -12,7 +13,7 @@ using System.Collections.Generic;
 
 namespace FieldActivityNamespace
 {
-    public class ReportSpecificTablesBuilder
+    public class ReportSpecificTableBuilder
     {
         private static ServiceStack.Logging.ILog Log = ServiceStack.Logging.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -24,7 +25,7 @@ namespace FieldActivityNamespace
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
-                settingsTable.Rows[0]["ReportTitle"] = "Field Activity";
+                settingsTable.Rows[0]["ReportTitle"] = Resources.FieldActivity;
 
                 DataTable table = new DataTable("FieldActivityDataTable");
 
@@ -40,7 +41,7 @@ namespace FieldActivityNamespace
                 ///////////////////////////////////////////////////////////////
                 DateTimeOffsetInterval reportPeriod = (DateTimeOffsetInterval)dataSet.Tables["ReportPeriods"].Rows[0]["NoGroupBy"];
 
-                string sortOrder = common.GetParameterString("SortOrder", "Reverse Chronological on Measurement Time");
+                string sortOrder = common.GetParameterString("SortOrder", "ReverseChronologicalOnMeasurementTime");
 
                 DataTable table1 = dataSet.Tables.Add("FieldActivity");
 
@@ -65,7 +66,7 @@ namespace FieldActivityNamespace
 
                 try
                 {
-                    if (sortOrder != "Reverse Chronological on Measurement Time")
+                    if (sortOrder != "ReverseChronologicalOnMeasurementTime")
                         fieldVisitData.Sort((x, y) => x.StartTime.Value.CompareTo(y.StartTime.Value));
                     else
                         fieldVisitData.Sort((x, y) => y.StartTime.Value.CompareTo(x.StartTime.Value));
@@ -81,7 +82,7 @@ namespace FieldActivityNamespace
                     {
                         var activities = fieldVisit.DischargeActivities;
 
-                        if (sortOrder != "Reverse Chronological on Measurement Time")
+                        if (sortOrder != "ReverseChronologicalOnMeasurementTime")
                             activities.Sort((x, y) => x.DischargeSummary.MeasurementTime.CompareTo(y.DischargeSummary.MeasurementTime));
                         else
                             activities.Sort((x, y) => y.DischargeSummary.MeasurementTime.CompareTo(x.DischargeSummary.MeasurementTime));
@@ -94,7 +95,7 @@ namespace FieldActivityNamespace
                             row["Date"] = (fieldVisit.StartTime.HasValue) ? fieldVisit.StartTime.Value.ToString("yyyy-MM-dd") : "";
                             row["ControlCondition"] = (fieldVisit.ControlConditionActivity != null) ? fieldVisit.ControlConditionActivity.ControlCondition.ToString() : "";
                             row["FieldVisitComments"] = fieldVisit.Remarks;
-                            row["ActivityType"] = "Discharge Summary";
+                            row["ActivityType"] = Resources.DischargeSummary;
 
                             DischargeSummary dischargeSummary = dischargeActivity.DischargeSummary;
                             row["Time"] = dischargeSummary.MeasurementTime.ToString("HH:mm");
@@ -125,7 +126,7 @@ namespace FieldActivityNamespace
                             row["Date"] = (fieldVisit.StartTime.HasValue) ? fieldVisit.StartTime.Value.ToString("yyyy-MM-dd") : "";
                             row["ControlCondition"] = (fieldVisit.ControlConditionActivity != null) ? fieldVisit.ControlConditionActivity.ControlCondition.ToString() : "";
                             row["FieldVisitComments"] = fieldVisit.Remarks;
-                            row["ActivityType"] = ActivityType.Reading.ToString();
+                            row["ActivityType"] = Resources.Reading;
 
                             row["Time"] = (reading.Time.HasValue) ? reading.Time.Value.ToString("HH:mm") : "";
                             row["Timezone"] = (reading.Time.HasValue) ? reading.Time.Value.ToString("zzz") : "";

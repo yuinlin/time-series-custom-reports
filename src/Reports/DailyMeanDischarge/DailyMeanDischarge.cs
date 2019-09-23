@@ -6,7 +6,7 @@ namespace Reports
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
-            DailyMeanDischargeNamespace.ReportSpecificTablesBuilder.AddReportSpecificTables(dataSet);
+            DailyMeanDischargeNamespace.ReportSpecificTableBuilder.AddReportSpecificTables(dataSet);
         }
     }
 }

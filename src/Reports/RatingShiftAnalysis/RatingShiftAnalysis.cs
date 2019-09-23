@@ -6,7 +6,7 @@ namespace Reports
     {
         public override void AddReportSpecificTables(System.Data.DataSet dataSet)
         {
-            RatingShiftAnalysisNamespace.ReportSpecificTablesBuilder.AddReportSpecificTables(dataSet);
+            RatingShiftAnalysisNamespace.ReportSpecificTableBuilder.AddReportSpecificTables(dataSet);
         }
     }
 }

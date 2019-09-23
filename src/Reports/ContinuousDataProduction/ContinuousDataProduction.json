@@ -1,5 +1,5 @@
 ﻿{
-  "Name": "Continuous Data Production",
+  "Name": "ContinuousDataProduction",
   "DefaultTimeRange": 
   {
     "Type": "MostRecent",
@@ -16,7 +16,7 @@
   "Inputs": 
   [
     {
-      "Name": "SourceData",
+      "Name": "DischargeTimeSeriesFromRatingCurve",
       "Label": "Discharge Time Series from Rating Curve",
       "Type": "TimeSeries",
       "IsMaster": true

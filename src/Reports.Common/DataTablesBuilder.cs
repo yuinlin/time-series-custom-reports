@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.Beta;
 using ReportPluginFramework.Beta.ReportData;
 
@@ -384,6 +385,8 @@ namespace Reports
             locationTable.Columns.Add("LocationType", typeof(string));
             locationTable.Columns.Add("IsExternal", typeof(bool));
             locationTable.Columns.Add("Tags", typeof(object));
+            locationTable.Columns.Add("LocationIdentifierAndNameInformation", typeof(string));
+            locationTable.Columns.Add("LocationExtraInformation", typeof(string));
             DataRow dataRow = locationTable.NewRow();
 
             LocationDescription locDescription = _Common.GetLocationDescriptionByIdentifier(locationIdentifier);
@@ -403,6 +406,13 @@ namespace Reports
             dataRow["LocationType"] = locData.LocationType;
             dataRow["IsExternal"] = locDescription.IsExternalLocation;
             dataRow["Tags"] = locDescription.Tags;
+            dataRow["LocationIdentifierAndNameInformation"] = Resources.LocationIdentifier + ": " + locationIdentifier +
+                ", " + Resources.LocationName + ": " + locDescription.Name;
+            dataRow["LocationExtraInformation"] = Resources.UtcOffset + ": " + _Common.GetOffsetString(locData.UtcOffset) +
+                ", " + Resources.Latitude + ": " + locData.Latitude +
+                ", " + Resources.Longitude + ": " + locData.Longitude +
+                ", " + Resources.Elevation + ": " + locData.Elevation.ToString() +
+                ((string.IsNullOrEmpty(locData.Elevation.ToString()) ? "" : " " + locData.ElevationUnits));
 
             locationTable.Rows.Add(dataRow);
 
@@ -483,6 +493,81 @@ namespace Reports
             table.Rows.Add(row);
 
             return table;
+        }
+
+        public DataTable RatingModelTable(string tableName, string inputOutputParameters, string ratingModelLabel, string locationIdentifier)
+        {
+            DataTable ratingModelTable = new DataTable(tableName);
+
+            ratingModelTable.Columns.Add("Identifier", typeof(string));
+            ratingModelTable.Columns.Add("InputParameter", typeof(string));
+            ratingModelTable.Columns.Add("InputUnitId", typeof(string));
+            ratingModelTable.Columns.Add("InputUnitSymbol", typeof(string));
+            ratingModelTable.Columns.Add("OutputParameter", typeof(string));
+            ratingModelTable.Columns.Add("OutputUnitId", typeof(string));
+            ratingModelTable.Columns.Add("OutputUnitSymbol", typeof(string));
+            ratingModelTable.Columns.Add("Description", typeof(string));
+            ratingModelTable.Columns.Add("Comment", typeof(string));
+            ratingModelTable.Columns.Add("TimeRange", typeof(string));
+            ratingModelTable.Columns.Add("RatingModelInfo", typeof(string));
+
+            ratingModelTable.Columns.Add("RatingModelDescriptionObject", typeof(object));
+
+            string ratingModelIdentifier = string.Format("{0}.{1}@{2}", inputOutputParameters, ratingModelLabel, locationIdentifier);
+
+            DataRow ratingModelRow = ratingModelTable.NewRow();
+            ratingModelRow["Identifier"] = ratingModelIdentifier;
+            ratingModelTable.Rows.Add(ratingModelRow);
+
+            RatingModelDescription ratingModelDescription = _Common.GetRatingModelDescription(ratingModelIdentifier, locationIdentifier);
+            ratingModelRow["RatingModelDescriptionObject"] = ratingModelDescription;
+
+            string locationName = _Common.GetLocationDescriptionByIdentifier(locationIdentifier).Name;
+
+            if (ratingModelDescription == null)
+            {
+                if (string.IsNullOrEmpty(ratingModelLabel) && string.IsNullOrEmpty(inputOutputParameters))
+                    ratingModelRow["RatingModelInfo"] = Resources.RatingModelUnspecified;
+                else
+                    ratingModelRow["RatingModelInfo"] = string.Format(Resources.NoRatingModelFoundWithXYZZ,
+                      inputOutputParameters, ratingModelLabel, locationIdentifier, locationName);
+            }
+            else
+            {
+
+                string inputParameterDisplayId = ratingModelDescription.InputParameter;
+                string inputUnitId = ratingModelDescription.InputUnit;
+                string outputParameterDisplayId = ratingModelDescription.OutputParameter;
+                string outputUnitId = ratingModelDescription.OutputUnit;
+                string rmDescription = ratingModelDescription.Description;
+
+                ratingModelRow["InputParameter"] = inputParameterDisplayId;
+                ratingModelRow["InputUnitId"] = inputUnitId;
+                ratingModelRow["InputUnitSymbol"] = _Common.GetUnitSymbol(inputUnitId);
+
+                ratingModelRow["OutputParameter"] = outputParameterDisplayId;
+                ratingModelRow["OutputUnitId"] = outputUnitId;
+                ratingModelRow["OutputUnitSymbol"] = _Common.GetUnitSymbol(outputUnitId);
+
+                ratingModelRow["Description"] = rmDescription;
+                ratingModelRow["Comment"] = ratingModelDescription.Comment;
+
+                ratingModelRow["RatingModelInfo"] = string.Format(Resources.NoRatingCurvesFoundWithXY,
+                  ratingModelIdentifier, locationName);
+
+                RatingCurveListServiceResponse ratingCurveListResponse = _Common.GetRatingCurveList(ratingModelIdentifier);
+
+                if (ratingCurveListResponse != null)
+                {
+                    ratingModelRow["RatingModelInfo"] = string.Format(Resources.RatingModelInformation,
+                      ratingModelIdentifier, locationName,
+                      inputParameterDisplayId, _Common.GetUnitSymbol(inputUnitId),
+                      outputParameterDisplayId, _Common.GetUnitSymbol(outputUnitId),
+                      ratingCurveListResponse.RatingCurves.Count);
+                }
+            }
+
+            return ratingModelTable;
         }
 
         public string GetReportSubTitle()

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace DailyMeanDischargeNamespace
 {
-    public class ReportSpecificTablesBuilder
+    public class ReportSpecificTableBuilder
     {
         private static ServiceStack.Logging.ILog Log = ServiceStack.Logging.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -66,7 +66,7 @@ namespace DailyMeanDischargeNamespace
                         ReportJobParameter coverageItem = null;
                         foreach (ReportJobParameter item in runReportRequest.Parameters)
                         {
-                            if (item.Name == "DataCoverageThreshold")
+                            if (item.Name == "DataCoverageThresholdPercent")
                             {
                                 coverageItem = item;
                                 break;
@@ -75,7 +75,7 @@ namespace DailyMeanDischargeNamespace
                         if (coverageItem != null) runReportRequest.Parameters.Remove(coverageItem);
 
                         ReportJobParameter parm = new ReportJobParameter();
-                        parm.Name = "DataCoverageThreshold";
+                        parm.Name = "DataCoverageThresholdPercent";
                         parm.Value = ("true" == requireCoverage) ? coverageAmountPercent : "";
                         runReportRequest.Parameters.Add(parm);
 
