@@ -589,7 +589,13 @@ namespace Reports
         public List<TimeSeriesPoint> GetComputedStatisticsPoints(Guid timeseriesUniqueId, DateTimeOffset? startTime, DateTimeOffset? endTime,
             StatisticType statType, StatisticPeriod period, int? periodCount, bool? requiresCoverage, double? coverageAmount)
         {
-            Log.DebugFormat("GetComputedStatisticsPoints stat = {0}, period = {1}, periodCount = {2} for TimeRange = '{3}' - '{4}'", statType, period, periodCount, startTime, endTime);
+            return GetComputedStatisticsResponse(timeseriesUniqueId, startTime, endTime, statType, period, periodCount, requiresCoverage, coverageAmount).Points;
+        }
+
+        public TimeSeriesComputedStatisticsResponse GetComputedStatisticsResponse(Guid timeseriesUniqueId, DateTimeOffset? startTime, DateTimeOffset? endTime,
+    StatisticType statType, StatisticPeriod period, int? periodCount, bool? requiresCoverage, double? coverageAmount)
+        {
+            Log.DebugFormat("GetComputedStatisticsResponse stat = {0}, period = {1}, periodCount = {2} for TimeRange = '{3}' - '{4}'", statType, period, periodCount, startTime, endTime);
 
             CoverageOptions co = new CoverageOptions();
             co.RequiresMinimumCoverage = requiresCoverage;
@@ -605,7 +611,46 @@ namespace Reports
             compRequest.QueryFromTime = startTime;
             compRequest.QueryToTime = (endTime.HasValue) ? endTime.Value.AddMilliseconds(-1) : endTime;
 
-            return ReportData().GetTimeSeriesComputedStatistics(compRequest).Points;
+            return ReportData().GetTimeSeriesComputedStatistics(compRequest);
+        }
+
+        public List<int> GetComputedStatisticsGrades(Guid timeseriesUniqueId, DateTimeOffset? startTime, DateTimeOffset? endTime,
+            StatisticType statType, StatisticPeriod period, int? periodCount, bool? requiresCoverage, double? coverageAmount)
+        {
+            TimeSeriesComputedStatisticsResponse response = GetComputedStatisticsResponse(timeseriesUniqueId, 
+                startTime, endTime, statType, period, periodCount, requiresCoverage, coverageAmount);
+
+           List<TimeSeriesPoint> points = response.Points;
+           List<GradeTimeRange> gradeRanges = response.GradeRanges;
+
+            var pointwiseGrades = new List<int>();
+            var gradeIndex = 0;
+
+            foreach (var point in points)
+            {
+                int grade = -1;
+                while (gradeIndex < gradeRanges.Count && gradeRanges[gradeIndex].EndTime <= point.Timestamp) ++gradeIndex;
+                if ((gradeIndex < gradeRanges.Count) && (gradeRanges[gradeIndex].StartTime <= point.Timestamp)) grade = gradeRanges[gradeIndex].GradeCode;
+                pointwiseGrades.Add(grade);
+            }
+            return pointwiseGrades;
+        }
+
+        public string GetGradeMarker(int code)
+        {
+            foreach (ReportJobParameter parm in _RunReportRequest.Parameters)
+            {
+                if (parm.Name.StartsWith("GradeMarker"))
+                {
+                    string gradeCode = parm.Name.Replace("GradeMarker", "").Trim();
+
+                    if (gradeCode == code.ToString())
+                    {
+                        return parm.Value;
+                    }
+                }
+            }
+            return "";
         }
 
         public string GetTimeSeriesInterpolationTypeString(Guid timeseriesUniqueId)
@@ -709,6 +754,11 @@ namespace Reports
         {
             TimeSeriesInstMinMaxFinder instMinMax = new TimeSeriesInstMinMaxFinder(this);
             return instMinMax.GetInstMinMaxPoints(inputGuid, interval, extrema, StartTime, EndTime);
+        }
+
+        public string RoundDouble(double value, bool fix, int places, int? limitPlaces, string missingStr)
+        {
+            return FormatDoubleValue(value, fix, places, missingStr);
         }
 
         public static string FormatDoubleValue(double value, bool fix, int places, string missingStr)
