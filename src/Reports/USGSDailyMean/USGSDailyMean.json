@@ -1,0 +1,69 @@
+﻿{
+  "Name": "USGS Daily Mean",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "WaterYears",
+    "Value": 3
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "FormatType",
+      "Label": "Format Type",
+      "DefaultValue": "SignificantFigures",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "SignificantFigures": "Significant Figures"
+      },
+      "Required": true
+    },
+    {
+      "Name": "FormatPrecision",
+      "Label": "Format Precision",
+      "DefaultValue": "5",
+      "Type": "Integer",
+      "Required": true
+    },
+    {
+      "Name": "DataCoverageThresholdPercent",
+      "Label": "Data Coverage Threshold (%)",
+      "DefaultValue": "80",
+      "Type": "Double",
+      "Required": false
+    }
+  ],
+  "Metadata":
+    {
+	  "GradeMarker  -3" : "",
+	  "GradeMarker  -2" : "",
+	  "GradeMarker  -1" : "",
+	  "GradeMarker   0" : "",
+	  "GradeMarker  20" : "P",
+	  "GradeMarker  30" : "S",
+	  "GradeMarker  40" : "E",
+	  "GradeMarker  50" : "W",
+	  "GradeMarker  70" : "F",
+	  "GradeMarker  80" : "G",
+	  "GradeMarker  90" : "M",
+	  "GradeMarker  95" : "SK",
+	  "GradeMarker 100" : "EX",
+    }
+}
