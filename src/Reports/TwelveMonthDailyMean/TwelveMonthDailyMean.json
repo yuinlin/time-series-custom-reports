@@ -1,0 +1,64 @@
+﻿{
+  "Name": "Twelve Month Daily Mean",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "Years",
+    "Value": 3
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "FormatType",
+      "Label": "Format Type",
+      "DefaultValue": "Fixed",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "SignificantFigures": "Significant Figures"
+      },
+      "Required": true
+    },
+    {
+      "Name": "FormatPrecision",
+      "Label": "Format Precision",
+      "DefaultValue": "3",
+      "Type": "Integer",
+      "Required": true
+    },
+    {
+      "Name": "MissingData",
+      "Label": "Missing Data",
+      "DefaultValue": "***",
+      "Type": "String",
+      "Required": false
+    }
+  ],
+  "Metadata":
+    {
+	  "GradeMarker  -2" : "",
+	  "GradeMarker  -1" : "",
+	  "GradeMarker   0" : "",
+	  "GradeMarker  10" : "B",
+	  "GradeMarker  20" : "E",
+	  "GradeMarker  30" : "A",
+	  "GradeMarker  40" : "D",
+	  "GradeMarker  50" : "R"
+    }
+}
