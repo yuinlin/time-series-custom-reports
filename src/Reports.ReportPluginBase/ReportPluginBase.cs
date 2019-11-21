@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Reflection;
-using ReportPluginFramework.Beta;
+using ReportPluginFramework;
 using PerpetuumSoft.Reporting.Components;
 using PerpetuumSoft.Reporting.DOM;
 using System.IO;

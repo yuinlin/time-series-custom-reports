@@ -1,6 +1,6 @@
 ﻿using System;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
+using ReportPluginFramework.ReportData.TimeSeriesComputedStatistics;
+using ReportPluginFramework.ReportData.TimeSeriesData;
 
 namespace Reports
 {

@@ -3,8 +3,8 @@ using System.Data;
 using System.Collections.Generic;
 using System.Reflection;
 
-using ReportPluginFramework.Beta;
-using ReportPluginFramework.Beta.ReportData;
+using ReportPluginFramework;
+using ReportPluginFramework.ReportData;
 
 using Server.Services.PublishService.ServiceModel.RequestDtos;
 using Server.Services.PublishService.ServiceModel.ResponseDtos;
@@ -27,7 +27,7 @@ namespace Reports
         public TimeAlignedPoint[] GetInstMinMaxPoints(Guid inputGuid, string interval, bool extrema, DateTimeOffset StartTime, DateTimeOffset EndTime)
         {
             int hoursToExtend = 12; // amount of extra time for finding the interpolated boundary value at start and end times
-            List<TimeAlignedPoint> points = _Common.GetTimeAlignedPoints(new List<Guid> { inputGuid }, 
+            List<TimeAlignedPoint> points = _Common.GetTimeAlignedPoints(new List<Guid> { inputGuid },
                 StartTime.AddHours(-1 * hoursToExtend), EndTime.AddHours(hoursToExtend));
 
             DateTimeOffset[] binEnds = GetDayEnds(StartTime, EndTime);
