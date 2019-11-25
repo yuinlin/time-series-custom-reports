@@ -4,7 +4,7 @@
   {
     "Type": "LatestComplete",
     "Unit": "WaterYears",
-    "Value": 3
+    "Value": 1
   },
   "OutputFormats": 
   [
@@ -52,18 +52,7 @@
   ],
   "Metadata":
     {
-	  "GradeMarker  -3" : "",
-	  "GradeMarker  -2" : "",
-	  "GradeMarker  -1" : "",
-	  "GradeMarker   0" : "",
-	  "GradeMarker  20" : "P",
-	  "GradeMarker  30" : "S",
-	  "GradeMarker  40" : "E",
-	  "GradeMarker  50" : "W",
-	  "GradeMarker  70" : "F",
-	  "GradeMarker  80" : "G",
-	  "GradeMarker  90" : "M",
-	  "GradeMarker  95" : "SK",
-	  "GradeMarker 100" : "EX",
+	  "GradeMarker 40" : "e",
+	  "NoteTag" : "ReportNote"
     }
 }
