@@ -1,4 +1,4 @@
-﻿using ReportPluginFramework.Beta;
+﻿using ReportPluginFramework;
 
 namespace Reports
 {

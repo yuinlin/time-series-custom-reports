@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ReportPluginFramework.Beta;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
+using ReportPluginFramework;
+using ReportPluginFramework.ReportData.TimeSeriesData;
+using ReportPluginFramework.ReportData.TimeSeriesComputedStatistics;
 
 namespace Reports
 {
@@ -66,7 +66,7 @@ namespace Reports
 
         private List<TimeSeriesPoint> FindDailyCountPoints(Guid timeseriesUniqueId, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
-            Log.DebugFormat("FindDailyCountPoints for uniqueId = {0} from {1} to {2}", 
+            Log.DebugFormat("FindDailyCountPoints for uniqueId = {0} from {1} to {2}",
                 timeseriesUniqueId, fromTime.ToString(Common._DateFormat), toTime.ToString(Common._DateFormat));
 
             return _Common.GetComputedStatisticsPoints(timeseriesUniqueId, fromTime, toTime, StatisticType.Count, StatisticPeriod.Daily, false, null);

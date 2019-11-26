@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Data;
 using ReportPluginFramework.Properties;
-using ReportPluginFramework.Beta;
+using ReportPluginFramework;
 using System.Reflection;
-using ReportPluginFramework.Beta.ReportData;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesDescription;
+using ReportPluginFramework.ReportData;
+using ReportPluginFramework.ReportData.TimeSeriesComputedStatistics;
+using ReportPluginFramework.ReportData.TimeSeriesData;
+using ReportPluginFramework.ReportData.TimeSeriesDescription;
 using System.Collections.Generic;
 
 namespace ContinuousDataProductionNamespace
@@ -92,7 +92,7 @@ namespace ContinuousDataProductionNamespace
 
                 settingsTable.Columns.Add("NumberOfHistoricalPoints", typeof(int));
                 settingsTable.Rows[0]["NumberOfHistoricalPoints"] = numberOfHistoricalPoints;
-              
+
             }
             catch (Exception exp)
             {

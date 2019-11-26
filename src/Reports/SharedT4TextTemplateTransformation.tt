@@ -18,10 +18,10 @@ using System.Threading;
 using System.Globalization;
 
 using ReportPluginFramework.Properties;
-using ReportPluginFramework.Beta;
-using ReportPluginFramework.Beta.ReportData;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
+using ReportPluginFramework;
+using ReportPluginFramework.ReportData;
+using ReportPluginFramework.ReportData.TimeSeriesComputedStatistics;
+using ReportPluginFramework.ReportData.TimeSeriesData;
 using Server.Services.PublishService.ServiceModel.RequestDtos;
 using Server.Services.PublishService.ServiceModel.ResponseDtos;
 using Server.Services.PublishService.ServiceModel.Dtos;
@@ -35,8 +35,8 @@ using PerpetuumSoft.Reporting.Export.Csv;
 using PerpetuumSoft.Reporting.Export.OpenXML;
 using PerpetuumSoft.Reporting.Export.Graph;
 
-using TimeSeriesPoint = ReportPluginFramework.Beta.ReportData.TimeSeriesData.TimeSeriesPoint;
-using InterpolationType = ReportPluginFramework.Beta.ReportData.TimeSeriesDescription.InterpolationType;
+using TimeSeriesPoint = ReportPluginFramework.ReportData.TimeSeriesData.TimeSeriesPoint;
+using InterpolationType = ReportPluginFramework.ReportData.TimeSeriesDescription.InterpolationType;
 <#+ 
 void PrintFiles(string namespaceName, string folderPath)
 {

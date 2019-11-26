@@ -7,10 +7,10 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 
 using ReportPluginFramework.Properties;
-using ReportPluginFramework.Beta;
-using ReportPluginFramework.Beta.ReportData;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesComputedStatistics;
-using ReportPluginFramework.Beta.ReportData.TimeSeriesData;
+using ReportPluginFramework;
+using ReportPluginFramework.ReportData;
+using ReportPluginFramework.ReportData.TimeSeriesComputedStatistics;
+using ReportPluginFramework.ReportData.TimeSeriesData;
 
 using Server.Services.PublishService.ServiceModel.RequestDtos;
 using Server.Services.PublishService.ServiceModel.ResponseDtos;
@@ -18,8 +18,8 @@ using Server.Services.PublishService.ServiceModel.Dtos;
 using Server.Services.PublishService.ServiceModel.Dtos.FieldVisit;
 using Server.Services.PublishService.ServiceModel.Dtos.FieldVisit.Enum;
 
-using TimeSeriesPoint = ReportPluginFramework.Beta.ReportData.TimeSeriesData.TimeSeriesPoint;
-using InterpolationType = ReportPluginFramework.Beta.ReportData.TimeSeriesDescription.InterpolationType;
+using TimeSeriesPoint = ReportPluginFramework.ReportData.TimeSeriesData.TimeSeriesPoint;
+using InterpolationType = ReportPluginFramework.ReportData.TimeSeriesDescription.InterpolationType;
 
 namespace Reports
 {
@@ -86,7 +86,7 @@ namespace Reports
             {
                 interval = GetReportTimeRangeInLocationUtcOffset(_RunReportRequest.Inputs.LocationInput.Identifier);
             }
-            
+
             return GroupByHandler.GetTrimmedPeriodSelected(interval);
         }
 
@@ -239,7 +239,7 @@ namespace Reports
             bool? requiresNoCoverage = null;
             double? noCoverageAmount = null;
 
-            List<TimeSeriesPoint> points = 
+            List<TimeSeriesPoint> points =
                 GetComputedStatisticsPoints(timeSeriesUniqueId, StatisticType.Count, StatisticPeriod.Annual, requiresNoCoverage, noCoverageAmount);
 
             double count = 0;
@@ -335,7 +335,7 @@ namespace Reports
 
         public string GetTimeSeriesUnitSymbol(Guid timeseriesUniqueId)
         {
-            return GetUnitSymbol(GetTimeSeriesDescription(timeseriesUniqueId).Unit); 
+            return GetUnitSymbol(GetTimeSeriesDescription(timeseriesUniqueId).Unit);
         }
 
         public string GetUnitSymbol(string unitId)
@@ -389,7 +389,7 @@ namespace Reports
             if (dischargeUncertainty.ActiveUncertaintyType == UncertaintyType.None)
                 return double.NaN;
             if (dischargeUncertainty.ActiveUncertaintyType == UncertaintyType.Quantitative)
-                return (dischargeUncertainty.QuantitativeUncertainty.Numeric.HasValue) ? 
+                return (dischargeUncertainty.QuantitativeUncertainty.Numeric.HasValue) ?
                     dischargeUncertainty.QuantitativeUncertainty.Numeric.Value : double.NaN;
             if (dischargeUncertainty.ActiveUncertaintyType == UncertaintyType.Qualitative)
                 return GetPercentUncertaintyForQualitativeGrade(dischargeUncertainty.QualitativeUncertainty);
@@ -559,7 +559,7 @@ namespace Reports
         {
             bool useCoverage = (coverageOptions.RequiresMinimumCoverage.HasValue)? coverageOptions.RequiresMinimumCoverage.Value : false;
             double coverageAmount = (coverageOptions.CoverageThreshold.HasValue)? coverageOptions.CoverageThreshold.Value : 0.0;
-            return string.Format(Resources.DataCoverageThreshold + ": {0}", (useCoverage) ? 
+            return string.Format(Resources.DataCoverageThreshold + ": {0}", (useCoverage) ?
                 (coverageAmount * 100.0).ToString() + "%" : Resources.NotApplicableAbbreviated);
         }
 
@@ -617,7 +617,7 @@ namespace Reports
         public List<int> GetComputedStatisticsGrades(Guid timeseriesUniqueId, DateTimeOffset? startTime, DateTimeOffset? endTime,
             StatisticType statType, StatisticPeriod period, int? periodCount, bool? requiresCoverage, double? coverageAmount)
         {
-            TimeSeriesComputedStatisticsResponse response = GetComputedStatisticsResponse(timeseriesUniqueId, 
+            TimeSeriesComputedStatisticsResponse response = GetComputedStatisticsResponse(timeseriesUniqueId,
                 startTime, endTime, statType, period, periodCount, requiresCoverage, coverageAmount);
 
            List<TimeSeriesPoint> points = response.Points;
@@ -692,7 +692,7 @@ namespace Reports
                 _TimeSeriesTimeRangeIntervals.Add(timeseriesUniqueId, timeseriesInterval);
             }
 
-            DateTimeOffsetInterval interval = _TimeSeriesTimeRangeIntervals[timeseriesUniqueId];         
+            DateTimeOffsetInterval interval = _TimeSeriesTimeRangeIntervals[timeseriesUniqueId];
 
             Log.DebugFormat("Time-range for uniqueId = {0} is '{1}'", timeseriesUniqueId, TimeSeriesRangeString(interval));
 
@@ -841,20 +841,20 @@ namespace Reports
             message += string.Format("{0}RunReportRequest Interval: {1}", newLine, TimeIntervalAsString(_RunReportRequest.Interval, dateFormat));
             message += string.Format("{0}Period Selected Adjusted for Report: {1}", newLine, TimeIntervalAsString(GetPeriodSelectedAdjustedForReport(), dateFormat));
             message += string.Format("{0}Formatted Period Selected: ", newLine);
-            message += string.Format("{0}{1}Report offset: {2}", 
+            message += string.Format("{0}{1}Report offset: {2}",
                 PeriodSelectedString(GetPeriodSelectedAdjustedForReport()), newLine, GetOffsetString(GetReportTimeSpanOffset()));
             message += string.Format("{0}TimeSeriesInputs: {1}", newLine, newLine);
             if ((runReportRequest.Inputs != null) && (runReportRequest.Inputs.TimeSeriesInputs != null))
                 foreach (TimeSeriesReportRequestInput timeseries in runReportRequest.Inputs.TimeSeriesInputs)
-                    message += string.Format("Name = '{0}', UniqueId = '{1}', IsMaster= '{2}', Identifier= '{3}', utcOffset= {4}{5}", 
+                    message += string.Format("Name = '{0}', UniqueId = '{1}', IsMaster= '{2}', Identifier= '{3}', utcOffset= {4}{5}",
                         timeseries.Name, timeseries.UniqueId, timeseries.IsMaster,
-                        GetTimeSeriesDescription(timeseries.UniqueId).Identifier, 
+                        GetTimeSeriesDescription(timeseries.UniqueId).Identifier,
                         GetOffsetString(GetTimeSeriesDescription(timeseries.UniqueId).UtcOffset), newLine);
 
             message += string.Format("{0}LocationInput: {1}", newLine, newLine);
             if ((runReportRequest.Inputs != null) && (runReportRequest.Inputs.LocationInput != null))
                 message += string.Format("Name = '{0}', Identifier = '{1}', utcOffset = {2}{3}",
-                    runReportRequest.Inputs.LocationInput.Name, runReportRequest.Inputs.LocationInput.Identifier, 
+                    runReportRequest.Inputs.LocationInput.Name, runReportRequest.Inputs.LocationInput.Identifier,
                     GetOffsetString(GetLocationData(runReportRequest.Inputs.LocationInput.Identifier).UtcOffset), newLine);
 
             message += outputFormatMessage;

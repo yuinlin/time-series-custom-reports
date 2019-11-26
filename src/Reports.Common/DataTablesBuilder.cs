@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ReportPluginFramework.Properties;
-using ReportPluginFramework.Beta;
-using ReportPluginFramework.Beta.ReportData;
+using ReportPluginFramework;
+using ReportPluginFramework.ReportData;
 
 using System.Data;
 using System.Reflection;
@@ -12,7 +12,7 @@ using Server.Services.PublishService.ServiceModel.RequestDtos;
 using Server.Services.PublishService.ServiceModel.ResponseDtos;
 using Server.Services.PublishService.ServiceModel.Dtos;
 
-using InterpolationType = ReportPluginFramework.Beta.ReportData.TimeSeriesDescription.InterpolationType;
+using InterpolationType = ReportPluginFramework.ReportData.TimeSeriesDescription.InterpolationType;
 
 namespace Reports
 {
