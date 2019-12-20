@@ -907,6 +907,31 @@ namespace Reports
         {
             return GetLocalizedEnumValue("", statistic.ToString());
         }
+
+        public string GetParameterRoundingSpec(string parameterName)
+        {
+            ParameterListServiceRequest request = new ParameterListServiceRequest();
+            List<ParameterMetadata> parameterList = Publish().Get(request).Parameters;
+            foreach (ParameterMetadata parameter in parameterList)
+            {
+                if (parameter.Identifier == parameterName)
+                    return parameter.RoundingSpec;
+            }
+            Log.DebugFormat("GetParameterRoundingSpec did not find parameter = '{0}'", parameterName);
+            return "";
+        }
+
+        public string GetFormattedDouble(double value, string roundingSpec, string missingStr)
+        {
+            if (string.IsNullOrEmpty(roundingSpec)) roundingSpec = "DEC(3)";
+
+            RoundServiceSpecRequest request = new RoundServiceSpecRequest();
+            request.Data = new List<double> { value };
+            request.RoundingSpec = roundingSpec;
+            request.ValueForNaN = missingStr;
+
+            return Publish().Put(request).Data[0];
+        }
     }
 }
 
