@@ -324,6 +324,7 @@ namespace Reports
             timeSeriesTable.Columns.Add("TimeSeriesInterval", typeof(DateTimeOffsetInterval));
             timeSeriesTable.Columns.Add("TimeSeriesTimeRangeString", typeof(string));
             timeSeriesTable.Columns.Add("TimeSeriesTimeRangeInformation", typeof(string));
+            timeSeriesTable.Columns.Add("RoundingSpec", typeof(string));
             DataRow dataRow = timeSeriesTable.NewRow();
 
             TimeSeriesDescription tsd = _Common.GetTimeSeriesDescription(timeseriesUniqueId);
@@ -354,6 +355,7 @@ namespace Reports
             dataRow["TimeSeriesInterval"] = _Common.GetTimeSeriesTimeRange(timeseriesUniqueId);
             dataRow["TimeSeriesTimeRangeString"] = _Common.GetTimeSeriesTimeRangeString(timeseriesUniqueId);
             dataRow["TimeSeriesTimeRangeInformation"] = _Common.GetTimeSeriesTimeRangeInformation(timeseriesUniqueId);
+            dataRow["RoundingSpec"] = _Common.GetParameterRoundingSpec(tsd.Parameter);
 
             timeSeriesTable.Rows.Add(dataRow);
 
