@@ -505,9 +505,11 @@ namespace Reports
             ratingModelTable.Columns.Add("InputParameter", typeof(string));
             ratingModelTable.Columns.Add("InputUnitId", typeof(string));
             ratingModelTable.Columns.Add("InputUnitSymbol", typeof(string));
+            ratingModelTable.Columns.Add("InputParameterRoundingSpec", typeof(string));
             ratingModelTable.Columns.Add("OutputParameter", typeof(string));
             ratingModelTable.Columns.Add("OutputUnitId", typeof(string));
             ratingModelTable.Columns.Add("OutputUnitSymbol", typeof(string));
+            ratingModelTable.Columns.Add("OutputParameterRoundingSpec", typeof(string));
             ratingModelTable.Columns.Add("Description", typeof(string));
             ratingModelTable.Columns.Add("Comment", typeof(string));
             ratingModelTable.Columns.Add("TimeRange", typeof(string));
@@ -546,10 +548,12 @@ namespace Reports
                 ratingModelRow["InputParameter"] = inputParameterDisplayId;
                 ratingModelRow["InputUnitId"] = inputUnitId;
                 ratingModelRow["InputUnitSymbol"] = _Common.GetUnitSymbol(inputUnitId);
+                ratingModelRow["InputParameterRoundingSpec"] = _Common.GetParameterRoundingSpec(inputParameterDisplayId);
 
                 ratingModelRow["OutputParameter"] = outputParameterDisplayId;
                 ratingModelRow["OutputUnitId"] = outputUnitId;
                 ratingModelRow["OutputUnitSymbol"] = _Common.GetUnitSymbol(outputUnitId);
+                ratingModelRow["OutputParameterRoundingSpec"] = _Common.GetParameterRoundingSpec(outputParameterDisplayId);
 
                 ratingModelRow["Description"] = rmDescription;
                 ratingModelRow["Comment"] = ratingModelDescription.Comment;
