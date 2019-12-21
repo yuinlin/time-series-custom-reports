@@ -46,42 +46,6 @@
       "DefaultValue": "Rating",
       "Type": "String",
       "Required": false
-    },  
-    {
-      "Name": "DischargeFormatType",
-      "Label": "Discharge Format Type",
-      "DefaultValue": "Significant Figures",
-      "Type": "PickList",
-      "PickListOptions": {
-        "Fixed": "Fixed",
-        "Significant Figures": "Significant Figures"
-      },
-      "Required": true
-    },
-    {
-      "Name": "DischargeFormatPrecision",
-      "Label": "Discharge Format Precision",
-      "DefaultValue": "3",
-      "Type": "Integer",
-      "Required": true
-    },
-    {
-      "Name": "OtherFormatType",
-      "Label": "Other Format Type",
-      "DefaultValue": "Fixed",
-      "Type": "PickList",
-      "PickListOptions": {
-        "Fixed": "Fixed",
-        "Significant Figures": "Significant Figures"
-      },
-      "Required": true
-    },
-    {
-      "Name": "OtherFormatPrecision",
-      "Label": "Other Format Precision",
-      "DefaultValue": "2",
-      "Type": "Integer",
-      "Required": true
     }
   ]
 }
