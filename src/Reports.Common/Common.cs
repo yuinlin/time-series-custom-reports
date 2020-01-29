@@ -231,7 +231,7 @@ namespace Reports
         public string GetLocationName(string locationIdentifier)
         {
             LocationDescription locationDescription = GetLocationDescriptionByIdentifier(locationIdentifier);
-            return (locationDescription != null)? locationDescription.Name : "";
+            return (locationDescription != null) ? locationDescription.Name : "";
         }
 
         public double GetTotalPointCount(Guid timeSeriesUniqueId)
@@ -301,7 +301,7 @@ namespace Reports
             var locationDescriptionListRequest = new LocationDescriptionListServiceRequest();
             locationDescriptionListRequest.LocationIdentifier = locationIdentifier;
             var locationDescriptions = Publish().Get(locationDescriptionListRequest).LocationDescriptions;
-            return (locationDescriptions.Count > 0)? locationDescriptions[0] : null;
+            return (locationDescriptions.Count > 0) ? locationDescriptions[0] : null;
         }
 
         public LocationDataServiceResponse GetLocationData(string locationIdentifier)
@@ -495,7 +495,7 @@ namespace Reports
             if (intervalStartTime.HasValue)
             {
                 Log.DebugFormat("PeriodSelectedIsWaterYear waterYearMonth = {0}, periodSelected = {1}, Period selected in offset = {2} is {3}",
-                  GetWaterYearMonth(),  TimeRangeString(_RunReportRequest.Interval), utcOffset, TimeRangeString(GetPeriodSelectedInUtcOffset(utcOffset)));
+                  GetWaterYearMonth(), TimeRangeString(_RunReportRequest.Interval), utcOffset, TimeRangeString(GetPeriodSelectedInUtcOffset(utcOffset)));
             }
             return (intervalStartTime.HasValue) && (intervalStartTime.Value.Month == GetWaterYearMonth());
         }
@@ -557,8 +557,8 @@ namespace Reports
 
         public string GetCoverageString(CoverageOptions coverageOptions)
         {
-            bool useCoverage = (coverageOptions.RequiresMinimumCoverage.HasValue)? coverageOptions.RequiresMinimumCoverage.Value : false;
-            double coverageAmount = (coverageOptions.CoverageThreshold.HasValue)? coverageOptions.CoverageThreshold.Value : 0.0;
+            bool useCoverage = (coverageOptions.RequiresMinimumCoverage.HasValue) ? coverageOptions.RequiresMinimumCoverage.Value : false;
+            double coverageAmount = (coverageOptions.CoverageThreshold.HasValue) ? coverageOptions.CoverageThreshold.Value : 0.0;
             return string.Format(Resources.DataCoverageThreshold + ": {0}", (useCoverage) ?
                 (coverageAmount * 100.0).ToString() + "%" : Resources.NotApplicableAbbreviated);
         }
@@ -620,8 +620,8 @@ namespace Reports
             TimeSeriesComputedStatisticsResponse response = GetComputedStatisticsResponse(timeseriesUniqueId,
                 startTime, endTime, statType, period, periodCount, requiresCoverage, coverageAmount);
 
-           List<TimeSeriesPoint> points = response.Points;
-           List<GradeTimeRange> gradeRanges = response.GradeRanges;
+            List<TimeSeriesPoint> points = response.Points;
+            List<GradeTimeRange> gradeRanges = response.GradeRanges;
 
             var pointwiseGrades = new List<int>();
             var gradeIndex = 0;
@@ -657,7 +657,7 @@ namespace Reports
         {
             InterpolationType interpolationType = GetTimeSeriesInterpolationType(timeseriesUniqueId);
             string interpolationTypeString = GetLocalizedEnumValue(interpolationType.GetType().Name, interpolationType.ToString());
-            return string.Format("{0} - {1}", (int) interpolationType, interpolationTypeString);
+            return string.Format("{0} - {1}", (int)interpolationType, interpolationTypeString);
         }
 
         public int GetBinAdjustment(Guid timeseriesUniqueId)
@@ -907,6 +907,30 @@ namespace Reports
         {
             return GetLocalizedEnumValue("", statistic.ToString());
         }
+
+        public string GetParameterRoundingSpec(string parameterName)
+        {
+            ParameterListServiceRequest request = new ParameterListServiceRequest();
+            List<ParameterMetadata> parameterList = Publish().Get(request).Parameters;
+            foreach (ParameterMetadata parameter in parameterList)
+            {
+                if (parameter.Identifier == parameterName)
+                    return parameter.RoundingSpec;
+            }
+            Log.DebugFormat("GetParameterRoundingSpec did not find parameter = '{0}'", parameterName);
+            return "";
+        }
+
+        public string GetFormattedDouble(double value, string roundingSpec, string missingStr)
+        {
+            if (string.IsNullOrEmpty(roundingSpec)) roundingSpec = "DEC(3)";
+
+            RoundServiceSpecRequest request = new RoundServiceSpecRequest();
+            request.Data = new List<double> { value };
+            request.RoundingSpec = roundingSpec;
+            request.ValueForNaN = missingStr;
+
+            return Publish().Put(request).Data[0];
+        }
     }
 }
-
