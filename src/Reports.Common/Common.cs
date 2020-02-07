@@ -941,7 +941,14 @@ namespace Reports
             request.UnitId = unitId;
             request.ValueForNaN = missingStr;
 
-            return Publish().Put(request).Data[0];
+            try
+            {
+                return Publish().Put(request).Data[0];
+            }
+            catch
+            {
+                return GetFormattedDouble(value, "", missingStr);
+            }
         }
 
         public List<string> GetFormattedDoubles(List<double> values, string roundingSpec, string missingStr)
