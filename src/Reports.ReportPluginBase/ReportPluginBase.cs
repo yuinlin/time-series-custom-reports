@@ -66,14 +66,19 @@ namespace Reports
                 document.Name, document.Pages.Count, outputFormat);
 
             string tempFileName = Path.GetTempFileName();
-            tempFileName = Path.ChangeExtension(tempFileName, outputFormat);
+            string outputFileName = Path.ChangeExtension(tempFileName, outputFormat);
             try
             {
                 File.Delete(tempFileName);
             }
             catch { }
+            try
+            {
+                File.Delete(outputFileName);
+            }
+            catch { }
 
-            Log.DebugFormat("GenerateReport - the name of file for export report to write to is set to {0}", tempFileName);
+            Log.DebugFormat("GenerateReport - the name of file for export report to write to is set to {0}", outputFileName);
 
             try
             {
@@ -84,8 +89,8 @@ namespace Reports
                             PdfExportFilter exportFilter = new PdfExportFilter();
 
                             exportFilter.Compress = true;
-                            exportFilter.Export(document, tempFileName, false);
-                            Log.DebugFormat("GenerateReport after export document to PDF into tempFileName = {0}", tempFileName);
+                            exportFilter.Export(document, outputFileName, false);
+                            Log.DebugFormat("GenerateReport after export document to PDF into tempFileName = {0}", outputFileName);
                             break;
                         }
                     case "CSV":
@@ -93,23 +98,23 @@ namespace Reports
                             CsvExportFilter exportFilter = new CsvExportFilter();
 
                             exportFilter.Separator = ",";
-                            exportFilter.Export(document, tempFileName, false);
-                            Log.DebugFormat("GenerateReport after export document to CSV into tempFileName = {0}", tempFileName);
+                            exportFilter.Export(document, outputFileName, false);
+                            Log.DebugFormat("GenerateReport after export document to CSV into tempFileName = {0}", outputFileName);
                             break;
                         }
                     case "XLSX":
                         {
                             ExcelExportFilter exportFilter = new ExcelExportFilter();
                             exportFilter.ExportAsData = true;
-                            exportFilter.Export(document, tempFileName, false);
-                            Log.DebugFormat("GenerateReport after export document to XLSX into tempFileName = {0}", tempFileName);
+                            exportFilter.Export(document, outputFileName, false);
+                            Log.DebugFormat("GenerateReport after export document to XLSX into tempFileName = {0}", outputFileName);
                             break;
                         }
                     case "PNG":
                         {
                             PngExportFilter exportFilter = new PngExportFilter();
-                            exportFilter.Export(document, tempFileName, false);
-                            Log.DebugFormat("GenerateReport after export document to XLSX into tempFileName = {0}", tempFileName);
+                            exportFilter.Export(document, outputFileName, false);
+                            Log.DebugFormat("GenerateReport after export document to XLSX into tempFileName = {0}", outputFileName);
                             break;
                         }
                     default:
@@ -125,7 +130,7 @@ namespace Reports
                 throw exp;
             }
 
-            return tempFileName;
+            return outputFileName;
         }
 
         private void InlineReportSlot_RenderingError(object sender, RenderingErrorEventArgs e)
