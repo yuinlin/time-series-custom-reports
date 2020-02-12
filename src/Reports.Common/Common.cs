@@ -932,5 +932,71 @@ namespace Reports
 
             return Publish().Put(request).Data[0];
         }
+
+        public string GetFormattedDouble(double value, string parameterDisplayId, string unitId, string missingStr)
+        {
+            RoundServiceRequest request = new RoundServiceRequest();
+            request.Data = new List<double> { value };
+            request.ParameterDisplayId = parameterDisplayId;
+            request.UnitId = unitId;
+            request.ValueForNaN = missingStr;
+
+            try
+            {
+                return Publish().Put(request).Data[0];
+            }
+            catch
+            {
+                return GetFormattedDouble(value, "", missingStr);
+            }
+        }
+
+        public List<string> GetFormattedDoubles(List<double> values, string roundingSpec, string missingStr)
+        {
+            if (string.IsNullOrEmpty(roundingSpec)) roundingSpec = "DEC(3)";
+
+            RoundServiceSpecRequest request = new RoundServiceSpecRequest();
+            request.Data = values;
+            request.RoundingSpec = roundingSpec;
+            request.ValueForNaN = missingStr;
+
+            return Publish().Put(request).Data;
+        }
+
+        public List<string> GetFormattedDoubles(List<double> values, string parameterDisplayId, string unitId, string missingStr)
+        {
+            RoundServiceRequest request = new RoundServiceRequest();
+            request.Data = values;
+            request.ParameterDisplayId = parameterDisplayId;
+            request.UnitId = unitId;
+            request.ValueForNaN = missingStr;
+
+            try
+            {
+                return Publish().Put(request).Data;
+            }
+            catch (Exception exp)
+            {
+                string defaultRoundingSpec = "DEC(3)";
+
+                Log.Error(string.Format(
+                    "Error rounding doubles with parameter = '{0}' and unitId = '{1}', retry with default specification {2}",
+                    parameterDisplayId, unitId, defaultRoundingSpec), exp);
+
+                return GetFormattedDoubles(values, defaultRoundingSpec, missingStr);
+            }
+        }
+
+        public List<string> GetComputedStatisticsFormatted(List<TimeSeriesPoint> points, string parameterDisplayId, string unitId, string missingStr, StatisticType statisticType)
+        {
+            List<double> statisticPoints = new List<double>();
+            foreach (TimeSeriesPoint point in points)
+                statisticPoints.Add((point.Value.HasValue) ? point.Value.Value : double.NaN);
+
+            if (statisticType == StatisticType.Count)
+                return GetFormattedDoubles(statisticPoints, "DEC(0)", missingStr);
+
+            return GetFormattedDoubles(statisticPoints, parameterDisplayId, unitId, missingStr);
+        }
     }
 }
