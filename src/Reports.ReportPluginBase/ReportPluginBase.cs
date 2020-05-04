@@ -113,8 +113,9 @@ namespace Reports
                     case "PNG":
                         {
                             PngExportFilter exportFilter = new PngExportFilter();
+                            exportFilter.PagesRange = "1";
                             exportFilter.Export(document, outputFileName, false);
-                            Log.DebugFormat("GenerateReport after export document to XLSX into tempFileName = {0}", outputFileName);
+                            Log.DebugFormat("GenerateReport after export document to PNG into tempFileName = {0}", outputFileName);
                             break;
                         }
                     default:
