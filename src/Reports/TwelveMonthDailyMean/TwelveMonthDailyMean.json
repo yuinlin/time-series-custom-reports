@@ -59,6 +59,7 @@
 	  "GradeMarker  20" : "E",
 	  "GradeMarker  30" : "A",
 	  "GradeMarker  40" : "D",
-	  "GradeMarker  50" : "R"
+	  "GradeMarker  50" : "R",
+	  "HydatLabel" : "Daily.HydatReady"
     }
 }
