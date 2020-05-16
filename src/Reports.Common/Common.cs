@@ -623,6 +623,11 @@ namespace Reports
             List<TimeSeriesPoint> points = response.Points;
             List<GradeTimeRange> gradeRanges = response.GradeRanges;
 
+            return GetTimeSeriesPointsGrades(points, gradeRanges);
+        }
+
+        public List<int> GetTimeSeriesPointsGrades(List<TimeSeriesPoint> points, List<GradeTimeRange> gradeRanges)
+        {
             var pointwiseGrades = new List<int>();
             var gradeIndex = 0;
 
@@ -713,18 +718,23 @@ namespace Reports
 
         public List<TimeSeriesPoint> GetTimeSeriesPoints(Guid timeseriesUniqueId, DateTimeOffset? StartTime, DateTimeOffset? EndTime)
         {
-            Log.DebugFormat("GetTimeSeriesPoints uniqueId = {0} from {1} to {2}", timeseriesUniqueId,
+            return GetTimeSeriesDataResponse(timeseriesUniqueId, StartTime, EndTime).Points;
+        }
+
+        public TimeSeriesDataResponse GetTimeSeriesDataResponse(Guid timeseriesUniqueId, DateTimeOffset? StartTime, DateTimeOffset? EndTime)
+        {
+            Log.DebugFormat("GetTimeSeriesDataResponse uniqueId = {0} from {1} to {2}", timeseriesUniqueId,
                 (StartTime.HasValue) ? StartTime.Value.ToString(_DateFormat) : "start of record",
                 (EndTime.HasValue) ? EndTime.Value.ToString(_DateFormat) : "end of record");
 
-            TimeSeriesPointsRequest request = new TimeSeriesPointsRequest();
+            TimeSeriesDataRequest request = new TimeSeriesDataRequest();
             request.TimeSeriesUniqueId = timeseriesUniqueId;
             request.QueryFromTime = StartTime;
             request.QueryToTime = EndTime;
             request.TimeSeriesDataType = TimeSeriesDataType.Corrected;
             request.IncludeGapMarkers = true;
 
-            return ReportData().GetTimeSeriesPoints(request).Points;
+            return ReportData().GetTimeSeriesData(request);
         }
 
         public List<TimeAlignedPoint> GetTimeAlignedPoints(List<Guid> inputGuids, DateTimeOffset? StartTime, DateTimeOffset? EndTime)
