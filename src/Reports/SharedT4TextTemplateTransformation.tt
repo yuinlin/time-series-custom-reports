@@ -42,15 +42,12 @@ void PrintFiles(string namespaceName, string folderPath)
 {
     var relativePath = Path.Combine(folderPath, @"..\..");
 	var anchorFile = @"Reports.Common\Common.cs";
-
 	if (!File.Exists(Path.Combine(relativePath, anchorFile)))
 	{
 	    relativePath = Path.Combine(folderPath, @"..\..\Custom\src");
-
 		if (!File.Exists(Path.Combine(relativePath, anchorFile)))
 		    throw new InvalidOperationException($"Can't find relative path to '{anchorFile}' from '{folderPath}'.");
 	}
-
 	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, anchorFile));
 	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.Common\DataTablesBuilder.cs"));
 	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.Common\DoubleValueFormatter.cs"));
