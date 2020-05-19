@@ -33,41 +33,41 @@
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ExternalLibaries\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.Export.Csv, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.Export.Csv.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.Export.Csv.dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.Export.OpenXML, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.Export.OpenXML.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.Export.OpenXML.dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.Export.Pdf, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.Export.Pdf.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.Export.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.MSChart, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.MSChart.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.MSChart.dll</HintPath>
     </Reference>
     <Reference Include="ReportPluginFramework">
-      <HintPath>..\..\ExternalLibaries\Aqts\ReportPluginFramework.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Aqts\ReportPluginFramework.dll</HintPath>
     </Reference>
     <Reference Include="Server.Services.PublishService.ServiceModel">
-      <HintPath>..\..\ExternalLibaries\Aqts\Server.Services.PublishService.ServiceModel.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Aqts\Server.Services.PublishService.ServiceModel.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ServiceStack.Interfaces.4.5.12\lib\portable-wp80+sl5+net45+win8+wpa81+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\ServiceStack.Interfaces.4.5.12\lib\portable-wp80+sl5+net45+win8+wpa81+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=4.5.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ServiceStack.Text.4.5.12\lib\net45\ServiceStack.Text.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\ServiceStack.Text.4.5.12\lib\net45\ServiceStack.Text.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

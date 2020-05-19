@@ -39,30 +39,30 @@
   <ItemGroup>
     <Reference Include="PerpetuumSoft.Reporting, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.Export.Csv, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.Export.Csv.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.Export.Csv.dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.Export.OpenXML, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.Export.OpenXML.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.Export.OpenXML.dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.Export.Pdf, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibaries\Perpetuum\PerpetuumSoft.Reporting.Export.Pdf.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.Export.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Writers.Pdf, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibaries\Perpetuum\PerpetuumSoft.Writers.Pdf.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Perpetuum\PerpetuumSoft.Writers.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="ReportPluginFramework, Version=0.1.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibaries\Aqts\ReportPluginFramework.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Aqts\ReportPluginFramework.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Interfaces.4.5.12\lib\portable-wp80+sl5+net45+win8+wpa81+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\ServiceStack.Interfaces.4.5.12\lib\portable-wp80+sl5+net45+win8+wpa81+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

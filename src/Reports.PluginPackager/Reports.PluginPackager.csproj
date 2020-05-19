@@ -38,14 +38,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Costura, Version=1.6.2.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.1.6.2\lib\dotnet\Costura.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\Costura.Fody.1.6.2\lib\dotnet\Costura.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=4.5.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Text.4.5.12\lib\net45\ServiceStack.Text.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\ServiceStack.Text.4.5.12\lib\net45\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
