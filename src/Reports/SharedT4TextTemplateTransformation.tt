@@ -40,14 +40,25 @@ using InterpolationType = ReportPluginFramework.ReportData.TimeSeriesDescription
 <#+ 
 void PrintFiles(string namespaceName, string folderPath)
 {
-	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\Common.cs");
-	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\DataTablesBuilder.cs");
-	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\DoubleValueFormatter.cs");
-	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\GroupByHandler.cs");
-	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\PointsDataTableBuilder.cs");
-	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\TimeSeriesTimeRangeFinder.cs");
-	PrintFile(namespaceName, folderPath + @"\..\..\Reports.Common\TimeSeriesInstMinMaxFinder.cs");	
-	PrintFile(namespaceName, folderPath + @"\..\..\Reports.ReportPluginBase\ReportPluginBase.cs");
+    var relativePath = Path.Combine(folderPath, @"..\..");
+	var anchorFile = @"Reports.Common\Common.cs";
+
+	if (!File.Exists(Path.Combine(relativePath, anchorFile)))
+	{
+	    relativePath = Path.Combine(folderPath, @"..\..\Custom\src");
+
+		if (!File.Exists(Path.Combine(relativePath, anchorFile)))
+		    throw new InvalidOperationException($"Can't find relative path to '{anchorFile}' from '{folderPath}'.");
+	}
+
+	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, anchorFile));
+	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.Common\DataTablesBuilder.cs"));
+	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.Common\DoubleValueFormatter.cs"));
+	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.Common\GroupByHandler.cs"));
+	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.Common\PointsDataTableBuilder.cs"));
+	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.Common\TimeSeriesTimeRangeFinder.cs"));
+	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.Common\TimeSeriesInstMinMaxFinder.cs"));	
+	PrintFile(namespaceName, Path.Combine(folderPath, relativePath, @"Reports.ReportPluginBase\ReportPluginBase.cs"));
 }
 void PrintFile(string namespaceName, string filePath)
 {
