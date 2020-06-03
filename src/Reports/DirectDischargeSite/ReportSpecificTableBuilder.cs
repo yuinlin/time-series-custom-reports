@@ -18,35 +18,6 @@ namespace DirectDischargeSiteNamespace
         {
             try
             {
-                /*
-                dataSet.Tables["DischargeTimeSeriesFromRatingCurve"].TableName = "SourceData";
-                dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocation"].TableName = "SourceDataLocation";
-                dataSet.Tables["DischargeTimeSeriesFromRatingCurveLocationExtendedAttributes"].TableName = "SourceDataLocationExtendedAttributes";
-
-                RunFileReportRequest runReportRequest = (RunFileReportRequest)dataSet.Tables["RunReportRequest"].Rows[0]["RunReportRequest"];
-                IPublishGateway publish = runReportRequest.Publish;
-                Guid TimeSeriesUniqueId = (Guid)dataSet.Tables["SourceData"].Rows[0]["UniqueId"];
-                string timeseriesType = (string)dataSet.Tables["SourceData"].Rows[0]["TimeSeriesType"];
-
-                if (timeseriesType != "ProcessorDerived") throw (new Exception("Input is not a derived time-series. Input signal must be a rating model derived time-series."));
-
-                Server.Services.PublishService.ServiceModel.RequestDtos.UpchainProcessorListByTimeSeriesServiceRequest upchain = new Server.Services.PublishService.ServiceModel.RequestDtos.UpchainProcessorListByTimeSeriesServiceRequest();
-                upchain.TimeSeriesUniqueId = TimeSeriesUniqueId;
-                List<Server.Services.PublishService.ServiceModel.Dtos.Processor> processors = publish.Get(upchain).Processors;
-
-                string procType = "";
-                foreach (Server.Services.PublishService.ServiceModel.Dtos.Processor processor in processors)
-                {
-                    procType = processor.ProcessorType;
-
-                    Log.InfoFormat("ProcessorType = '{0}'", procType);
-                    if (procType == "ratingmodel")
-                        break;
-                    else continue;
-                }
-                if (procType != "ratingmodel")
-                    throw (new Exception("Input is not a rating model derived time-series. Input signal must be a rating model derived time-series."));
-*/
                 Common common = (Common)dataSet.Tables["RunReportRequest"].Rows[0]["CommonLibrary"];
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
