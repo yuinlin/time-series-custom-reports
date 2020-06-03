@@ -1,0 +1,39 @@
+﻿{
+  "Name": "Direct Discharge Site",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "WaterYears",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "DataCoverageThresholdPercent",
+      "Label": "Data Coverage Threshold (%)",
+      "DefaultValue": "80",
+      "Type": "Double",
+      "Required": false
+    }
+  ],
+  "Metadata":
+    {
+	  "LogoVisible" : "True"
+    }
+}
