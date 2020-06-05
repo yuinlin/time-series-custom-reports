@@ -24,31 +24,6 @@
   ],
   "Parameters": 
   [
-    {
-      "Name": "FormatType",
-      "Label": "Format Type",
-      "DefaultValue": "Fixed",
-      "Type": "PickList",
-      "PickListOptions": {
-        "Fixed": "Fixed",
-        "SignificantFigures": "Significant Figures"
-      },
-      "Required": true
-    },
-    {
-      "Name": "FormatPrecision",
-      "Label": "Format Precision",
-      "DefaultValue": "3",
-      "Type": "Integer",
-      "Required": true
-    },
-    {
-      "Name": "MissingData",
-      "Label": "Missing Data",
-      "DefaultValue": "***",
-      "Type": "String",
-      "Required": false
-    }
   ],
   "Metadata":
     {
@@ -60,6 +35,7 @@
 	  "GradeMarker  30" : "A",
 	  "GradeMarker  40" : "D",
 	  "GradeMarker  50" : "R",
-	  "HydatLabel" : "Daily.HydatReady"
+	  "HydatLabel" : "Daily.HydatReady",
+	  "MissingData" : "***"
     }
 }
