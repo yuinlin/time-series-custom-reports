@@ -24,6 +24,17 @@
   ],
   "Parameters": 
   [
+	{
+      "Name": "SelectDailyMeans",
+      "Label": "Select Daily Means",
+      "DefaultValue": "DailyMeansFromHydatReady",
+      "Type": "PickList",
+      "PickListOptions": {
+        "DailyMeansFromHydatReady": "Daily Means from HydatReady",
+        "DailyMeansOfInputDataset": "Daily Means of Input Dataset"
+      },
+      "Required": true
+    }  
   ],
   "Metadata":
     {
