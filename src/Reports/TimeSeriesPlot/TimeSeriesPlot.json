@@ -58,5 +58,10 @@
       },
       "Required": true
     }
-  ]
+  ],
+  "Metadata":
+    {
+	  "StageParameter" : "Stage",
+	  "DischargeParameter" : "Discharge"
+    }
 }

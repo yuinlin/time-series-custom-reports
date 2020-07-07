@@ -97,7 +97,6 @@ namespace Reports
             Log.DebugFormat("GetCommonDataSet for dll {0} in folder {1}", dllName, dllFolder);
 
             AddRunReportRequestParametersFromDefinitionMetadata();
-            AddRunReportRequestParametersFromSettingsFile();
 
             Log.Info(ReportInputInformation());
 
