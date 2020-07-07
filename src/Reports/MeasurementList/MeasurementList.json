@@ -47,5 +47,11 @@
       "Type": "String",
       "Required": false
     }
-  ]
+  ],
+  "Metadata":
+    {
+	  "WaterTempParameter" : "Water Temp",
+	  "DateFormat" : "MM/dd/yyyy",
+	  "TimeFormat" : "HH:mm:ss"
+    }
 }
