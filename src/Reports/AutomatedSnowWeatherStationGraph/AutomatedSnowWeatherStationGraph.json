@@ -1,0 +1,28 @@
+﻿{
+  "Name": "Automated Snow Weather Station Graph",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "WaterYears",
+    "Value": 100
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "DailySnowWaterEquivalentTimeSeries",
+      "Label": "Daily Snow Water Equivalent Time Series (SW.Daily)",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+  ]
+}

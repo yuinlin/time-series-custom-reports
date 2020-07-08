@@ -1,0 +1,28 @@
+﻿{
+  "Name": "Groundwater Level Statistics Chart",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "WaterYears",
+    "Value": 100
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "GroundwaterLevelTimeSeries",
+      "Label": "Groundwater Level Time Series (SGWL.Working)",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+  ]
+}
