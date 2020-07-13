@@ -68,9 +68,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwelveMonthDailyMean", "Rep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectDischargeSite", "Reports\DirectDischargeSite\DirectDischargeSite.csproj", "{652AA8DE-0D4C-4F20-99FB-EB71C2A4FDC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroundwaterLevelStatisticsChart", "Reports\GroundwaterLevelStatisticsChart\GroundwaterLevelStatisticsChart.csproj", "{ECA8A618-0F16-4F4C-9250-7648AFCC76DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroundwaterLevelStatisticsChart", "Reports\GroundwaterLevelStatisticsChart\GroundwaterLevelStatisticsChart.csproj", "{D2F87F57-0150-4A2D-9FF8-87A7D5DF2679}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatedSnowWeatherStationGraph", "Reports\AutomatedSnowWeatherStationGraph\AutomatedSnowWeatherStationGraph.csproj", "{C8F88DD2-AA9F-4D57-8E4C-8994CCA93EA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationsData", "Reports\LocationsData\LocationsData.csproj", "{87F22D1D-572C-420F-906F-535FB0D7C3AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,14 +172,18 @@ Global
 		{652AA8DE-0D4C-4F20-99FB-EB71C2A4FDC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{652AA8DE-0D4C-4F20-99FB-EB71C2A4FDC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{652AA8DE-0D4C-4F20-99FB-EB71C2A4FDC5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ECA8A618-0F16-4F4C-9250-7648AFCC76DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ECA8A618-0F16-4F4C-9250-7648AFCC76DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ECA8A618-0F16-4F4C-9250-7648AFCC76DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ECA8A618-0F16-4F4C-9250-7648AFCC76DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2F87F57-0150-4A2D-9FF8-87A7D5DF2679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2F87F57-0150-4A2D-9FF8-87A7D5DF2679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2F87F57-0150-4A2D-9FF8-87A7D5DF2679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2F87F57-0150-4A2D-9FF8-87A7D5DF2679}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8F88DD2-AA9F-4D57-8E4C-8994CCA93EA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8F88DD2-AA9F-4D57-8E4C-8994CCA93EA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8F88DD2-AA9F-4D57-8E4C-8994CCA93EA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8F88DD2-AA9F-4D57-8E4C-8994CCA93EA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87F22D1D-572C-420F-906F-535FB0D7C3AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F22D1D-572C-420F-906F-535FB0D7C3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F22D1D-572C-420F-906F-535FB0D7C3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F22D1D-572C-420F-906F-535FB0D7C3AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,8 +210,9 @@ Global
 		{E2CBBDA9-2BBE-42D3-A127-395BCD2BB9DC} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{246C793D-DC52-4D9F-B642-0DC8042E137D} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{652AA8DE-0D4C-4F20-99FB-EB71C2A4FDC5} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
-		{ECA8A618-0F16-4F4C-9250-7648AFCC76DE} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
+		{D2F87F57-0150-4A2D-9FF8-87A7D5DF2679} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{C8F88DD2-AA9F-4D57-8E4C-8994CCA93EA3} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
+		{87F22D1D-572C-420F-906F-535FB0D7C3AA} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE1A8A78-29AC-43E5-8083-A27EB11F4054}
