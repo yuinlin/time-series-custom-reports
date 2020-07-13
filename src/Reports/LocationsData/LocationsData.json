@@ -1,0 +1,72 @@
+﻿{
+  "Name": "Locations Data",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Days",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "CSV",
+    },
+    {
+      "Name": "PDF",
+    },
+    {
+      "Name": "xlsx",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+  ],
+  "Parameters": 
+  [
+   {
+      "Name": "LocationIdentifierFilterPartialName",
+      "Label": "Location Identifier Filter (supports partialname*)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "LocationNameFilterPartialName",
+      "Label": "Location Name Filter (supports partialname*)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },   
+	{
+      "Name": "PrimaryFolderFilterPartialName",
+      "Label": "Primary Folder Filter (supports partialname*)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+	{
+      "Name": "LocationTagFilterPartialName",
+      "Label": "Location Tag Filter (supports partialname*, separate items with +)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+	{
+      "Name": "SortOn",
+      "Label": "Sort On",
+      "DefaultValue": "LocationIdentifier",
+      "Type": "PickList",
+      "PickListOptions": {
+        "LocationIdentifier": "Location Identifier",
+        "LocationName": "Location Name",
+        "PrimaryFolder": "Primary Folder"
+      },
+      "Required": true
+    }
+  ],
+  "Metadata":
+    {
+	  "SkipAttributes" : ""
+    }
+}
