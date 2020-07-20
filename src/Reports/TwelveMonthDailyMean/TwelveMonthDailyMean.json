@@ -16,8 +16,8 @@
   "Inputs": 
   [
     {
-      "Name": "SourceData",
-      "Label": "Time Series",
+      "Name": "SourceDataStageWorkingOrDischargeWorking",
+      "Label": "Source Data (Stage.Working or Discharge.Working)",
       "Type": "TimeSeries",
       "IsMaster": true
     }
@@ -25,13 +25,13 @@
   "Parameters": 
   [
 	{
-      "Name": "SelectDailyMeans",
-      "Label": "Select Daily Means",
+      "Name": "SelectDailyMeansMethod",
+      "Label": "Select daily means method",
       "DefaultValue": "DailyMeansFromHydatReady",
       "Type": "PickList",
       "PickListOptions": {
-        "DailyMeansFromHydatReady": "Daily Means from HydatReady",
-        "DailyMeansOfInputDataset": "Daily Means of Input Dataset"
+        "DailyMeansFromHydatReady": "Directly from HydatReady - approved data only",
+        "DailyMeansOfInputDataset": "Daily Means of Input Dataset - all approval levels"
       },
       "Required": true
     }  
