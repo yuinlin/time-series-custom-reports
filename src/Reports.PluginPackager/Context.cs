@@ -27,7 +27,6 @@ namespace Reports.PluginPackager
             "NodaTime.*",
             "ComponentFactory.*",
             "PerpetuumSoft.*",
-            "itextsharp.dll",
             "NewtonSoft.*",
         };
     }

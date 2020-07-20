@@ -50,7 +50,7 @@
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.Export.Pdf, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.Export.Pdf.dll</HintPath>
+      <HintPath>..\..\ExternalLibraries\Perpetuum\PerpetuumSoft.Reporting.Export.Pdf[OldVersion].dll</HintPath>
     </Reference>
     <Reference Include="PerpetuumSoft.Reporting.MSChart, Version=7.3.0.32, Culture=neutral, PublicKeyToken=8a6ae0a3e67829b5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
