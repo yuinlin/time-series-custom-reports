@@ -3,8 +3,8 @@
   "DefaultTimeRange": 
   {
     "Type": "MostRecent",
-    "Unit": "WaterYears",
-    "Value": 100
+    "Unit": "Days",
+    "Value": 1
   },
   "OutputFormats": 
   [
