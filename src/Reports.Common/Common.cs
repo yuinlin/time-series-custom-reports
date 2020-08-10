@@ -2,6 +2,7 @@
 using System.Data;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
@@ -916,6 +917,19 @@ namespace Reports
         {
             return GetLocalizedEnumValue("", statistic.ToString());
         }
+
+        public static bool MatchPartialNameFilter(string filter, string stringValue)
+        {
+            if (string.IsNullOrEmpty(filter)) return true;
+            if (string.IsNullOrEmpty(stringValue)) stringValue = "";
+
+            string matchThisString = "^" + filter.Trim().Replace("*", ".*") + "$";
+            Regex regex = new Regex(matchThisString, RegexOptions.IgnoreCase);
+            Match regMatch = regex.Match(stringValue);
+
+            return regMatch.Success;
+        }
+
 
         public string GetParameterRoundingSpec(string parameterName)
         {
