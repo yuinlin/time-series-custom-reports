@@ -20,11 +20,12 @@ namespace TwelveMonthDailyMeanNamespace
         {
             try
             {
+                Common common = (Common)dataSet.Tables["RunReportRequest"].Rows[0]["CommonLibrary"];
+                common.CheckReportDefinitionVersion("2");
+
                 dataSet.Tables["SourceDataStageWorkingOrDischargeWorking"].TableName = "SourceData";
                 dataSet.Tables["SourceDataStageWorkingOrDischargeWorkingLocation"].TableName = "SourceDataLocation";
                 dataSet.Tables["SourceDataStageWorkingOrDischargeWorkingLocationExtendedAttributes"].TableName = "SourceDataLocationExtendedAttributes";
-
-                Common common = (Common)dataSet.Tables["RunReportRequest"].Rows[0]["CommonLibrary"];
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
