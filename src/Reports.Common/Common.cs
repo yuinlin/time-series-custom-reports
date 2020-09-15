@@ -59,6 +59,23 @@ namespace Reports
             return _WaterYearMonth;
         }
 
+        public void CheckReportDefinitionVersion(string requiredVersion)
+        {
+            bool containsVersionKey = _RunReportRequest.ReportDefinitionMetadata.ContainsKey("Version");
+
+            string version = (containsVersionKey) ? _RunReportRequest.ReportDefinitionMetadata["Version"] : "1";
+
+            if (version != requiredVersion)
+            {
+                string msg = string.Format(
+                    "Exception due to an incompatible version of report definition: the report definition is '{0}' " +
+                    "but this report requires '{1}', check the value of the " +
+                    "System Configuration Tool setting ReportPluginConfig-{2}",
+                    version, requiredVersion, _DllName);
+                throw new Exception(msg);
+            }
+        }
+
         public TimeSpan GetReportTimeSpanOffset()
         {
             if ((_RunReportRequest.Inputs != null) && (_RunReportRequest.Inputs.TimeSeriesInputs.Count > 0))

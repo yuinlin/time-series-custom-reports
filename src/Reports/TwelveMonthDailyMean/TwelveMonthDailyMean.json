@@ -1,5 +1,5 @@
 ﻿{
-  "Name": "Twelve Month Daily Mean",
+  "Name": "TwelveMonthDailyMean",
   "DefaultTimeRange": 
   {
     "Type": "LatestComplete",
@@ -38,6 +38,7 @@
   ],
   "Metadata":
     {
+	  "Version": "2",
 	  "GradeMarker  -2" : "",
 	  "GradeMarker  -1" : "",
 	  "GradeMarker   0" : "",
