@@ -3,7 +3,7 @@
   "DefaultTimeRange": 
   {
     "Type": "LatestComplete",
-    "Unit": "WaterYears",
+    "Unit": "Years",
     "Value": 1
   },
   "OutputFormats": 
@@ -17,12 +17,45 @@
   [
     {
       "Name": "SourceData",
-      "Label": "Daily Mean Time Series",
+      "Label": "Time Series",
       "Type": "TimeSeries",
       "IsMaster": true
     }
   ],
   "Parameters": 
-  [
-  ]
+  [    
+    {
+      "Name": "ValueRounding",
+      "Label": "Value Rounding",
+      "DefaultValue": "CustomDynamicRounding",
+      "Type": "PickList",
+      "PickListOptions": {
+        "ParameterBasedRounding": "Parameter Based Rounding",
+        "CustomDynamicRounding": "Custom Dynamic Rounding"
+      },
+      "Required": true
+    },
+    {
+      "Name": "AggregationOption",
+      "Label": "Aggregation Option",
+      "DefaultValue": "NoAggregationRequired",
+      "Type": "PickList",
+      "PickListOptions": {
+        "NoAggregationRequired": "Input is Daily Mean Time-Series - No Aggregation Required",
+        "AggregateInputTimeSeries": "Aggregate Daily Means from Input Time-Series"
+      },
+      "Required": true
+    },
+    {
+      "Name": "AggregationDataCoverageThresholdPercent",
+      "Label": "Aggregation Data Coverage Threshold (%)",
+      "DefaultValue": "80",
+      "Type": "Double",
+      "Required": false
+    }
+  ],
+  "Metadata":
+    {
+	  "Version": "2"
+    }
 }
