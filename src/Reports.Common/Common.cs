@@ -2,6 +2,7 @@
 using System.Data;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
@@ -56,6 +57,23 @@ namespace Reports
         public int GetWaterYearMonth()
         {
             return _WaterYearMonth;
+        }
+
+        public void CheckReportDefinitionVersion(string requiredVersion)
+        {
+            bool containsVersionKey = _RunReportRequest.ReportDefinitionMetadata.ContainsKey("Version");
+
+            string version = (containsVersionKey) ? _RunReportRequest.ReportDefinitionMetadata["Version"] : "1";
+
+            if (version != requiredVersion)
+            {
+                string msg = string.Format(
+                    "Exception due to an incompatible version of report definition: the report definition is '{0}' " +
+                    "but this report requires '{1}', check the value of the " +
+                    "System Configuration Tool setting ReportPluginConfig-{2}",
+                    version, requiredVersion, _DllName);
+                throw new Exception(msg);
+            }
         }
 
         public TimeSpan GetReportTimeSpanOffset()
@@ -901,6 +919,19 @@ namespace Reports
                 return enumValue;
             }
         }
+        public static string GetLocalizedDisplayString(string stringToLocalize)
+        {
+            try
+            {
+                string localized = Resources.ResourceManager.GetString(stringToLocalize);
+                if (!string.IsNullOrEmpty(localized)) return localized;
+
+                localized = Resources.ResourceManager.GetString(stringToLocalize.Replace(" ", string.Empty));
+                if (!string.IsNullOrEmpty(localized)) return localized;
+            }
+            catch { }
+            return stringToLocalize;
+        }
 
         public static string GetLocalizedTimeSeriesTypeName(string timeSeriesType)
         {
@@ -916,6 +947,19 @@ namespace Reports
         {
             return GetLocalizedEnumValue("", statistic.ToString());
         }
+
+        public static bool MatchPartialNameFilter(string filter, string stringValue)
+        {
+            if (string.IsNullOrEmpty(filter)) return true;
+            if (string.IsNullOrEmpty(stringValue)) stringValue = "";
+
+            string matchThisString = "^" + filter.Trim().Replace("*", ".*") + "$";
+            Regex regex = new Regex(matchThisString, RegexOptions.IgnoreCase);
+            Match regMatch = regex.Match(stringValue);
+
+            return regMatch.Success;
+        }
+
 
         public string GetParameterRoundingSpec(string parameterName)
         {
@@ -1006,6 +1050,120 @@ namespace Reports
                 return GetFormattedDoubles(statisticPoints, "DEC(0)", missingStr);
 
             return GetFormattedDoubles(statisticPoints, parameterDisplayId, unitId, missingStr);
+        }
+
+        public double GetDefinedShift(string ratingModelIdentifier, double stage, DateTimeOffset measurementTime)
+        {
+            double definedShift = double.NaN;
+            try
+            {
+                RatingModelEffectiveShiftsByStageValuesServiceRequest request = new RatingModelEffectiveShiftsByStageValuesServiceRequest();
+                request.RatingModelIdentifier = ratingModelIdentifier;
+                request.MeasurementTime = measurementTime;
+                request.StageValues = new List<double> { stage };
+
+                RatingModelEffectiveShiftsByStageValuesServiceResponse response = Publish().Get(request);
+
+                if (response.EffectiveShiftValues.Count > 0 && response.EffectiveShiftValues[0].HasValue)
+                    definedShift = response.EffectiveShiftValues[0].Value;
+
+            }
+            catch (Exception exp)
+            {
+                Log.Error(string.Format("Exception calculating defined shift from '{0}', '{1}', '{2}': ",
+                  ratingModelIdentifier, stage, measurementTime), exp);
+            }
+            return definedShift;
+        }
+
+        public double GetCalculatedStage(string ratingModelIdentifier, double discharge, DateTimeOffset measurementTime)
+        {
+            double calculatedStage = double.NaN;
+            try
+            {
+                RatingModelInputValuesServiceRequest request = new RatingModelInputValuesServiceRequest();
+                request.RatingModelIdentifier = ratingModelIdentifier;
+                request.OutputValues = new List<double> { discharge };
+                request.EffectiveTime = measurementTime;
+                RatingModelInputValuesServiceResponse response = Publish().Get(request);
+                List<double?> inputValues = response.InputValues;
+                if ((inputValues.Count > 0) && (inputValues[0] != null))
+                    calculatedStage = (double)inputValues[0];
+
+            }
+            catch (Exception exp)
+            {
+                Log.Error(string.Format("Exception calculating stage from '{0}', '{1}', '{2}': ",
+                  ratingModelIdentifier, discharge, measurementTime), exp);
+            }
+            return calculatedStage;
+        }
+
+        public double GetCalculatedDischarge(string ratingModelIdentifier, double stage, DateTimeOffset measurementTime, bool applyShifts)
+        {
+            double predictedDischarge = double.NaN;
+            try
+            {
+                RatingModelOutputValuesServiceRequest request = new RatingModelOutputValuesServiceRequest();
+                request.RatingModelIdentifier = ratingModelIdentifier;
+                request.InputValues = new List<double> { stage };
+                request.ApplyShifts = applyShifts;
+                request.EffectiveTime = measurementTime;
+                RatingModelOutputValuesServiceResponse response = Publish().Get(request);
+                List<double?> outputValues = response.OutputValues;
+                if ((outputValues.Count > 0) && (outputValues[0] != null))
+                    predictedDischarge = (double)outputValues[0];
+            }
+            catch (Exception exp)
+            {
+                Log.Error(string.Format("Exception calculating predicted discharge from '{0}', '{1}', '{2}, applyShifts = '{3}'': ",
+                  ratingModelIdentifier, stage, measurementTime, applyShifts), exp);
+            }
+
+            return predictedDischarge;
+        }
+
+        public List<FieldVisitDescription> GetFieldVisitDescriptions(string locIdentifier, DateTimeOffset? queryFrom, DateTimeOffset? queryTo)
+        {
+            FieldVisitDescriptionListServiceRequest request = new FieldVisitDescriptionListServiceRequest();
+            request.LocationIdentifier = locIdentifier;
+            request.QueryFrom = queryFrom;
+            request.QueryTo = queryTo;
+            request.IncludeInvalidFieldVisits = false;
+
+            FieldVisitDescriptionListServiceResponse response = Publish().Get(request);
+
+            return response.FieldVisitDescriptions;
+        }
+        public FieldVisitDataServiceResponse GetFieldVisitData(FieldVisitDescription fieldVisitDescription)
+        {
+            FieldVisitDataServiceRequest request = new FieldVisitDataServiceRequest();
+            request.FieldVisitIdentifier = fieldVisitDescription.Identifier;
+            request.ApplyRounding = true;
+            request.IncludeInvalidActivities = false;
+
+            FieldVisitDataServiceResponse response = Publish().Get(request);
+            return response;
+        }
+        public List<LocationDescription> GetLocationDescriptions(string locationIdentifierFilter, string locationNameFilter,
+            string primaryFolderFilter, List<string> locationTagFilterList)
+        {
+            List<LocationDescription> locationDescriptions = new List<LocationDescription>();
+            try
+            {
+                LocationDescriptionListServiceRequest locationDescriptionRequest = new LocationDescriptionListServiceRequest();
+
+                if (!string.IsNullOrEmpty(locationIdentifierFilter)) locationDescriptionRequest.LocationIdentifier = locationIdentifierFilter;
+                if (!string.IsNullOrEmpty(locationNameFilter)) locationDescriptionRequest.LocationName = locationNameFilter;
+                if (!string.IsNullOrEmpty(primaryFolderFilter)) locationDescriptionRequest.LocationFolder = primaryFolderFilter;
+                if (locationTagFilterList.Count > 0) locationDescriptionRequest.TagKeys = locationTagFilterList;
+
+                LocationDescriptionListServiceResponse locResponse = Publish().Get(locationDescriptionRequest);
+                locationDescriptions = locResponse.LocationDescriptions;
+            }
+            catch { }
+
+            return locationDescriptions;
         }
     }
 }
