@@ -44,12 +44,17 @@ namespace Reports
             _WaterYearMonth = _RunReportRequest.ReportData.GetSystemConfiguration().WaterYearDefaultMonth;
         }
 
-        private IReportData ReportData()
+        public RunFileReportRequest RunReportRequest()
+        {
+            return _RunReportRequest;
+        }
+
+        public IReportData ReportData()
         {
             return _RunReportRequest.ReportData;
         }
 
-        private IPublishGateway Publish()
+        public IPublishGateway Publish()
         {
             return _RunReportRequest.Publish;
         }
@@ -310,6 +315,25 @@ namespace Reports
                 return tsDescResponse.TimeSeriesDescriptions[0];
 
             Log.InfoFormat("GetTimeSeriesDescription for guid = {0} not found, returning null", timeseriesUniqueId);
+            return null;
+        }
+
+        public TimeSeriesDescription GetTimeSeriesDescription(string locIdentifier, string parameter, string label)
+        {
+            try
+            {
+                TimeSeriesDescriptionServiceRequest request = new TimeSeriesDescriptionServiceRequest();
+
+                request.LocationIdentifier = locIdentifier;
+                request.Parameter = parameter;
+
+                TimeSeriesDescriptionListServiceResponse response = Publish().Get(request);
+
+                foreach (TimeSeriesDescription tsDesc in response.TimeSeriesDescriptions)
+                    if (tsDesc.Label == label) return tsDesc;
+            }
+            catch { }
+
             return null;
         }
 
@@ -1145,8 +1169,20 @@ namespace Reports
             FieldVisitDataServiceResponse response = Publish().Get(request);
             return response;
         }
+
+        public List<string> GetFilterList(string filterString)
+        {
+            List<string> filterList = new List<string>();
+
+            if (!string.IsNullOrEmpty(filterString))
+            {
+                string[] filterArray = filterString.Split(new string[] { "+" }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string filter in filterArray) filterList.Add(filter.Trim());
+            }
+            return filterList;
+        }
         public List<LocationDescription> GetLocationDescriptions(string locationIdentifierFilter, string locationNameFilter,
-            string primaryFolderFilter, List<string> locationTagFilterList)
+            string primaryFolderFilter, List<string> locationTagKeysFilterList, List<string> locationTagValuesFilterList)
         {
             List<LocationDescription> locationDescriptions = new List<LocationDescription>();
             try
@@ -1156,10 +1192,31 @@ namespace Reports
                 if (!string.IsNullOrEmpty(locationIdentifierFilter)) locationDescriptionRequest.LocationIdentifier = locationIdentifierFilter;
                 if (!string.IsNullOrEmpty(locationNameFilter)) locationDescriptionRequest.LocationName = locationNameFilter;
                 if (!string.IsNullOrEmpty(primaryFolderFilter)) locationDescriptionRequest.LocationFolder = primaryFolderFilter;
-                if (locationTagFilterList.Count > 0) locationDescriptionRequest.TagKeys = locationTagFilterList;
+                if (locationTagKeysFilterList.Count > 0) locationDescriptionRequest.TagKeys = locationTagKeysFilterList;
+                if (locationTagValuesFilterList.Count > 0) locationDescriptionRequest.TagValues = locationTagValuesFilterList;
 
                 LocationDescriptionListServiceResponse locResponse = Publish().Get(locationDescriptionRequest);
-                locationDescriptions = locResponse.LocationDescriptions;
+
+                if ((locationTagKeysFilterList.Count == 1) && (locationTagValuesFilterList.Count == 1))
+                {
+                    foreach (LocationDescription locDesc in locResponse.LocationDescriptions)
+                    {
+                        foreach(TagMetadata tagMeta in locDesc.Tags)
+                        {
+                            if (MatchPartialNameFilter(locationTagKeysFilterList[0], tagMeta.Key) &&
+                                MatchPartialNameFilter(locationTagValuesFilterList[0], tagMeta.Value))
+                            {
+                                locationDescriptions.Add(locDesc);
+                                break;
+                            }
+
+                        }
+                    }
+                }
+                else
+                {
+                    locationDescriptions = locResponse.LocationDescriptions;
+                }
             }
             catch { }
 

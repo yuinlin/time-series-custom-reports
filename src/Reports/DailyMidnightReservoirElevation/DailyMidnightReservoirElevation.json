@@ -1,0 +1,33 @@
+﻿{
+  "Name": "Daily Midnight Reservoir Elevation",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "Years",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "DailyMidnightElevation",
+      "Label": "Daily Midnight Elevation",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+  ],
+  "Metadata":
+    {
+      "StorageParameter" : "Total Storage",
+      "AreaParameter" : "Lake Area"
+    }
+}
