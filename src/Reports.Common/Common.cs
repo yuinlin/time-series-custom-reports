@@ -1195,32 +1195,241 @@ namespace Reports
                 if (locationTagKeysFilterList.Count > 0) locationDescriptionRequest.TagKeys = locationTagKeysFilterList;
                 if (locationTagValuesFilterList.Count > 0) locationDescriptionRequest.TagValues = locationTagValuesFilterList;
 
-                LocationDescriptionListServiceResponse locResponse = Publish().Get(locationDescriptionRequest);
+                locationDescriptions = Publish().Get(locationDescriptionRequest).LocationDescriptions;
+            }
+            catch { }
 
-                if ((locationTagKeysFilterList.Count == 1) && (locationTagValuesFilterList.Count == 1))
+            return locationDescriptions;
+        }
+
+        public List<LocationDescription> GetLocationDescriptions(string locationIdentifierFilter, string locationNameFilter,
+            string primaryFolderFilter, List<string> locationTagFilterList)
+        {
+            List<LocationDescription> locationDescriptions = new List<LocationDescription>();
+            try
+            {
+                List<TagDefinition> tags = GetTagDefinitions("Location");
+
+                List<string> keysFilter = new List<string>();
+                List<string> valuesFilter = new List<string>();
+                List<string> pairsFilter = new List<string>();
+
+                bool unknownTagFilterItem = false;
+                foreach (string tagFilter in locationTagFilterList)
                 {
-                    foreach (LocationDescription locDesc in locResponse.LocationDescriptions)
-                    {
-                        foreach(TagMetadata tagMeta in locDesc.Tags)
-                        {
-                            if (MatchPartialNameFilter(locationTagKeysFilterList[0], tagMeta.Key) &&
-                                MatchPartialNameFilter(locationTagValuesFilterList[0], tagMeta.Value))
-                            {
-                                locationDescriptions.Add(locDesc);
-                                break;
-                            }
+                    bool matchesKey = MatchesATagKey(tagFilter, tags);
+                    if (matchesKey) keysFilter.Add(tagFilter);
 
+                    bool matchesValue = MatchesATagValue(tagFilter, tags);
+                    if (matchesValue) valuesFilter.Add(tagFilter);
+
+                    if (!matchesKey && !matchesValue)
+                    {
+                        string pairString = MatchesATagPair(tagFilter, tags);
+                        if (!string.IsNullOrEmpty(pairString))
+                        {
+                            pairsFilter.Add(pairString);
+
+                            string[] keyValuePair = pairString.Split(new string[] { "+" }, StringSplitOptions.None);
+                            keysFilter.Add(keyValuePair[0]);
+                            valuesFilter.Add(keyValuePair[1]);
                         }
+                        else
+                        {
+                            Log.InfoFormat("Location Tag Filter unknown item: '{0}'", tagFilter);
+                            unknownTagFilterItem = true;
+                        };
                     }
                 }
-                else
+
+                LogTagFilters("Location", locationTagFilterList, keysFilter, valuesFilter, pairsFilter);
+
+                if (!unknownTagFilterItem)
                 {
-                    locationDescriptions = locResponse.LocationDescriptions;
+                    LocationDescriptionListServiceRequest locationDescriptionRequest = new LocationDescriptionListServiceRequest();
+
+                    if (!string.IsNullOrEmpty(locationIdentifierFilter)) locationDescriptionRequest.LocationIdentifier = locationIdentifierFilter;
+                    if (!string.IsNullOrEmpty(locationNameFilter)) locationDescriptionRequest.LocationName = locationNameFilter;
+                    if (!string.IsNullOrEmpty(primaryFolderFilter)) locationDescriptionRequest.LocationFolder = primaryFolderFilter;
+                    if (keysFilter.Count > 0) locationDescriptionRequest.TagKeys = keysFilter;
+                    if (valuesFilter.Count > 0) locationDescriptionRequest.TagValues = valuesFilter;
+
+                    LocationDescriptionListServiceResponse locResponse = Publish().Get(locationDescriptionRequest);
+
+                    if (pairsFilter.Count == 0)
+                    {
+                        locationDescriptions = locResponse.LocationDescriptions;
+                    }
+                    else
+                    {
+                        int pairsCount = pairsFilter.Count;
+                        foreach (LocationDescription locDesc in locResponse.LocationDescriptions)
+                        {
+                            int matchCount = 0;
+                            foreach (string pairFilter in pairsFilter)
+                            {
+                                string[] keyValuePairs = pairFilter.Split(new string[] { "+" }, StringSplitOptions.None);
+                                foreach (TagMetadata tag in locDesc.Tags)
+                                {
+                                    if (!string.IsNullOrEmpty(tag.Value) &&
+                                        MatchPartialNameFilter(keyValuePairs[0], tag.Key) &&
+                                        MatchPartialNameFilter(keyValuePairs[1], tag.Value))
+                                        matchCount++;
+                                }
+                            }
+                            if (matchCount == pairsCount) locationDescriptions.Add(locDesc);
+                        }
+                    }
                 }
             }
             catch { }
 
             return locationDescriptions;
+        }
+
+        public bool MatchesATagKey(string tagFilter, List<TagDefinition> Tags)
+        {
+            string matchThisString = "^" + tagFilter.Replace("*", ".*") + "$";
+            Regex regex = new Regex(matchThisString, RegexOptions.IgnoreCase);
+            foreach (TagDefinition tag in Tags)
+            {
+                if (regex.Match(tag.Key).Success)
+                    return true;
+            }         
+            return false;
+        }
+
+        public bool MatchesATagValue(string tagFilter, List<TagDefinition> Tags)
+        {
+            string matchThisString = "^" + tagFilter.Replace("*", ".*") + "$";
+            Regex regex = new Regex(matchThisString, RegexOptions.IgnoreCase);
+            foreach (TagDefinition tag in Tags)
+            {
+                if (!tag.ValueType.HasValue) continue;
+                if (tag.ValueType.Value != TagValueType.PickList) continue;
+
+                foreach (string pickListValue in tag.PickListValues)
+                    if (regex.Match(pickListValue).Success)
+                        return true;
+            }
+            return false;
+        }
+
+        public string MatchesATagPair(string tagFilter, List<TagDefinition> Tags)
+        {
+            if (!tagFilter.Contains(":")) return null;
+
+            string[] splitItems = tagFilter.Split(new string[] { ":" }, StringSplitOptions.None);
+
+            for (int i = 0; i < splitItems.Length - 1; i++)
+            {
+                string leftSubstring = splitItems[0];
+                for (int j = 1; j < i + 1; j++) leftSubstring += ":" + splitItems[j];
+                string rightSubstring = splitItems[i + 1];
+                for (int j = i + 2; j < splitItems.Length; j++) rightSubstring += ":" + splitItems[j];
+
+                leftSubstring = leftSubstring.Trim();
+                rightSubstring = rightSubstring.Trim();
+
+                string leftSubstringRegEx = "^" + leftSubstring.Replace("*", ".*") + "$";
+                Regex leftRegex = new Regex(leftSubstringRegEx, RegexOptions.IgnoreCase);
+                string rightSubstringRegEx = "^" + rightSubstring.Replace("*", ".*") + "$";
+                Regex rightRegex = new Regex(rightSubstringRegEx, RegexOptions.IgnoreCase);
+
+                foreach (TagDefinition tag in Tags)
+                {
+                    if (!tag.ValueType.HasValue) continue;
+                    if (tag.ValueType.Value != TagValueType.PickList) continue;
+
+                    if (!leftRegex.Match(tag.Key).Success) continue;
+
+                    foreach (string pickListValue in tag.PickListValues)
+                        if (rightRegex.Match(pickListValue).Success)
+                            return string.Format("{0}+{1}", leftSubstring, rightSubstring);
+                }
+            }
+            return null;
+        }
+
+        public List<string> GetUnknownTagFilters(List<string> tagsFilterList, string tagType)
+        {
+            List<string> unknownFilters = new List<string>();
+            List<TagDefinition> tags = GetTagDefinitions(tagType);
+
+            foreach (string tagFilter in tagsFilterList)
+            {
+                bool matchesKey = MatchesATagKey(tagFilter, tags);
+                bool matchesValue = MatchesATagValue(tagFilter, tags);
+
+                if (!matchesKey && !matchesValue && string.IsNullOrEmpty(MatchesATagPair(tagFilter, tags)))
+                    unknownFilters.Add(tagFilter);
+            }
+            return unknownFilters;
+        }
+
+        public string GetUnknownTagFilterMessage(List<string> tagFilterList, string tagType)
+        {
+            List<string> unknownTags = GetUnknownTagFilters(tagFilterList, tagType);
+            if (unknownTags.Count > 0)
+            {
+                return string.Format("{0} '{1}'",
+                    ((unknownTags.Count > 1) ?
+                    Common.GetLocalizedDisplayString("Unknown " + tagType + " Tag Filter Items") :
+                    Common.GetLocalizedDisplayString("Unknown " + tagType + " Tag Filter Item")),
+                    String.Join(", ", unknownTags));
+            }
+            return "";
+        }
+
+        public List<TagDefinition> GetTagDefinitions()
+        {
+            return Publish().Get(new TagListServiceRequest()).Tags;
+        }
+
+        public List<TagDefinition> GetTagDefinitions(string tagType)
+        {
+            List<TagDefinition> allTagDefinitions = GetTagDefinitions();
+            List<TagDefinition> filteredTagDefinitions = new List<TagDefinition>();
+            foreach (TagDefinition tag in allTagDefinitions)
+            {
+                if ((tagType == "Location") && !tag.AppliesToLocations) continue;
+                if ((tagType == "LocationNote") && !tag.AppliesToLocationNotes) continue;
+                if ((tagType == "SensorsGauges") && !tag.AppliesToSensorsGauges) continue;
+
+                filteredTagDefinitions.Add(tag);
+            }
+            return filteredTagDefinitions;
+        }
+        public static bool MaximumTimeExceeded(DateTimeOffset reportStartTime, double maximumTimeInMinutes, string outputFormat)
+        {
+            double timeForReportGeneration = 0.5;
+
+            if (maximumTimeInMinutes < 0.0) return false;
+
+            TimeSpan elapsedTime = DateTimeOffset.Now - reportStartTime;
+            if (elapsedTime.TotalMinutes + timeForReportGeneration > maximumTimeInMinutes)
+                return true;
+
+            return false;
+        }
+        public static string GetTableTruncatedInformationString(double timeLimitInMinutes)
+        {
+            return string.Format("The table is truncated due to report generation exceeding the time limit of {0} minutes",
+              timeLimitInMinutes);
+        }
+
+        public static void LogTagFilters(string tagType, List<string> tagFilterList, 
+            List<string> keysFilter, List<string> valuesFilter, List<string> pairsFilter)
+        {
+            Log.DebugFormat("{0} Tag Filter List: '{1}'", tagType, String.Join(", ", tagFilterList));
+            Log.DebugFormat("{0} Tag Filter Keys: '{1}'", tagType, String.Join(", ", keysFilter));
+            Log.DebugFormat("{0} Tag Filter Values: '{1}'", tagType, String.Join(", ", valuesFilter));
+
+            foreach (string pairFilter in pairsFilter)
+            {
+                string[] pair = pairFilter.Split(new string[] { "+" }, StringSplitOptions.None);
+                Log.DebugFormat("{0} Tag Filter Pair: key='{1}' and value='{2}'", tagType, pair[0], pair[1]);
+            }
         }
     }
 }
