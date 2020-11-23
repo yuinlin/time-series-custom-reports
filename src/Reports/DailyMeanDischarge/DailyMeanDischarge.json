@@ -52,6 +52,13 @@
       "DefaultValue": "80",
       "Type": "Double",
       "Required": false
+    },
+    {
+      "Name": "MinimumApprovalLevel",
+      "Label": "Minimum Approval Level",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
     }
   ],
   "Metadata":
