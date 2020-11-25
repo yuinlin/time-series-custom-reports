@@ -1,0 +1,50 @@
+﻿{
+  "Name": "Daily Aggregate by Year",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "Years",
+    "Value": 2
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "CSV",
+    },
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "StartTimeOffsetInHours",
+      "Label": "Start Time Offset (hours)",
+      "DefaultValue": "0",
+      "Type": "Double",
+      "Required": true
+    },
+    {
+      "Name": "DataCoverageThresholdPercent",
+      "Label": "Data Coverage Threshold (%)",
+      "DefaultValue": "80",
+      "Type": "Double",
+      "Required": false
+    }
+  ],
+  "Metadata":
+    {
+      "CsvDateFormat" : "yyyy-MM-dd HH:mm",
+      "CsvRoundValues": "True"
+    }
+}
