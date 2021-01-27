@@ -1,0 +1,52 @@
+﻿{
+  "Name": "Monthly and Daily Means",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "Years",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "TimeSeries1",
+      "Label": "TimeSeries 1",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    },
+    {
+      "Name": "TimeSeries2",
+      "Label": "TimeSeries 2",
+      "Type": "TimeSeries",
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "DailyMeansTable",
+      "Label": "Daily Means Table",
+      "DefaultValue": "DoNotShowDailyMeansTable",
+      "Type": "PickList",
+      "PickListOptions": {
+        "DoNotShowDailyMeansTable": "Do not show Daily Means Table",
+        "ShowDailyMeansTable": "Show Daily Means Table"
+      },
+      "Required": true
+    }
+  ],
+  "Metadata":
+    {
+      "MonthlyTableDateFormat" : "MMM-yyyy",
+      "DailyTableDateFormat" : "yyyy-MM-dd",
+      "MonthlyChartDateFormat" : "MMM",
+      "DailyChartDateFormat" : "MMMM",
+      "DataCoverageThresholdPercent": "80"
+    }
+}

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4A01B119-3AEA-468F-9D46-38313AE98E38}</ProjectGuid>
+    <ProjectGuid>{5605A174-D179-4410-89D3-FBE2E7597F49}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DailyAggregateByYearNamespace</RootNamespace>
-    <AssemblyName>DailyAggregateByYear</AssemblyName>
+    <RootNamespace>MonthlyAndDailyMeansNamespace</RootNamespace>
+    <AssemblyName>MonthlyAndDailyMeans</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -103,29 +103,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DailyAggregateByYear.cs" />
+    <Compile Include="MonthlyAndDailyMeans.cs" />
     <Compile Include="ReportSpecificTableBuilder.cs" />
     <Compile Include="ReportSpecificFunctions.cs" />
-    <Compile Include="DailyAggregateByYearCommonClasses.cs">
+    <Compile Include="MonthlyAndDailyMeansCommonClasses.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DailyAggregateByYearCommonClasses.tt</DependentUpon>
+      <DependentUpon>MonthlyAndDailyMeansCommonClasses.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DailyAggregateByYear.json">
+    <None Include="MonthlyAndDailyMeans.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="DailyAggregateByYear.rst">
+    <None Include="MonthlyAndDailyMeans.rst">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DailyAggregateByYearCommonClasses.tt">
+    <Content Include="MonthlyAndDailyMeansCommonClasses.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DailyAggregateByYearCommonClasses.cs</LastGenOutput>
+      <LastGenOutput>MonthlyAndDailyMeansCommonClasses.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
