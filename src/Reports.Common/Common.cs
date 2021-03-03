@@ -778,6 +778,33 @@ namespace Reports
             return ReportData().GetTimeSeriesData(request);
         }
 
+        public TimeSeriesDataServiceResponse GetTimeSeriesCorrectedDataReponse(Guid uniqueId, string getParts, 
+            DateTimeOffset? StartTime, DateTimeOffset? EndTime)
+        {
+            TimeSeriesDataCorrectedServiceRequest request = new TimeSeriesDataCorrectedServiceRequest();
+            request.ApplyRounding = true;
+            request.GetParts = getParts;
+            request.IncludeGapMarkers = true;
+            request.TimeSeriesUniqueId = uniqueId;
+            request.QueryFrom = StartTime;
+            request.QueryTo = EndTime;
+
+            return Publish().Get(request);
+        }
+
+        public TimeSeriesDataServiceResponse GetTimeSeriesRawDataReponse(Guid uniqueId, string getParts,
+            DateTimeOffset? StartTime, DateTimeOffset? EndTime)
+        {
+            TimeSeriesDataRawServiceRequest request = new TimeSeriesDataRawServiceRequest();
+            request.ApplyRounding = true;
+            request.GetParts = getParts;
+            request.TimeSeriesUniqueId = uniqueId;
+            request.QueryFrom = StartTime;
+            request.QueryTo = EndTime;
+
+            return Publish().Get(request);
+        }
+
         public List<TimeAlignedPoint> GetTimeAlignedPoints(List<Guid> inputGuids, DateTimeOffset? StartTime, DateTimeOffset? EndTime)
         {
             Log.DebugFormat("GetTimeAlignedPoints number of guids='{0}', from start = {1} to end = {2}", inputGuids.Count,
@@ -1042,6 +1069,8 @@ namespace Reports
 
         public List<string> GetFormattedDoubles(List<double> values, string parameterDisplayId, string unitId, string missingStr)
         {
+            if (values.Count == 0) return new List<string>();
+
             RoundServiceRequest request = new RoundServiceRequest();
             request.Data = values;
             request.ParameterDisplayId = parameterDisplayId;
