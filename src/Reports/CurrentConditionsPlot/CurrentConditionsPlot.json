@@ -1,0 +1,73 @@
+﻿{
+  "Name": "Current Conditions Plot",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Days",
+    "Value": 7
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "LocationTagKey",
+      "Label": "Location Tag Key",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "DatasetParameter1",
+      "Label": "Dataset Parameter",
+      "DefaultValue": "Water Level",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "DatasetLabelOrKey1",
+      "Label": "Dataset Label or Tag Key for Label",
+      "DefaultValue": "Current Conditions Report - Water Level Label",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "DatasetParameter2",
+      "Label": "Dataset Parameter",
+      "DefaultValue": "Flow",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "DatasetLabelOrKey2",
+      "Label": "Dataset Label or Tag Key for Label",
+      "DefaultValue": "Current Conditions Report - Flow Label",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "SortOn",
+      "Label": "Sort On",
+      "DefaultValue": "LocationName",
+      "Type": "PickList",
+      "PickListOptions": {
+        "LocationIdentifier": "Location Identifier",
+        "LocationName": "Location Name"
+      },
+      "Required": true
+    }
+  ],
+  "Metadata":
+  {
+      "DateFormat": "yyyy-MM-dd HH:mm:ss",
+      "ChartDateFormat": "yyyy-MMM-dd"
+  }
+}
