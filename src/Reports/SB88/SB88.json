@@ -1,0 +1,81 @@
+﻿{
+  "Name": "SB88",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Days",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    },
+     {
+      "Name": "xlsx",
+      "IsDefault": false
+    }
+  ],
+  "Inputs": 
+  [
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "EstimatedAccuracy",
+      "Label": "Estimated accuracy of measurement",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "CalibrationDescription",
+      "Label": "Description of calibration method",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "Name",
+      "Label": "Name",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "PhoneNumber",
+      "Label": "Phone Number",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "Email",
+      "Label": "Email",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "Qualifications",
+      "Label": "Qualifications of the individual",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "License",
+      "Label": "License number and type for the qualified individual",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    }
+  ],
+  "Metadata":
+    {
+      "DateFormat" : "yyyy-MM-dd",
+      "DefaultColumnWidth" : "72",
+      "Column Widths" : "132,66,132,,80,80,,,,,,,,216,,,,120,186,80,,,,,,,120,,156"
+    }
+}

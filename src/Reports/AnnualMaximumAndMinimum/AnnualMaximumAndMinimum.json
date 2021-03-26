@@ -1,0 +1,65 @@
+﻿{
+  "Name": "Annual Maximum and Minimum",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "Years",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    },
+     {
+      "Name": "xlsx",
+      "IsDefault": false
+    }
+  ],
+  "Inputs": 
+  [
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "LocationType",
+      "Label": "Location Type",
+      "DefaultValue": "Reservoir",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "DatasetParameter1",
+      "Label": "Dataset Parameter",
+      "DefaultValue": "Lake/res Elevation",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "DatasetLabel1",
+      "Label": "Dataset Label",
+      "DefaultValue": "Final",
+      "Type": "String",
+      "Required": true
+    },    
+    {
+      "Name": "DatasetParameter2",
+      "Label": "Dataset Parameter",
+      "DefaultValue": "Total Storage",
+      "Type": "String",
+      "Required": false
+    },    
+    {
+      "Name": "DatasetLabel2",
+      "Label": "Dataset Label",
+      "DefaultValue": "Final",
+      "Type": "String",
+      "Required": false
+    }  
+  ],
+  "Metadata":
+    {
+      "DateFormat" : "yyyy-MM-dd HH:mm"
+    }
+}
