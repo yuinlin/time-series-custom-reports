@@ -1,0 +1,42 @@
+﻿{
+  "Name": "Antecedent Rainfall",
+  "DefaultTimeRange": 
+  {
+    "Type": "LatestComplete",
+    "Unit": "Years",
+    "Value": 2
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "CSV",
+    },
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "DiscreteValues",
+      "Label": "Discrete Values",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    },
+    {
+      "Name": "Precipitation",
+      "Label": "Precipitation",
+      "Type": "TimeSeries",
+      "IsMaster": false
+    }
+  ],
+  "Parameters": 
+  [
+  ],
+  "Metadata":
+  {
+      "DateFormat": "yyyy-MM-dd HH:mm",
+      "MissingData": "--"      
+  }
+}
