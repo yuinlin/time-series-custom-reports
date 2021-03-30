@@ -62,13 +62,13 @@
       "DateFormat": "yyyy-MM-dd HH:mm",
       "DefaultColumnWidth" : "72",
       "LocalAssumedDatumDisplayName": "Local Assumed Datum",
-      "Published Readings" : "Location Identifier,Date Time,Parameter,Raw Value,Unit,Comments,Reference Point",
+      "Published Readings" : "Location Identifier,Date Time,Parameter,Value,Unit,Comments,Reference Point",
       "Published Readings Column Widths": "96,96,96,80,80,132,96",
-      "All Readings" : "Location Identifier,Date Time,Parameter,Raw Value,Unit,Comments,Reference Point,Publish",
+      "All Readings" : "Location Identifier,Date Time,Parameter,Value,Unit,Comments,Reference Point,Publish",
       "All Readings Column Widths": "96,96,96,80,80,132,96",
-      "Published Readings and Metadata": "Location Identifier,Date Time,Parameter,Raw Value,Unit,Reading Type,Comments,Reference Point, Method, Uncertainty, Approval Level, Control Condition, Grade, Reading Qualifiers, Sub-Location",
-      "Published Readings and Metadata Column Widths": "96,96,96,80,80,132,96",
-      "All Readings and Metadata": "Location Identifier,Date Time,Parameter,Raw Value,Unit,Reading Type,Comments,Reference Point, Publish, Method, Uncertainty, Approval Level, Control Condition, Grade, Reading Qualifiers, Sub-Location",
-      "All Readings and Metadata Column Widths": "96,96,96,80,80,132,96"
+      "Published Readings and Metadata": "Location Identifier,Date Time,Parameter,Value,Unit,Reading Type,Comments,Reference Point, Method, Uncertainty, Approval Level, Control Condition, Grade, Reading Qualifiers, Sub-Location",
+      "Published Readings and Metadata Column Widths": "96,96,96,80,80,96, 132,96",
+      "All Readings and Metadata": "Location Identifier,Date Time,Parameter,Value,Unit,Reading Type,Comments,Reference Point, Publish, Method, Uncertainty, Approval Level, Control Condition, Grade, Reading Qualifiers, Sub-Location",
+      "All Readings and Metadata Column Widths": "96,96,96,80,80,96, 132,96"
   }
 }
