@@ -28,7 +28,8 @@ namespace Reports.PluginPackager
             "ComponentFactory.*",
             "PerpetuumSoft.*",
             "NewtonSoft.*",
-            "System.*"
+            "System.*",
+            "Microsoft.*"
         };
     }
 }
