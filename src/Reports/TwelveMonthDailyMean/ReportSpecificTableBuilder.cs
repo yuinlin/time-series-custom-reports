@@ -2,6 +2,7 @@
 using System.Data;
 using System.Reflection;
 using ReportPluginFramework;
+using ReportPluginFramework.Properties;
 using ReportPluginFramework.ReportData;
 using ReportPluginFramework.ReportData.TimeSeriesComputedStatistics;
 using ReportPluginFramework.ReportData.TimeSeriesData;
@@ -29,7 +30,7 @@ namespace TwelveMonthDailyMeanNamespace
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
-                settingsTable.Rows[0]["ReportTitle"] = "Twelve Month Daily Mean";
+                settingsTable.Rows[0]["ReportTitle"] = Resources.TwelveMonthDailyMean;
 
                 DataTable table = new DataTable("TwelveMonthDailyMeanDataTable");
 

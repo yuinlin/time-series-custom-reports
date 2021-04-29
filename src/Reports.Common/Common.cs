@@ -1443,8 +1443,7 @@ namespace Reports
         }
         public static string GetTableTruncatedInformationString(double timeLimitInMinutes)
         {
-            return string.Format("The table is truncated due to report generation exceeding the time limit of {0} minutes",
-              timeLimitInMinutes);
+            return string.Format(Resources.TheTableHasBeenTruncatedX, timeLimitInMinutes);
         }
 
         public static void LogTagFilters(string tagType, List<string> tagFilterList, 
