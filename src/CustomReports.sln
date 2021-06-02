@@ -92,6 +92,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntecedentRainfall", "Repor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldVisitReadings", "Reports\FieldVisitReadings\FieldVisitReadings.csproj", "{BD471B93-2F01-4763-96BE-E292D1EDB49F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydrologicalCommaSeparated", "Reports\HydrologicalCommaSeparated\HydrologicalCommaSeparated.csproj", "{4368A3A0-4895-4D11-A4CA-7948D879A042}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -238,6 +240,10 @@ Global
 		{BD471B93-2F01-4763-96BE-E292D1EDB49F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD471B93-2F01-4763-96BE-E292D1EDB49F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD471B93-2F01-4763-96BE-E292D1EDB49F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4368A3A0-4895-4D11-A4CA-7948D879A042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4368A3A0-4895-4D11-A4CA-7948D879A042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4368A3A0-4895-4D11-A4CA-7948D879A042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4368A3A0-4895-4D11-A4CA-7948D879A042}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -276,6 +282,7 @@ Global
 		{4221641C-76E6-406C-8DBB-BC11069DE9C2} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{1D437071-4852-42CB-86F9-EADF87EED897} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{BD471B93-2F01-4763-96BE-E292D1EDB49F} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
+		{4368A3A0-4895-4D11-A4CA-7948D879A042} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE1A8A78-29AC-43E5-8083-A27EB11F4054}

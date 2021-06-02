@@ -1,0 +1,71 @@
+﻿{
+  "Name": "HydrologicalCommaSeparated",
+  "Label": "Hydrological Comma Separated",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "Days",
+    "Value": 7
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "hcs",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "AgencyId",
+      "Label": "Agency Id",
+      "DefaultValue": "bom390",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "SiteIdType",
+      "Label": "SiteIdType",
+      "DefaultValue": "SLSR",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "SiteId",
+      "Label": "SiteId",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "SensorDataType",
+      "Label": "Sensor DataType",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "SensorTypeParam1",
+      "Label": "Sensor Type Param 1",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "SensorTypeParam2",
+      "Label": "Sensor Type Param 2",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    }
+  ]
+}
