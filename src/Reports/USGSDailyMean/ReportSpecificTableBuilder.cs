@@ -19,6 +19,7 @@ namespace USGSDailyMeanNamespace
             try
             {
                 Common common = (Common)dataSet.Tables["RunReportRequest"].Rows[0]["CommonLibrary"];
+                common.CheckReportDefinitionVersion("2");
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
