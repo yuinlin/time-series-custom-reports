@@ -94,7 +94,7 @@ namespace BenchmarkHistoryNamespace
 
                 if (refPoints.Count == 0) return;
 
-                Dictionary<Guid, double> refPointElevations = new Dictionary<Guid, double>();
+                Dictionary<Guid, List<ReferencePointPeriod>> refPointHistories = new Dictionary<Guid, List<ReferencePointPeriod>>();
                 Dictionary<Guid, int> refPointNumbers = new Dictionary<Guid, int>();
 
                 for (int i = 0; i < refPoints.Count; i++)
@@ -127,7 +127,8 @@ namespace BenchmarkHistoryNamespace
                     double elevation = refPointPeriods[refPointPeriods.Count - 1].Elevation;
                     row["Elevation"] = Common.FormatDoubleValue(elevation, formatFixed, formatPrecision, "");
 
-                    refPointElevations[refPoint.UniqueId] = elevation;
+                    refPointPeriods.Reverse();
+                    refPointHistories[refPoint.UniqueId] = refPointPeriods;
 
                     benchmarks.Rows.Add(row);
                 }
@@ -201,7 +202,7 @@ namespace BenchmarkHistoryNamespace
                         int thePosition = (int)(number % groupSizeLimit);
 
                         double level = lsm.MeasuredElevation.Numeric.Value;
-                        double correction = level - refPointElevations[id];
+                        double correction = ReportSpecificFunctions.calculateDifference(lsm, refPointHistories[id]);
 
                         DataRow row = dataSet.Tables["BenchmarkHistory"].Rows[fieldVisitFirstRow + theGroupNumber];
 
