@@ -1,0 +1,68 @@
+﻿{
+  "Name": "Time Series Charts",
+  "DefaultTimeRange": 
+  {
+    "Type": "MostRecent",
+    "Unit": "WaterYears",
+    "Value": 1
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }
+  ],
+  "Inputs": 
+  [
+    {
+      "Name": "SourceData",
+      "Label": "Time Series",
+      "Type": "TimeSeries",
+      "IsMaster": true
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "IntervalUnit",
+      "Label": "Interval Unit",
+      "DefaultValue": "Month",
+      "Type": "PickList",
+      "PickListOptions": {
+        "12 Months": "12 Months",
+        "Month": "Month"
+      },
+      "Required": true
+    },
+	{
+      "Name": "YAxisScale",
+      "Label": "Y Axis Scale",
+      "DefaultValue": "Logarithmic",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Linear": "Linear",
+        "Logarithmic": "Logarithmic"
+      },
+      "Required": true
+    },
+    {
+      "Name": "ShowMeasurements",
+      "Label": "Show Measurements",
+      "DefaultValue": "Show Measurements and Uncertainty",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Show Measurements and Uncertainty": "Show Measurements and Uncertainty",
+        "Show Measurements": "Show Measurements",
+        "Exclude": "Do not show Measurements"
+      },
+      "Required": true
+    }
+  ],
+  "Metadata":
+    {
+	  "HideReportName" : "True",
+	  "StageParameter" : "Stage",
+	  "DischargeParameter" : "Discharge"
+    }
+}

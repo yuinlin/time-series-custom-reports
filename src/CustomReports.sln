@@ -96,6 +96,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HydrologicalCommaSeparated"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyMeanFlow", "Reports\DailyMeanFlow\DailyMeanFlow.csproj", "{984C950F-3493-44F3-8DE1-0C13B1DB5578}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSeriesCharts", "Reports\TimeSeriesCharts\TimeSeriesCharts.csproj", "{F59C04E8-DCFA-486F-B63D-859939A9E4B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -250,6 +252,10 @@ Global
 		{984C950F-3493-44F3-8DE1-0C13B1DB5578}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{984C950F-3493-44F3-8DE1-0C13B1DB5578}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{984C950F-3493-44F3-8DE1-0C13B1DB5578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F59C04E8-DCFA-486F-B63D-859939A9E4B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F59C04E8-DCFA-486F-B63D-859939A9E4B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F59C04E8-DCFA-486F-B63D-859939A9E4B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F59C04E8-DCFA-486F-B63D-859939A9E4B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -290,6 +296,7 @@ Global
 		{BD471B93-2F01-4763-96BE-E292D1EDB49F} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{4368A3A0-4895-4D11-A4CA-7948D879A042} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{984C950F-3493-44F3-8DE1-0C13B1DB5578} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
+		{F59C04E8-DCFA-486F-B63D-859939A9E4B5} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE1A8A78-29AC-43E5-8083-A27EB11F4054}
