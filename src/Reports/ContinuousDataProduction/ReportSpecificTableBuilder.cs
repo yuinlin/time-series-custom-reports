@@ -27,6 +27,7 @@ namespace ContinuousDataProductionNamespace
                 }
 
                 Common common = (Common)dataSet.Tables["RunReportRequest"].Rows[0]["CommonLibrary"];
+                common.CheckReportDefinitionVersion("2");
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
@@ -73,7 +74,7 @@ namespace ContinuousDataProductionNamespace
                 int httpCallLimitSize = common.GetParameterInt("HttpCallLimitSize", 2000);
                 int httpCallTimeoutInSeconds = common.GetParameterInt("HttpCallTimeoutInSeconds", 30);
                 string httpUrlPrefix = common.GetParameterString("HttpUrlPrefix",
-                    @"http://geo.weather.gc.ca/geomet/features/collections/hydrometric-daily-mean/items?f=json&STATION_NUMBER=");
+                    @"https://api.weather.gc.ca/collections/hydrometric-daily-mean/items?f=json&STATION_NUMBER=");
 
                 TimeSpan timezone = TimeSpan.FromHours(common.GetTimeSeriesDescription(timeSeriesUniqueId).UtcOffset);
                 DateTimeOffsetInterval selectedInterval = (DateTimeOffsetInterval)dataSet.Tables["ReportData"].Rows[0]["SelectedInterval"];
