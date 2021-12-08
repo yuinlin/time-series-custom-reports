@@ -1,4 +1,4 @@
-﻿{
+{
   "Name": "ContinuousDataProduction",
   "DefaultTimeRange": 
   {
@@ -39,9 +39,10 @@
   ],
   "Metadata":
     {
+      "Version": "2",
 	  "HttpRepeatCallLimit" : "5",
 	  "HttpCallLimitSize" : "500",
 	  "HttpCallTimeoutInSeconds" : "30",
-	  "HttpUrlPrefix" : "http://geo.weather.gc.ca/geomet/features/collections/hydrometric-daily-mean/items?f=json&STATION_NUMBER="
+	  "HttpUrlPrefix" : "https://api.weather.gc.ca/collections/hydrometric-daily-mean/items?f=json&STATION_NUMBER="
     }
 }

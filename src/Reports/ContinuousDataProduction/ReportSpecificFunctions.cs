@@ -19,18 +19,27 @@ namespace ContinuousDataProductionNamespace
         public static int GetNumberOfHistoricalPointsAvailable(string urlPrefix, string locationIdentifier, int httpRepeatCallLimit, int httpCallTimeoutInSeconds)
         {
             string path = urlPrefix;
+            string answer = "";
 
-            path += System.Net.WebUtility.UrlEncode(locationIdentifier);
-            path += "&startindex=0&limit=0";
-
-            string answer = CallHttpClient(path, httpRepeatCallLimit, httpCallTimeoutInSeconds);
-
-            if (!string.IsNullOrEmpty(answer))
+            try
             {
-                dynamic dynData = JsonConvert.DeserializeObject(answer);
-                int numberOfPoints = dynData.numberMatched;
-                Log.DebugFormat("There are {0} historical points in location {1}", numberOfPoints, locationIdentifier);
-                return numberOfPoints;
+                path += System.Net.WebUtility.UrlEncode(locationIdentifier);
+                path += "&startindex=0&limit=1";
+
+                answer = CallHttpClient(path, httpRepeatCallLimit, httpCallTimeoutInSeconds);
+
+                if (!string.IsNullOrEmpty(answer))
+                {
+                    dynamic dynData = JsonConvert.DeserializeObject(answer);
+                    int numberOfPoints = dynData.numberMatched;
+                    Log.InfoFormat("GetNumberOfHistoricalPointsAvailable: Found '{0}' historical points for location '{1}' from Url '{2}'", numberOfPoints, locationIdentifier, path);
+                    return numberOfPoints;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Exception in call to GetNumberOfHistoricalPointsAvailable " + Environment.NewLine, ex);
+                Log.InfoFormat("Fail to retrieve number of Historical points from Url '{0}', http call returned '{1}', so return number of Historical = -1", path, answer);
             }
 
             return -1;
