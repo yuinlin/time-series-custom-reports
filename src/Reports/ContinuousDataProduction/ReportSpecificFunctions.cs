@@ -39,9 +39,9 @@ namespace ContinuousDataProductionNamespace
             catch (Exception ex)
             {
                 Log.Error("Exception in call to GetNumberOfHistoricalPointsAvailable " + Environment.NewLine, ex);
-                Log.InfoFormat("Fail to retrieve number of Historical points from Url '{0}', http call returned '{1}', so return number of Historical = -1", path, answer);
             }
 
+            Log.InfoFormat("Fail to retrieve number of Historical points from Url '{0}', http call returned '{1}', so return number of Historical = -1", path, answer);
             return -1;
         }
 
