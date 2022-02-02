@@ -1,0 +1,114 @@
+{
+  "Name": "Cross-Section Survey Plot",
+  "DefaultTimeRange": 
+  {
+    "Type": "EntireRecord"
+  },
+  "OutputFormats": 
+  [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    }	
+  ],
+  "Inputs": 
+  [
+    {
+        "Name":"Location",
+        "Type":"Location"
+    }
+  ],
+  "Parameters": 
+  [
+    {
+      "Name": "RelativeLocationFilterPartialName",
+      "Label": "Relative Location Filter (supports partialname*)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "ChannelFilterPartialName",
+      "Label": "Channel Filter (supports partialname*)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },   
+	{
+      "Name": "PartyFilterPartialName",
+      "Label": "Party Filter (supports partialname*)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+	{
+      "Name": "SortOrder",
+      "Label": "Sort Order",
+      "DefaultValue": "ReverseChronologicalOnStartTime",
+      "Type": "PickList",
+      "PickListOptions": {
+        "ChronologicalOnStartTime": "Chronological on Start Time",
+        "ReverseChronologicalOnStartTime": "Reverse Chronological on Start Time"
+      },
+      "Required": true
+    },
+	{
+      "Name": "PlotType",
+      "Label": "Plot Type",
+      "DefaultValue": "MultipleSeparatePlots",
+      "Type": "PickList",
+      "PickListOptions": {
+        "MultipleSeparatePlots": "Multiple Separate Plots",
+        "SingleOverlaidPlot": "Single Overlaid Plot"
+      },
+      "Required": true
+    },
+    {
+      "Name": "OverlaidCurve1",
+      "Label": "Overlaid Plot Curve 1 (index, horizontal offset, vertical offset)",
+      "DefaultValue": "1, 0.0, 0.0",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "OverlaidCurve2",
+      "Label": "Overlaid Plot Curve 2 (index, horizontal offset, vertical offset)",
+      "DefaultValue": "2, 0.0, 0.0",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "OverlaidCurve3",
+      "Label": "Overlaid Plot Curve 3 (index, horizontal offset, vertical offset)",
+      "DefaultValue": "3, 0.0, 0.0",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "OverlaidCurve4",
+      "Label": "Overlaid Plot Curve 4 (index, horizontal offset, vertical offset)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    },
+    {
+      "Name": "OverlaidCurve5",
+      "Label": "Overlaid Plot Curve 5 (index, horizontal offset, vertical offset)",
+      "DefaultValue": "",
+      "Type": "String",
+      "Required": false
+    }
+  ],
+  "Metadata":
+    {
+      "DateFormat" : "yyyy-MM-dd\nHH:mm",
+      "MaximumOverlaidCurves" : "5",
+      "OverlaidColor1" : "45, 151, 245",
+      "OverlaidColor2" : "102, 204, 51",
+      "OverlaidColor3" : "255, 204, 0",
+      "OverlaidColor4" : "255, 64, 75",
+      "OverlaidColor5" : "193, 105, 193",
+      "ShowOffsetsInLegend" : "True",
+      "OffsetRoundingSpec" : "DEC(1)"
+    }
+}
