@@ -12,6 +12,8 @@ namespace Reports.PluginPackager
 
         public List<string> ForceInclude { get; } = new List<string>
         {
+            "Microsoft.Win32.Primitives.dll",
+            "Microsoft.Win32.Registry.dll",
             "PerpetuumSoft.Reporting.Export.Csv.dll",
             "PerpetuumSoft.Reporting.Export.OpenXML.dll"
         };
