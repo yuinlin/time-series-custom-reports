@@ -11,6 +11,7 @@ using PerpetuumSoft.Reporting.Export.Graph;
 using System.Diagnostics;
 using System.Threading;
 using System.Globalization;
+using PerpetuumSoft.Reporting.Rendering;
 
 namespace Reports
 {
@@ -137,6 +138,9 @@ namespace Reports
         private void InlineReportSlot_RenderingError(object sender, RenderingErrorEventArgs e)
         {
             Log.Debug("Report Render Error");
+
+            if (e.Exception is ScriptException scriptException)
+                Log.Error($"Render ScriptException: {scriptException.Describe(true)}");
 
             Log.Error("Render Error: ", e.Exception);
             Log.Error("Render Error (innerException): ", e.Exception.InnerException);
