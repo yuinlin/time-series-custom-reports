@@ -1196,6 +1196,7 @@ namespace Reports
 
             return response.FieldVisitDescriptions;
         }
+
         public FieldVisitDataServiceResponse GetFieldVisitData(FieldVisitDescription fieldVisitDescription)
         {
             FieldVisitDataServiceRequest request = new FieldVisitDataServiceRequest();
@@ -1205,6 +1206,26 @@ namespace Reports
 
             FieldVisitDataServiceResponse response = Publish().Get(request);
             return response;
+        }
+
+        public List<FieldVisit> GetFieldVisitDataByLocation(string locationIdentifier, IEnumerable<ActivityType> activities = null, IEnumerable<string> parameters = null)
+        {
+            var request = new FieldVisitDataByLocationServiceRequest
+            {
+                LocationIdentifier = locationIdentifier,
+                Activities = activities?.ToList() ?? new List<ActivityType> { ActivityType.Reading },
+                Parameters = parameters?.ToList(),
+            };
+
+            return Publish().Get(request).FieldVisitData;
+        }
+
+        public List<Reading> GetFieldVisitReadingsByLocation(string locationIdentifier, IEnumerable<string> parameters = null)
+        {
+            return GetFieldVisitDataByLocation(locationIdentifier, new [] { ActivityType.Reading }, parameters)
+                .Where(fv => fv.InspectionActivity?.Readings != null)
+                .SelectMany(fv => fv.InspectionActivity.Readings)
+                .ToList();
         }
 
         public List<string> GetFilterList(string filterString)
