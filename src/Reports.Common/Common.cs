@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
-
+using System.Linq;
 using ReportPluginFramework.Properties;
 using ReportPluginFramework;
 using ReportPluginFramework.ReportData;
@@ -1025,25 +1025,29 @@ namespace Reports
             return "";
         }
 
-        public string GetFormattedDouble(double value, string roundingSpec, string missingStr)
+        public string GetFormattedDouble(double value, string roundingSpec, string missingStr = null)
         {
             if (string.IsNullOrEmpty(roundingSpec)) roundingSpec = "DEC(3)";
 
-            RoundServiceSpecRequest request = new RoundServiceSpecRequest();
-            request.Data = new List<double> { value };
-            request.RoundingSpec = roundingSpec;
-            request.ValueForNaN = missingStr;
+            var request = new RoundServiceSpecRequest
+            {
+                Data = new List<double> { value },
+                RoundingSpec = roundingSpec,
+                ValueForNaN = missingStr
+            };
 
             return Publish().Put(request).Data[0];
         }
 
         public string GetFormattedDouble(double value, string parameterDisplayId, string unitId, string missingStr)
         {
-            RoundServiceRequest request = new RoundServiceRequest();
-            request.Data = new List<double> { value };
-            request.ParameterDisplayId = parameterDisplayId;
-            request.UnitId = unitId;
-            request.ValueForNaN = missingStr;
+            var request = new RoundServiceRequest
+            {
+                Data = new List<double> { value },
+                ParameterDisplayId = parameterDisplayId,
+                UnitId = unitId,
+                ValueForNaN = missingStr
+            };
 
             try
             {
@@ -1055,14 +1059,16 @@ namespace Reports
             }
         }
 
-        public List<string> GetFormattedDoubles(List<double> values, string roundingSpec, string missingStr)
+        public List<string> GetFormattedDoubles(List<double> values, string roundingSpec, string missingStr = null)
         {
             if (string.IsNullOrEmpty(roundingSpec)) roundingSpec = "DEC(3)";
 
-            RoundServiceSpecRequest request = new RoundServiceSpecRequest();
-            request.Data = values;
-            request.RoundingSpec = roundingSpec;
-            request.ValueForNaN = missingStr;
+            var request = new RoundServiceSpecRequest
+            {
+                Data = values,
+                RoundingSpec = roundingSpec,
+                ValueForNaN = missingStr
+            };
 
             return Publish().Put(request).Data;
         }
@@ -1071,11 +1077,13 @@ namespace Reports
         {
             if (values.Count == 0) return new List<string>();
 
-            RoundServiceRequest request = new RoundServiceRequest();
-            request.Data = values;
-            request.ParameterDisplayId = parameterDisplayId;
-            request.UnitId = unitId;
-            request.ValueForNaN = missingStr;
+            var request = new RoundServiceRequest
+            {
+                Data = values,
+                ParameterDisplayId = parameterDisplayId,
+                UnitId = unitId,
+                ValueForNaN = missingStr
+            };
 
             try
             {
@@ -1188,6 +1196,7 @@ namespace Reports
 
             return response.FieldVisitDescriptions;
         }
+
         public FieldVisitDataServiceResponse GetFieldVisitData(FieldVisitDescription fieldVisitDescription)
         {
             FieldVisitDataServiceRequest request = new FieldVisitDataServiceRequest();
@@ -1197,6 +1206,26 @@ namespace Reports
 
             FieldVisitDataServiceResponse response = Publish().Get(request);
             return response;
+        }
+
+        public List<FieldVisit> GetFieldVisitDataByLocation(string locationIdentifier, IEnumerable<ActivityType> activities = null, IEnumerable<string> parameters = null)
+        {
+            var request = new FieldVisitDataByLocationServiceRequest
+            {
+                LocationIdentifier = locationIdentifier,
+                Activities = activities?.ToList() ?? new List<ActivityType> { ActivityType.Reading },
+                Parameters = parameters?.ToList(),
+            };
+
+            return Publish().Get(request).FieldVisitData;
+        }
+
+        public List<Reading> GetFieldVisitReadingsByLocation(string locationIdentifier, IEnumerable<string> parameters = null)
+        {
+            return GetFieldVisitDataByLocation(locationIdentifier, new [] { ActivityType.Reading }, parameters)
+                .Where(fv => fv.InspectionActivity?.Readings != null)
+                .SelectMany(fv => fv.InspectionActivity.Readings)
+                .ToList();
         }
 
         public List<string> GetFilterList(string filterString)

@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 using ServiceStack;
 using System.Threading;
 using System.Globalization;
@@ -35,6 +36,7 @@ using PerpetuumSoft.Reporting.Export.Pdf;
 using PerpetuumSoft.Reporting.Export.Csv;
 using PerpetuumSoft.Reporting.Export.OpenXML;
 using PerpetuumSoft.Reporting.Export.Graph;
+using PerpetuumSoft.Reporting.Rendering;
 
 using TimeSeriesPoint = ReportPluginFramework.ReportData.TimeSeriesData.TimeSeriesPoint;
 using InterpolationType = ReportPluginFramework.ReportData.TimeSeriesDescription.InterpolationType;

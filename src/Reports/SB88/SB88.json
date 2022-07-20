@@ -72,10 +72,10 @@
       "Required": false
     }
   ],
-  "Metadata":
-    {
-      "DateFormat" : "yyyy-MM-dd",
-      "DefaultColumnWidth" : "72",
-      "Column Widths" : "132,66,132,,80,80,,,,,,,,216,,,,120,186,80,,,,,,,120,,156"
-    }
+  "Metadata": {
+    "SensorCommentDateFormat": "yyyy-MM-dd",
+    "ReportDateFormat": "MM-dd-yyyy",
+    "DefaultColumnWidth": "72",
+    "Column Widths": "132,66,132,,80,80,,,,,,,,216,,,,120,186,80,,,,,,,120,,156"
+  }
 }

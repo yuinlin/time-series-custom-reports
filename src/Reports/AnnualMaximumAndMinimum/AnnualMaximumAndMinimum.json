@@ -58,8 +58,9 @@
       "Required": false
     }  
   ],
-  "Metadata":
-    {
-      "DateFormat" : "yyyy-MM-dd HH:mm"
-    }
+  "Metadata": {
+    "DateFormat": "yyyy-MM-dd HH:mm",
+    "RoundingSpec1": "",
+    "RoundingSpec2": "DEC(2)"
+  }
 }
