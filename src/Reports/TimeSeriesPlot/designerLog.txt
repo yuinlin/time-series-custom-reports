@@ -1,0 +1,9 @@
+12/19/2022 5:10:08 PM   DEBUG Cannot connect help2 System.Exception: Cannot create ActiveX component.
+   at Microsoft.VisualBasic.Interaction.CreateObject(String ProgId, String ServerName)
+   at PerpetuumSoft.Reporting.DOM.Design.ModernScriptEditorForm.OnLoad(EventArgs e)
+12/19/2022 5:14:43 PM   DEBUG Cannot connect help2 System.Exception: Cannot create ActiveX component.
+   at Microsoft.VisualBasic.Interaction.CreateObject(String ProgId, String ServerName)
+   at PerpetuumSoft.Reporting.DOM.Design.ModernScriptEditorForm.OnLoad(EventArgs e)
+12/19/2022 6:27:55 PM   DEBUG Cannot connect help2 System.Exception: Cannot create ActiveX component.
+   at Microsoft.VisualBasic.Interaction.CreateObject(String ProgId, String ServerName)
+   at PerpetuumSoft.Reporting.DOM.Design.ModernScriptEditorForm.OnLoad(EventArgs e)
