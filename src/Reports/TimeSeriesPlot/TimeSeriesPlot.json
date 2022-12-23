@@ -72,7 +72,7 @@
       "Required": false
     },
     {
-      "Name": "IntervalCount",
+      "Name": "IntervalsPerPage",
       "Label": "Intervals per Page",
       "DefaultValue": "1",
       "Type": "Integer",
