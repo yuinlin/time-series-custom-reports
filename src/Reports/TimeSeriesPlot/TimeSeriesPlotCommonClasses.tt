@@ -1,7 +1,0 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#" #>
-<#@ include file="..\SharedT4TextTemplateTransformation.tt"#>  
-<# 
-string namespaceName =  Path.GetFileNameWithoutExtension(this.Host.TemplateFile).Replace("CommonClasses","Namespace");	
-string folderPath = Path.GetDirectoryName(this.Host.TemplateFile);
-PrintFiles(namespaceName, folderPath);
-#>

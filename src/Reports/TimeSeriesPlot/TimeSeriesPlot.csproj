@@ -111,12 +111,8 @@
     <Compile Include="TimeSeriesPlot.cs" />
     <Compile Include="ReportSpecificTableBuilder.cs" />
     <Compile Include="ReportSpecificFunctions.cs" />
-    <Compile Include="TimeSeriesPlotCommonClasses.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TimeSeriesPlotCommonClasses.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeSeriesPlotCommonClasses.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -129,10 +125,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TimeSeriesPlotCommonClasses.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TimeSeriesPlotCommonClasses.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

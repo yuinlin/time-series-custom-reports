@@ -22,8 +22,7 @@
       "IsMaster": true
     }
   ],
-  "Parameters": 
-  [
+  "Parameters": [
     {
       "Name": "IntervalUnit",
       "Label": "Interval Unit",
@@ -35,7 +34,7 @@
       },
       "Required": true
     },
-	{
+    {
       "Name": "YAxisScale",
       "Label": "Y Axis Scale",
       "DefaultValue": "Logarithmic",
@@ -57,6 +56,27 @@
         "Exclude": "Do not show Measurements"
       },
       "Required": true
+    },
+    {
+      "Name": "YAxisMinimum",
+      "Label": "Y Axis Minimum",
+      "DefaultValue": "",
+      "Type": "Double",
+      "Required": false
+    },
+    {
+      "Name": "YAxisMaximum",
+      "Label": "Y Axis Maximum",
+      "DefaultValue": "",
+      "Type": "Double",
+      "Required": false
+    },
+    {
+      "Name": "IntervalsPerPage",
+      "Label": "Intervals per Page",
+      "DefaultValue": "1",
+      "Type": "Integer",
+      "Required": false
     }
   ],
   "Metadata":
