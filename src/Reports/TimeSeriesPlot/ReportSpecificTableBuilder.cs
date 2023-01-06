@@ -22,7 +22,7 @@ namespace TimeSeriesPlotNamespace
 
                 DataTable settingsTable = dataSet.Tables["ReportSettings"];
                 settingsTable.Columns.Add("ReportTitle", typeof(string));
-                settingsTable.Rows[0]["ReportTitle"] = "Time Series Plot Robbie";
+                settingsTable.Rows[0]["ReportTitle"] = "Time Series Plot";
 
                 DataTable table = new DataTable("TimeSeriesPlotDataTable");
 
