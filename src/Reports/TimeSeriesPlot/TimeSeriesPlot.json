@@ -1,20 +1,17 @@
 ﻿{
   "Name": "Time Series Plot",
-  "DefaultTimeRange": 
-  {
+  "DefaultTimeRange": {
     "Type": "MostRecent",
     "Unit": "WaterYears",
     "Value": 1
   },
-  "OutputFormats": 
-  [
+  "OutputFormats": [
     {
       "Name": "PDF",
       "IsDefault": true
     }
   ],
-  "Inputs": 
-  [
+  "Inputs": [
     {
       "Name": "SourceData",
       "Label": "Time Series",
@@ -35,6 +32,13 @@
       "Required": true
     },
     {
+      "Name": "IntervalsPerPage",
+      "Label": "Intervals per Page",
+      "DefaultValue": "1",
+      "Type": "Integer",
+      "Required": false
+    },
+    {
       "Name": "YAxisScale",
       "Label": "Y Axis Scale",
       "DefaultValue": "Logarithmic",
@@ -42,18 +46,6 @@
       "PickListOptions": {
         "Linear": "Linear",
         "Logarithmic": "Logarithmic"
-      },
-      "Required": true
-    },
-    {
-      "Name": "ShowMeasurements",
-      "Label": "Show Measurements",
-      "DefaultValue": "Show Measurements and Uncertainty",
-      "Type": "PickList",
-      "PickListOptions": {
-        "Show Measurements and Uncertainty": "Show Measurements and Uncertainty",
-        "Show Measurements": "Show Measurements",
-        "Exclude": "Do not show Measurements"
       },
       "Required": true
     },
@@ -72,16 +64,20 @@
       "Required": false
     },
     {
-      "Name": "IntervalsPerPage",
-      "Label": "Intervals per Page",
-      "DefaultValue": "1",
-      "Type": "Integer",
-      "Required": false
+      "Name": "ShowMeasurements",
+      "Label": "Show Measurements",
+      "DefaultValue": "Show Measurements and Uncertainty",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Show Measurements and Uncertainty": "Show Measurements and Uncertainty",
+        "Show Measurements": "Show Measurements",
+        "Exclude": "Do not show Measurements"
+      },
+      "Required": true
     }
   ],
-  "Metadata":
-    {
-	  "StageParameter" : "Stage",
-	  "DischargeParameter" : "Discharge"
-    }
+  "Metadata": {
+    "StageParameter": "Stage",
+    "DischargeParameter": "Discharge"
+  }
 }
