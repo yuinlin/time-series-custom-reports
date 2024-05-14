@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Globalization;
 using PerpetuumSoft.Reporting.Rendering;
+using System.Security.AccessControl;
 
 namespace Reports
 {
@@ -65,6 +66,9 @@ namespace Reports
             string outputFormat = request.OutputFormat;
             Log.DebugFormat("GenerateReport after RenderDocument, document name is {0}, page count is {1}, outputFormat is {2}",
                 document.Name, document.Pages.Count, outputFormat);
+
+            var sem = Semaphore.OpenExisting("reportgeneration-forceconcurrency", SemaphoreRights.Synchronize);
+            sem.WaitOne();
 
             string tempFileName = Path.GetTempFileName();
             string outputFileName = Path.ChangeExtension(tempFileName, outputFormat);
