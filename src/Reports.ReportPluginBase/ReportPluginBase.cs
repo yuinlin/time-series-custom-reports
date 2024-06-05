@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Reflection;
 using ReportPluginFramework;
 using PerpetuumSoft.Reporting.Components;
@@ -67,6 +68,12 @@ namespace Reports
                 document.Name, document.Pages.Count, outputFormat);
             
             string tempFolderPath = Path.GetTempPath();
+
+            if (!Directory.Exists(tempFolderPath))
+            {
+                throw new DirectoryNotFoundException("Temp folder directory does not exist.");
+            }
+            
             string tempFileName = Path.Combine(tempFolderPath, Path.GetRandomFileName());
             string outputFileName = Path.ChangeExtension(tempFileName, outputFormat);
 
