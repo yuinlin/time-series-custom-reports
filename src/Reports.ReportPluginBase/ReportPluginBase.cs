@@ -18,7 +18,7 @@ namespace Reports
     public abstract class ReportPluginBase
     {
         private static ServiceStack.Logging.ILog Log = ServiceStack.Logging.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        public Assembly _Assembly = Assembly.GetExecutingAssembly();
+        private Assembly _Assembly = Assembly.GetExecutingAssembly();
 
         public virtual FileReportOutput GenerateReport(RunFileReportRequest request)
         {
@@ -30,7 +30,7 @@ namespace Reports
             return fileReportOutput;
         }
 
-        public string GenerateReportIntoFile(RunFileReportRequest request)
+        private string GenerateReportIntoFile(RunFileReportRequest request)
         {
             Thread.CurrentThread.CurrentCulture.NumberFormat = CultureInfo.InvariantCulture.NumberFormat;
 
@@ -65,19 +65,16 @@ namespace Reports
             string outputFormat = request.OutputFormat;
             Log.DebugFormat("GenerateReport after RenderDocument, document name is {0}, page count is {1}, outputFormat is {2}",
                 document.Name, document.Pages.Count, outputFormat);
+            
+            string tempFolderPath = Path.GetTempPath();
 
-            string tempFileName = Path.GetTempFileName();
+            if (!Directory.Exists(tempFolderPath))
+            {
+                throw new DirectoryNotFoundException("Temp folder directory does not exist.");
+            }
+            
+            string tempFileName = Path.Combine(tempFolderPath, Path.GetRandomFileName());
             string outputFileName = Path.ChangeExtension(tempFileName, outputFormat);
-            try
-            {
-                File.Delete(tempFileName);
-            }
-            catch { }
-            try
-            {
-                File.Delete(outputFileName);
-            }
-            catch { }
 
             Log.DebugFormat("GenerateReport - the name of file for export report to write to is set to {0}", outputFileName);
 
