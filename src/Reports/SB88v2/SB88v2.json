@@ -1,27 +1,23 @@
 ﻿{
   "Name": "SB88 v2",
-  "DefaultTimeRange": 
-  {
-    "Type": "MostRecent",
-    "Unit": "Days",
+  "DefaultTimeRange": {
+    "Type": "LatestComplete",
+    "Unit": "WaterYears",
     "Value": 1
   },
-  "OutputFormats": 
-  [
+  "OutputFormats": [
     {
       "Name": "PDF",
       "IsDefault": true
     },
-     {
+    {
       "Name": "xlsx",
       "IsDefault": false
     }
   ],
-  "Inputs": 
-  [
+  "Inputs": [
   ],
-  "Parameters": 
-  [
+  "Parameters": [
     {
       "Name": "EstimatedAccuracy",
       "Label": "Estimated accuracy of measurement",
