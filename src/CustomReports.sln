@@ -102,6 +102,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldVisitReadingsInMultipl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossSectionSurveyPlot", "Reports\CrossSectionSurveyPlot\CrossSectionSurveyPlot.csproj", "{FF29EF5E-0332-4BAB-90DB-BA8EA0EF40C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SB88v2", "Reports\SB88v2\SB88v2.csproj", "{09CFC64D-BDCC-43A4-B71C-F64DEC6FD069}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -268,6 +270,10 @@ Global
 		{FF29EF5E-0332-4BAB-90DB-BA8EA0EF40C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF29EF5E-0332-4BAB-90DB-BA8EA0EF40C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF29EF5E-0332-4BAB-90DB-BA8EA0EF40C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09CFC64D-BDCC-43A4-B71C-F64DEC6FD069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09CFC64D-BDCC-43A4-B71C-F64DEC6FD069}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09CFC64D-BDCC-43A4-B71C-F64DEC6FD069}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09CFC64D-BDCC-43A4-B71C-F64DEC6FD069}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -311,6 +317,7 @@ Global
 		{F59C04E8-DCFA-486F-B63D-859939A9E4B5} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{5826D6DB-C210-4D0B-A027-CD1D7FC2B812} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 		{FF29EF5E-0332-4BAB-90DB-BA8EA0EF40C8} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
+		{09CFC64D-BDCC-43A4-B71C-F64DEC6FD069} = {AE7CB849-EE9B-4D3C-9951-446ABBF4640C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE1A8A78-29AC-43E5-8083-A27EB11F4054}
