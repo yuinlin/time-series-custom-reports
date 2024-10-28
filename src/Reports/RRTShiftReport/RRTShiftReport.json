@@ -1,0 +1,62 @@
+﻿{
+  "Name": "RRT Shift Report",
+  "DefaultTimeRange": {
+    "Type": "LatestComplete",
+    "Unit": "WaterYears",
+    "Value": 1
+  },
+  "OutputFormats": [
+    {
+      "Name": "PDF",
+      "IsDefault": true
+    },
+    {
+      "Name": "xlsx",
+      "IsDefault": false
+    }
+  ],
+  "Inputs": [
+    {
+      "Name": "Location",
+      "Type": "Location"
+    }
+  ],
+  "Parameters": [
+    {
+      "Name": "RatingModelParameter",
+      "Label": "Rating Model Parameter",
+      "DefaultValue": "Stage-Discharge",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "RatingModelLabel",
+      "Label": "Rating Model Label",
+      "DefaultValue": "Rating",
+      "Type": "String",
+      "Required": true
+    },
+    {
+      "Name": "NumericFormatType",
+      "Label": "Numeric Format Type",
+      "DefaultValue": "Fixed",
+      "Type": "PickList",
+      "PickListOptions": {
+        "Fixed": "Fixed",
+        "Significant Figures": "Significant Figures"
+      },
+      "Required": true
+    },
+    {
+      "Name": "NumericFormatPrecision",
+      "Label": "Numeric Format Precision",
+      "DefaultValue": "2",
+      "Type": "Integer",
+      "Required": true
+    }
+  ],
+  "Metadata": {
+    "DateFormat": "yyyy-MM-dd",
+    "TimeFormat": "HH:mm:ss"
+  }
+}
