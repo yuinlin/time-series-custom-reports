@@ -154,9 +154,10 @@ namespace CrossSectionSurveyPlotNamespace
                         activitytRow["SurveyComment"] = activity.Comments;
                         activitytRow["TotalPoints"] = (points == null)? "" : points.Count.ToString();
 
-                        if (string.IsNullOrEmpty(stageUnitId)) stageUnitId = activity.Stage.Unit;
-                        string stageUnit = (stageUnitId == activity.Stage.Unit) ? "" : " " + CommonLibrary.GetUnitSymbol(activity.Stage.Unit);
-                        activitytRow["Stage"] = activity.Stage.Display + stageUnit;
+                        var stageUnitOrEmpty = activity?.Stage?.Unit ?? string.Empty;
+                        if (string.IsNullOrEmpty(stageUnitId)) stageUnitId = stageUnitOrEmpty;
+                        string stageUnit = stageUnitId == stageUnitOrEmpty ? "" : " " + CommonLibrary.GetUnitSymbol(stageUnitOrEmpty);
+                        activitytRow["Stage"] = activity?.Stage?.Display + stageUnit;
 
                         activityTable.Rows.Add(activitytRow);
                         if (points == null) continue;
